@@ -175,6 +175,3 @@ env = DesktopEnv(
 
 Please refer to the `LICENSE` file in the repository.
 
------
-
-**Would you like me to create a shell script to automate the installation steps (1-3) for you?**
