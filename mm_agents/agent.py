@@ -13,7 +13,8 @@ from dotenv import load_dotenv
 
 import backoff
 import dashscope
-import google.generativeai as genai
+from google import genai
+from google.genai import types as genai_types
 import openai
 import requests
 import tiktoken
@@ -869,28 +870,25 @@ class PromptAgent:
                 # gemini_messages[-1]['parts'][1].save("output.png", "PNG")
 
             # print(gemini_messages)
-            api_key = os.environ.get("GENAI_API_KEY")
-            assert api_key is not None, "Please set the GENAI_API_KEY environment variable"
-            genai.configure(api_key=api_key)
+            api_key = os.environ.get("GENAI_API_KEY") or os.environ.get("GEMINI_API_KEY")
+            assert api_key is not None, "Please set the GENAI_API_KEY or GEMINI_API_KEY environment variable"
+            client = genai.Client(api_key=api_key)
             logger.info("Generating content with Gemini model: %s", self.model)
-            request_options = {"timeout": 120}
-            gemini_model = genai.GenerativeModel(self.model)
 
-            response = gemini_model.generate_content(
-                gemini_messages,
-                generation_config={
-                    "candidate_count": 1,
-                    # "max_output_tokens": max_tokens,
-                    "top_p": top_p,
-                    "temperature": temperature
-                },
-                safety_settings={
-                    "harassment": "block_none",
-                    "hate": "block_none",
-                    "sex": "block_none",
-                    "danger": "block_none"
-                },
-                request_options=request_options
+            response = client.models.generate_content(
+                model=self.model,
+                contents=gemini_messages,
+                config=genai_types.GenerateContentConfig(
+                    candidate_count=1,
+                    top_p=top_p,
+                    temperature=temperature,
+                    safety_settings=[
+                        genai_types.SafetySetting(category="HARM_CATEGORY_HARASSMENT", threshold="OFF"),
+                        genai_types.SafetySetting(category="HARM_CATEGORY_HATE_SPEECH", threshold="OFF"),
+                        genai_types.SafetySetting(category="HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold="OFF"),
+                        genai_types.SafetySetting(category="HARM_CATEGORY_DANGEROUS_CONTENT", threshold="OFF"),
+                    ],
+                ),
             )
             return response.text
 
@@ -932,40 +930,26 @@ class PromptAgent:
                 system_instruction = gemini_messages[0]['parts'][0]
                 gemini_messages.pop(0)
 
-            api_key = os.environ.get("GENAI_API_KEY")
-            assert api_key is not None, "Please set the GENAI_API_KEY environment variable"
-            genai.configure(api_key=api_key)
+            api_key = os.environ.get("GENAI_API_KEY") or os.environ.get("GEMINI_API_KEY")
+            assert api_key is not None, "Please set the GENAI_API_KEY or GEMINI_API_KEY environment variable"
+            client = genai.Client(api_key=api_key)
             logger.info("Generating content with Gemini model: %s", self.model)
-            request_options = {"timeout": 120}
-            gemini_model = genai.GenerativeModel(
-                self.model,
-                system_instruction=system_instruction
-            )
 
-            with open("response.json", "w") as f:
-                messages_to_save = []
-                for message in gemini_messages:
-                    messages_to_save.append({
-                        "role": message["role"],
-                        "content": [part if isinstance(part, str) else "image" for part in message["parts"]]
-                    })
-                json.dump(messages_to_save, f, indent=4)
-
-            response = gemini_model.generate_content(
-                gemini_messages,
-                generation_config={
-                    "candidate_count": 1,
-                    # "max_output_tokens": max_tokens,
-                    "top_p": top_p,
-                    "temperature": temperature
-                },
-                safety_settings={
-                    "harassment": "block_none",
-                    "hate": "block_none",
-                    "sex": "block_none",
-                    "danger": "block_none"
-                },
-                request_options=request_options
+            response = client.models.generate_content(
+                model=self.model,
+                contents=gemini_messages,
+                config=genai_types.GenerateContentConfig(
+                    system_instruction=system_instruction,
+                    candidate_count=1,
+                    top_p=top_p,
+                    temperature=temperature,
+                    safety_settings=[
+                        genai_types.SafetySetting(category="HARM_CATEGORY_HARASSMENT", threshold="OFF"),
+                        genai_types.SafetySetting(category="HARM_CATEGORY_HATE_SPEECH", threshold="OFF"),
+                        genai_types.SafetySetting(category="HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold="OFF"),
+                        genai_types.SafetySetting(category="HARM_CATEGORY_DANGEROUS_CONTENT", threshold="OFF"),
+                    ],
+                ),
             )
 
             return response.text

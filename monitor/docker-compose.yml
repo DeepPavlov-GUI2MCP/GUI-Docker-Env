@@ -4,7 +4,7 @@ services:
       context: ..
       dockerfile: monitor/Dockerfile
     ports:
-      - "${FLASK_PORT:-8080}:8080"
+      - "${FLASK_PORT:-8080}:${FLASK_PORT:-8080}"
     volumes:
       - .:/app/monitor
       - ${TASK_CONFIG_PATH:-../evaluation_examples/test_all.json}:/app/evaluation_examples/test.json

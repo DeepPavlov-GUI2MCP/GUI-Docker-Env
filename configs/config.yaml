@@ -1,7 +1,7 @@
 remote_docker_server:
-  ip: "10.1.110.48" # change this to your own ip . 
+  ip: "127.0.0.1"
   port: 50003
-  path_to_vm: "/home/shichenrui/TongGUI/ubuntu_env/desktop_env/Ubuntu.qcow2"
+  path_to_vm: "/mnt/data/VMs/Ubuntu.qcow2"
 
 # Token-based quota configuration
 tokens:
