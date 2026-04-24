@@ -211,7 +211,7 @@ def config() -> argparse.Namespace:
     parser.add_argument("--top_k", "--top-k", type=int, default=-1)
     parser.add_argument("--history_n", "--history-n", type=int, default=5)
     parser.add_argument("--callusr_tolerance", "--callusr-tolerance", type=int, default=3)
-    parser.add_argument("--max_tokens", "--max-tokens", type=int, default=50000)
+    parser.add_argument("--max_tokens", "--max-tokens", type=int, default=2048)
     parser.add_argument("--stop_token", "--stop-token", type=str, default=None)
 
     # example config
