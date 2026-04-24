@@ -666,7 +666,7 @@ class UITARSAgent:
                 baseurl_list.append(u)
             random.shuffle(baseurl_list)
         if not raw_bases or not baseurl_list:
-            baseurl_list = ["http://127.0.0.1:8000/v1"]
+            baseurl_list = ["http://127.0.0.1:8010/v1"]
         api_key = (
             os.environ.get("OPENAI_API_KEY")
             or os.environ.get("UITARS_OPENAI_API_KEY")
