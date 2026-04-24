@@ -11,6 +11,7 @@ import datetime
 import json
 import logging
 import os
+import shutil
 import sys
 from pathlib import Path
 from typing import Optional, List, Dict, Any
@@ -18,6 +19,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import requests
 from tqdm import tqdm
+
+from mm_agents.env_loader import load_mm_agents_env
+
+load_mm_agents_env()
 
 from mm_agents.uitars15_v1 import UITARSAgent
 import lib_run_single
@@ -151,51 +156,67 @@ def config() -> argparse.Namespace:
         description="Run end-to-end evaluation on the benchmark"
     )
 
-    # docker_server / env server config
-    parser.add_argument("--base-url", type=str, default="http://127.0.0.1:50003", help="Base URL for docker_server API")
-    parser.add_argument("--token", type=str, required=True, help="Token to use for docker_server (required)")
+    # docker_server / env server config (defaults from .env / .env-default via load_mm_agents_env)
+    parser.add_argument(
+        "--base-url",
+        type=str,
+        default=os.environ.get("OSWORLD_BASE_URL") or "http://127.0.0.1:50003",
+        help="Base URL for docker_server API",
+    )
+    parser.add_argument(
+        "--token",
+        type=str,
+        default=os.environ.get("OSWORLD_TOKEN") or "dart",
+        help="Token for docker_server (OSWORLD_TOKEN in .env)",
+    )
     parser.add_argument("--max-workers", type=int, default=8, help="Maximum concurrent tasks (VMs)")
     parser.add_argument("--os-type", type=str, default="Ubuntu", help="OS type to pass to DesktopEnv")
 
-    # environment config
-    parser.add_argument("--path_to_vm", type=str, default=None)
+    # environment config (hyphen aliases match common CLI style)
+    parser.add_argument("--path_to_vm", "--path-to-vm", type=str, default=None)
     parser.add_argument("--headless", action="store_true", help="Run in headless machine")
-    parser.add_argument("--action_space", type=str, default="pyautogui", help="Action type")
+    parser.add_argument("--action_space", "--action-space", type=str, default="pyautogui", help="Action type")
     parser.add_argument(
         "--observation_type",
+        "--observation-type",
         choices=["screenshot", "a11y_tree", "screenshot_a11y_tree", "som"],
         default="screenshot",
         help="Observation type",
     )
-    parser.add_argument("--screen_width", type=int, default=1920)
-    parser.add_argument("--screen_height", type=int, default=1080)
-    parser.add_argument("--sleep_after_execution", type=float, default=2.0)
-    parser.add_argument("--max_steps", type=int, default=15)
+    parser.add_argument("--screen_width", "--screen-width", type=int, default=1920)
+    parser.add_argument("--screen_height", "--screen-height", type=int, default=1080)
+    parser.add_argument("--sleep_after_execution", "--sleep-after-execution", type=float, default=2.0)
+    parser.add_argument("--max_steps", "--max-steps", type=int, default=15)
 
     # agent config
-    parser.add_argument("--max_trajectory_length", type=int, default=50)
-    parser.add_argument("--test_config_base_dir", type=str, default="evaluation_examples")
+    parser.add_argument("--max_trajectory_length", "--max-trajectory-length", type=int, default=50)
+    parser.add_argument("--test_config_base_dir", "--test-config-base-dir", type=str, default="evaluation_examples")
 
     # lm config
     parser.add_argument("--model", type=str, default="ui_tars_1.5")
-    parser.add_argument("--model_type", type=str, default="qwen25vl")
-    parser.add_argument("--infer_mode", type=str, default="qwen25vl_normal")
-    parser.add_argument("--prompt_style", type=str, default="qwen25vl_normal")
-    parser.add_argument("--input_swap", action="store_true", help="Use copy and paste to type content")
+    parser.add_argument("--model_type", "--model-type", type=str, default="qwen25vl")
+    parser.add_argument("--infer_mode", "--infer-mode", type=str, default="qwen25vl_normal")
+    parser.add_argument("--prompt_style", "--prompt-style", type=str, default="qwen25vl_normal")
+    parser.add_argument("--input_swap", "--input-swap", action="store_true", help="Use copy and paste to type content")
     parser.add_argument("--language", type=str, default="English")
-    parser.add_argument("--max_pixels", type=float, default=16384*28*28)
-    parser.add_argument("--min_pixels", type=float, default=100*28*28)
+    parser.add_argument("--max_pixels", "--max-pixels", type=float, default=16384*28*28)
+    parser.add_argument("--min_pixels", "--min-pixels", type=float, default=100*28*28)
     parser.add_argument("--temperature", type=float, default=1.0)
-    parser.add_argument("--top_p", type=float, default=0.9)
-    parser.add_argument("--top_k", type=int, default=-1)
-    parser.add_argument("--history_n", type=int, default=5)
-    parser.add_argument("--callusr_tolerance", type=int, default=3)
-    parser.add_argument("--max_tokens", type=int, default=50000)
-    parser.add_argument("--stop_token", type=str, default=None)
+    parser.add_argument("--top_p", "--top-p", type=float, default=0.9)
+    parser.add_argument("--top_k", "--top-k", type=int, default=-1)
+    parser.add_argument("--history_n", "--history-n", type=int, default=5)
+    parser.add_argument("--callusr_tolerance", "--callusr-tolerance", type=int, default=3)
+    parser.add_argument("--max_tokens", "--max-tokens", type=int, default=50000)
+    parser.add_argument("--stop_token", "--stop-token", type=str, default=None)
 
     # example config
     parser.add_argument("--domain", type=str, default="all")
-    parser.add_argument("--test_all_meta_path", type=str, default="evaluation_examples/test_nogdrive.json")
+    parser.add_argument(
+        "--test_all_meta_path",
+        "--test-all-meta-path",
+        type=str,
+        default="evaluation_examples/test_nogdrive.json",
+    )
 
     # warmup / two-phase controls
     parser.add_argument("--warmup-count", type=int, default=8, help="Number of tasks to run in warmup phase before batch")
@@ -204,7 +225,12 @@ def config() -> argparse.Namespace:
     parser.set_defaults(auto_continue_after_warmup=True)
     
     # logging related
-    parser.add_argument("--result_dir", type=str, default="./results_chenrui")
+    parser.add_argument("--result_dir", "--result-dir", type=str, default="./results_chenrui")
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Re-run all tasks in the meta file; ignore existing result.txt resume state and clear each example output dir before running",
+    )
     args = parser.parse_args()
 
     return args
@@ -220,6 +246,8 @@ def run_one_example(args: argparse.Namespace, domain: str, example_id: str) -> D
         domain,
         example_id,
     )
+    if args.overwrite and os.path.isdir(example_result_dir):
+        shutil.rmtree(example_result_dir)
     os.makedirs(example_result_dir, exist_ok=True)
 
     # Load example config
@@ -430,14 +458,16 @@ if __name__ == "__main__":
     if args.domain != "all":
         test_all_meta = {args.domain: test_all_meta[args.domain]}
 
-    # Determine unfinished tasks
-    test_file_list = get_unfinished(
-        args.action_space,
-        args.model,
-        args.observation_type,
-        args.result_dir,
-        test_all_meta,
-    )
+    if args.overwrite:
+        test_file_list = {k: list(v) for k, v in test_all_meta.items()}
+    else:
+        test_file_list = get_unfinished(
+            args.action_space,
+            args.model,
+            args.observation_type,
+            args.result_dir,
+            test_all_meta,
+        )
     left_info = ""
     for domain in test_file_list:
         left_info += f"{domain}: {len(test_file_list[domain])}\n"

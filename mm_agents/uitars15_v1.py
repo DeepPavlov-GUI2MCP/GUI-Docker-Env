@@ -13,6 +13,10 @@ import base64
 from loguru import logger
 import os
 import re
+
+from mm_agents.env_loader import load_mm_agents_env
+
+load_mm_agents_env()
 from io import BytesIO
 from typing import Dict, List
 from PIL import Image
@@ -643,11 +647,32 @@ class UITARSAgent:
         #     base_url=os.environ['DOUBAO_API_URL'],
         #     api_key=os.environ['DOUBAO_API_KEY'],
         # )
-        baseurl_list = ["https://sv-97d8a94e-3f68-4483-abd2-10bd4fcff474-8000-x-defau-80e399b04a.sproxy.hd-01.alayanew.com:22443/v1","https://sv-97d8a94e-3f68-4483-abd2-10bd4fcff474-8001-x-defau-a45bff984b.sproxy.hd-01.alayanew.com:22443/v1", "https://sv-97d8a94e-3f68-4483-abd2-10bd4fcff474-8002-x-defau-7d9341af09.sproxy.hd-01.alayanew.com:22443/v1"]
-        random.shuffle(baseurl_list)
-        self.vlm = openai.OpenAI(
-            api_key="empty",
-            base_url= baseurl_list[0])
+        def _ev(name: str) -> str:
+            return (os.environ.get(name) or "").strip()
+
+        raw_bases = (
+            _ev("OPENAI_BASE_URL")
+            or _ev("UITARS_OPENAI_BASE_URL")
+            or _ev("UITARS_OPENAI_BASE_URLS")
+        )
+        if raw_bases:
+            baseurl_list = []
+            for part in raw_bases.split(","):
+                u = part.strip().rstrip("/")
+                if not u:
+                    continue
+                if not u.endswith("/v1"):
+                    u = f"{u}/v1"
+                baseurl_list.append(u)
+            random.shuffle(baseurl_list)
+        if not raw_bases or not baseurl_list:
+            baseurl_list = ["http://127.0.0.1:8000/v1"]
+        api_key = (
+            os.environ.get("OPENAI_API_KEY")
+            or os.environ.get("UITARS_OPENAI_API_KEY")
+            or "empty"
+        )
+        self.vlm = openai.OpenAI(api_key=api_key, base_url=baseurl_list[0])
 
         self.thoughts = []
         self.actions = []
