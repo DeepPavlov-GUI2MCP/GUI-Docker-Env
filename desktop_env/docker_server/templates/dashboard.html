@@ -188,6 +188,41 @@
       </div>
 
       <div class="col-12 card">
+        <h2>Utilities</h2>
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Authorization Token (optional)</label>
+          <input id="authToken" type="text" placeholder="Enter token if REQUIRE_TOKEN is enabled" style="width: 100%; max-width: 400px;" />
+          <div class="muted" style="margin-top: 4px;">Token will be saved in browser localStorage and included in all API requests</div>
+        </div>
+        <div class="row-actions" style="margin-bottom: 12px;">
+          <a class="btn primary" href="javascript:void(0)" onclick="startEmulator()">Start Emulator</a>
+          <span class="muted">Start a new VM emulator instance</span>
+          <span id="startEmuMsg" class="muted"></span>
+        </div>
+        <div class="row-actions" style="margin-bottom: 12px;">
+          <a class="btn primary" href="javascript:void(0)" onclick="stopAllEmulators()">Stop All Emulators</a>
+          <span class="muted">Stop all emulators currently in memory</span>
+          <span id="stopAllMsg" class="muted"></span>
+        </div>
+        <div class="row-actions" style="margin-bottom: 12px;">
+          <form class="inline" id="removeAllForm" onsubmit="return removeAllContainers(event)">
+            <button class="btn danger" type="submit">Remove All Containers</button>
+            <label>Min Age (min)</label>
+            <input id="minAge" type="number" min="0" value="0" style="width: 80px;" />
+            <label>Image</label>
+            <input id="imageFilter" type="text" value="happysixd/osworld-docker" style="width: 200px;" />
+            <label><input id="dryRun" type="checkbox" /> Dry Run</label>
+            <span id="removeAllMsg" class="muted"></span>
+          </form>
+        </div>
+        <div class="row-actions">
+          <a class="btn warn" href="javascript:void(0)" onclick="cleanupAll()">Run remove_all.sh (Legacy)</a>
+          <span class="muted">This will remove stale containers using scripts/remove_all.sh on the server.</span>
+          <span id="cleanupMsg" class="muted"></span>
+        </div>
+      </div>
+
+      <div class="col-12 card">
         <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px;">
           <h2>Token Usage</h2>
           <form class="inline" id="limitForm" onsubmit="return setLimit(event)">
@@ -239,9 +274,9 @@
 
       <div class="col-12 card">
         <h2>Recent Requests</h2>
-        <div style="overflow:auto;">
+        <div style="overflow:auto; max-height: 600px;">
           <table>
-            <thead>
+            <thead style="position: sticky; top: 0; background: #1e293b;">
               <tr>
                 <th>Time (UTC)</th>
                 <th>Method</th>
@@ -254,36 +289,6 @@
               <tr><td colspan="5" class="muted">Loading...</td></tr>
             </tbody>
           </table>
-        </div>
-      </div>
-
-      <div class="col-12 card">
-        <h2>Utilities</h2>
-        <div style="margin-bottom: 16px;">
-          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Authorization Token (optional)</label>
-          <input id="authToken" type="text" placeholder="Enter token if REQUIRE_TOKEN is enabled" style="width: 100%; max-width: 400px;" />
-          <div class="muted" style="margin-top: 4px;">Token will be saved in browser localStorage and included in all API requests</div>
-        </div>
-        <div class="row-actions" style="margin-bottom: 12px;">
-          <a class="btn primary" href="javascript:void(0)" onclick="stopAllEmulators()">Stop All Emulators</a>
-          <span class="muted">Stop all emulators currently in memory</span>
-          <span id="stopAllMsg" class="muted"></span>
-        </div>
-        <div class="row-actions" style="margin-bottom: 12px;">
-          <form class="inline" id="removeAllForm" onsubmit="return removeAllContainers(event)">
-            <button class="btn danger" type="submit">Remove All Containers</button>
-            <label>Min Age (min)</label>
-            <input id="minAge" type="number" min="0" value="0" style="width: 80px;" />
-            <label>Image</label>
-            <input id="imageFilter" type="text" value="happysixd/osworld-docker" style="width: 200px;" />
-            <label><input id="dryRun" type="checkbox" /> Dry Run</label>
-            <span id="removeAllMsg" class="muted"></span>
-          </form>
-        </div>
-        <div class="row-actions">
-          <a class="btn warn" href="javascript:void(0)" onclick="cleanupAll()">Run remove_all.sh (Legacy)</a>
-          <span class="muted">This will remove stale containers using scripts/remove_all.sh on the server.</span>
-          <span id="cleanupMsg" class="muted"></span>
         </div>
       </div>
     </section>
@@ -397,14 +402,16 @@
         (arr || []).forEach(e => {
           const tr = document.createElement("tr");
           const started = e.start_time ? new Date(e.start_time * 1000).toLocaleString() : "-";
+          const vncUrl = `http://${location.hostname}:${e.vnc_port}`;
           tr.innerHTML = `
             <td><code>${e.emulator_id}</code></td>
             <td>${e.token || "-"}</td>
-            <td>${e.server_port}/${e.chromium_port}/${e.vnc_port}/${e.vlc_port}</td>
+            <td><a href="${vncUrl}" target="_blank" title="Open VNC">${e.server_port}/${e.chromium_port}/${e.vnc_port}/${e.vlc_port}</a></td>
             <td>${started}</td>
             <td>${e.duration_minutes} min</td>
             <td>
               <div class="row-actions">
+                <a href="${vncUrl}" target="_blank" class="btn">View</a>
                 <a href="javascript:void(0)" class="btn danger" onclick="stopEmu('${e.emulator_id}')">Stop</a>
               </div>
             </td>
@@ -457,6 +464,34 @@
         msg.textContent = "Error updating limit";
       }
       return false;
+    }
+
+    async function startEmulator() {
+      const msg = document.getElementById("startEmuMsg");
+      msg.textContent = "Starting emulator...";
+      msg.className = "muted";
+      try {
+        const resp = await fetch("/start_emulator", {
+          method: "POST",
+          headers: getAuthHeaders()
+        });
+        const js = await resp.json();
+        if (js.code === 0 && js.data) {
+          const d = js.data;
+          msg.innerHTML = `Started! VNC: <a href="http://${location.hostname}:${d.vnc_port}" target="_blank">${d.vnc_port}</a> | <a href="/window" target="_blank">View</a>`;
+          msg.className = "success";
+        } else {
+          msg.textContent = js.message || "Failed to start";
+          msg.className = "danger-txt";
+        }
+        await fetchStatus();
+        await fetchEmulators();
+        setTimeout(() => { msg.textContent = ""; msg.className = "muted"; }, 10000);
+      } catch (e) {
+        console.error(e);
+        msg.textContent = "Error starting emulator";
+        msg.className = "danger-txt";
+      }
     }
 
     async function stopAllEmulators() {
