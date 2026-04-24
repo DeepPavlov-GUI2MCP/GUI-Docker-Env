@@ -174,7 +174,7 @@ def config() -> argparse.Namespace:
     parser.add_argument(
         "--enable-proxy",
         action="store_true",
-        help="Honor task proxy:true: configure VM via proxy pool (set PROXY_CONFIG_FILE or edit evaluation_examples/settings/proxy/dataimpulse.json)",
+        help="Honor task proxy:true: proxy pool from PROXY_CONFIG_FILE (.json array or Webshare .txt host:port:user:pass per line)",
     )
 
     # environment config (hyphen aliases match common CLI style)

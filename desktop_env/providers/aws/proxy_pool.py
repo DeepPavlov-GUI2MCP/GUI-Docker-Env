@@ -1,11 +1,12 @@
-import random
-import requests
+import json
 import logging
+import random
 import time
-from typing import List, Dict, Optional
 from dataclasses import dataclass
 from threading import Lock
-import json
+from typing import Dict, List, Optional
+
+import requests
 
 logger = logging.getLogger("desktopenv.providers.aws.ProxyPool")
 logger.setLevel(logging.INFO)
@@ -33,24 +34,61 @@ class ProxyPool:
             self.load_proxies_from_file(config_file)
     
     def load_proxies_from_file(self, config_file: str):
-        """Load proxy list from config file"""
+        """Load from JSON array (legacy) or Webshare .txt lines: host:port:user:password"""
+        if config_file.lower().endswith(".txt"):
+            self._load_proxies_webshare_txt(config_file)
+            return
         try:
-            with open(config_file, 'r') as f:
+            with open(config_file, "r", encoding="utf-8") as f:
                 proxy_configs = json.load(f)
-                
+
             for config in proxy_configs:
                 proxy = ProxyInfo(
-                    host=config['host'],
-                    port=config['port'],
-                    username=config.get('username'),
-                    password=config.get('password'),
-                    protocol=config.get('protocol', 'http')
+                    host=config["host"],
+                    port=config["port"],
+                    username=config.get("username"),
+                    password=config.get("password"),
+                    protocol=config.get("protocol", "http"),
                 )
                 self.proxies.append(proxy)
-                
+
             logger.info(f"Loaded {len(self.proxies)} proxies from {config_file}")
         except Exception as e:
             logger.error(f"Failed to load proxies from {config_file}: {e}")
+
+    def _load_proxies_webshare_txt(self, path: str) -> None:
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                for lineno, line in enumerate(f, 1):
+                    line = line.strip()
+                    if not line or line.startswith("#"):
+                        continue
+                    parts = line.split(":", 3)
+                    if len(parts) != 4:
+                        logger.warning(
+                            "Skipping line %d in %s: expected host:port:user:password",
+                            lineno,
+                            path,
+                        )
+                        continue
+                    host, port_s, username, password = parts
+                    try:
+                        port = int(port_s)
+                    except ValueError:
+                        logger.warning("Skipping line %d in %s: invalid port", lineno, path)
+                        continue
+                    self.proxies.append(
+                        ProxyInfo(
+                            host=host.strip(),
+                            port=port,
+                            username=username,
+                            password=password,
+                            protocol="http",
+                        )
+                    )
+            logger.info(f"Loaded {len(self.proxies)} Webshare-format proxies from {path}")
+        except OSError as e:
+            logger.error(f"Failed to read Webshare proxy file {path}: {e}")
     
     def add_proxy(self, host: str, port: int, username: str = None, 
                   password: str = None, protocol: str = "http"):

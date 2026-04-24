@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import os.path
+from pathlib import Path
 import platform
 import shutil
 import sqlite3
@@ -28,7 +29,20 @@ import dotenv
 dotenv.load_dotenv()
 
 
-PROXY_CONFIG_FILE = os.getenv("PROXY_CONFIG_FILE", "evaluation_examples/settings/proxy/dataimpulse.json")  # Default proxy config file
+def _default_proxy_config_file() -> str:
+    gui_root = Path(__file__).resolve().parents[2]
+    roll_proxy = gui_root.parent / "dart_rollouter" / "evaluation_examples" / "settings" / "proxy"
+    for name in ("webshare.secrets.txt", "webshare.txt"):
+        p = roll_proxy / name
+        if p.is_file():
+            return str(p)
+    return str(gui_root / "evaluation_examples" / "settings" / "proxy" / "dataimpulse.json")
+
+
+PROXY_CONFIG_FILE = os.getenv(
+    "PROXY_CONFIG_FILE",
+    _default_proxy_config_file(),
+)  # JSON array or Webshare .txt; default dart_rollouter/.../webshare*.txt if present
 
 logger = logging.getLogger("desktopenv.setup")
 
