@@ -171,6 +171,11 @@ def config() -> argparse.Namespace:
     )
     parser.add_argument("--max-workers", type=int, default=8, help="Maximum concurrent tasks (VMs)")
     parser.add_argument("--os-type", type=str, default="Ubuntu", help="OS type to pass to DesktopEnv")
+    parser.add_argument(
+        "--enable-proxy",
+        action="store_true",
+        help="Honor task proxy:true: configure VM via proxy pool (set PROXY_CONFIG_FILE or edit evaluation_examples/settings/proxy/dataimpulse.json)",
+    )
 
     # environment config (hyphen aliases match common CLI style)
     parser.add_argument("--path_to_vm", "--path-to-vm", type=str, default=None)
@@ -293,6 +298,7 @@ def run_one_example(args: argparse.Namespace, domain: str, example_id: str) -> D
             action_space="pyautogui",
             provider_name="docker_server",
             os_type=args.os_type,
+            enable_proxy=args.enable_proxy,
         )
 
         # Execute example
