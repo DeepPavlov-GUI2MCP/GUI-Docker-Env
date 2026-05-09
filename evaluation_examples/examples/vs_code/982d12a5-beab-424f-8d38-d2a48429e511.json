@@ -42,6 +42,9 @@
       "type": "vm_file",
       "path": "/home/user/.config/Code/User/settings.json",
       "dest": "settings.json"
+    },
+    "options": {
+      "containment_ok": true
     }
   },
   "proxy": false,

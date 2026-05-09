@@ -45,10 +45,15 @@
   "evaluator": {
     "func": [
       "is_expected_url_pattern_match",
+      "is_expected_url_pattern_match",
       "is_expected_url_pattern_match"
     ],
     "conj": "or",
     "result": [
+      {
+        "type": "active_url_from_accessTree",
+        "goto_prefix": "https://www."
+      },
       {
         "type": "active_url_from_accessTree",
         "goto_prefix": "https://www."
@@ -72,6 +77,14 @@
         "rules": {
           "expected": [
             "^https://(www\\.)?drugs\\.com/sfx/tamiflu-side-effects\\.html"
+          ]
+        }
+      },
+      {
+        "type": "rule",
+        "rules": {
+          "expected": [
+            "^https://(www\\.)?drugs\\.com/sfx/tamiflu-side-effects\\.html#common-side-effects"
           ]
         }
       }
