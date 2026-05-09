@@ -9,7 +9,7 @@
       "parameters": {
         "files": [
           {
-            "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/thunderbird/15c3b339-88f7-4a86-ab16-e71c58dcb01e/thunderbird-profile-blank.tar.gz",
+            "url": "https://huggingface.co/datasets/tony-pitchblack/ubuntu_osworld_file_cache/resolve/main/thunderbird/15c3b339-88f7-4a86-ab16-e71c58dcb01e/thunderbird-profile-blank.tar.gz",
             "path": "/home/user/Desktop/thunderbird-profile-blank.tar.gz"
           }
         ]
