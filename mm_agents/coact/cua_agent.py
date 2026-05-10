@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import openai
 import requests
+import trafilatura
 from desktop_env.desktop_env import DesktopEnv
 from openai import OpenAI
 from mm_agents.env_loader import load_mm_agents_env
@@ -48,6 +49,9 @@ MAX_RESPONSE_MULTIPLIER = 3
 DEFAULT_WEBPAGE_MAX_CHARS = 12000
 MAX_WEBPAGE_MAX_CHARS = 20000
 REQUEST_TIMEOUT_SECONDS = 20
+DEFAULT_WEBPAGE_BACKEND = "trafilatura"
+FALLBACK_WEBPAGE_BACKEND = "html"
+SUPPORTED_WEBPAGE_BACKENDS = {DEFAULT_WEBPAGE_BACKEND, FALLBACK_WEBPAGE_BACKEND}
 
 READ_WEBPAGE_TOOL = {
     "type": "function",
@@ -59,6 +63,12 @@ READ_WEBPAGE_TOOL = {
             "url": {
                 "type": "string",
                 "description": "The absolute URL of the page to inspect.",
+            },
+            "backend": {
+                "type": "string",
+                "description": "Extraction backend to use. Defaults to trafilatura for concise page text.",
+                "default": DEFAULT_WEBPAGE_BACKEND,
+                "enum": sorted(SUPPORTED_WEBPAGE_BACKENDS),
             },
             "max_chars": {
                 "type": "integer",
@@ -362,7 +372,18 @@ def _extract_title(html: str) -> Optional[str]:
     return unescape(re.sub(r"\s+", " ", match.group(1))).strip() or None
 
 
-def _read_webpage(url: str, max_chars: int = DEFAULT_WEBPAGE_MAX_CHARS) -> Dict[str, Any]:
+def _extract_html_text(html: str) -> str:
+    parser = _HTMLTextExtractor()
+    parser.feed(html)
+    parser.close()
+    return parser.get_text()
+
+
+def read_webpage(
+    url: str,
+    max_chars: int = DEFAULT_WEBPAGE_MAX_CHARS,
+    backend: str = DEFAULT_WEBPAGE_BACKEND,
+) -> Dict[str, Any]:
     cleaned_url = str(url).strip()
     if not cleaned_url:
         return {"url": cleaned_url, "title": None, "content": "", "truncated": False, "error": "Missing URL."}
@@ -373,6 +394,19 @@ def _read_webpage(url: str, max_chars: int = DEFAULT_WEBPAGE_MAX_CHARS) -> Dict[
             "content": "",
             "truncated": False,
             "error": "Only http:// and https:// URLs are supported.",
+        }
+
+    normalized_backend = str(backend or DEFAULT_WEBPAGE_BACKEND).strip().lower()
+    if normalized_backend not in SUPPORTED_WEBPAGE_BACKENDS:
+        return {
+            "url": cleaned_url,
+            "title": None,
+            "content": "",
+            "truncated": False,
+            "error": (
+                f"Unsupported backend: {normalized_backend}. "
+                f"Supported backends: {', '.join(sorted(SUPPORTED_WEBPAGE_BACKENDS))}."
+            ),
         }
 
     try:
@@ -396,10 +430,26 @@ def _read_webpage(url: str, max_chars: int = DEFAULT_WEBPAGE_MAX_CHARS) -> Dict[
             "error": f"Failed to fetch page: {exc}",
         }
 
-    parser = _HTMLTextExtractor()
-    parser.feed(response.text)
-    parser.close()
-    text_content = parser.get_text()
+    text_content = ""
+    effective_backend = normalized_backend
+    if normalized_backend == DEFAULT_WEBPAGE_BACKEND:
+        text_content = (
+            trafilatura.extract(
+                response.text,
+                url=response.url,
+                include_comments=False,
+                include_tables=False,
+                include_links=False,
+                favor_precision=True,
+            )
+            or ""
+        ).strip()
+        if not text_content:
+            effective_backend = FALLBACK_WEBPAGE_BACKEND
+
+    if effective_backend == FALLBACK_WEBPAGE_BACKEND:
+        text_content = _extract_html_text(response.text)
+
     bounded_chars = _bounded_max_chars(max_chars)
     truncated = len(text_content) > bounded_chars
     return {
@@ -408,7 +458,12 @@ def _read_webpage(url: str, max_chars: int = DEFAULT_WEBPAGE_MAX_CHARS) -> Dict[
         "content": text_content[:bounded_chars],
         "truncated": truncated,
         "error": None if text_content else "Could not extract readable page text.",
+        "backend": effective_backend,
     }
+
+
+def _read_webpage(url: str, max_chars: int = DEFAULT_WEBPAGE_MAX_CHARS) -> Dict[str, Any]:
+    return read_webpage(url=url, max_chars=max_chars, backend=DEFAULT_WEBPAGE_BACKEND)
 
 
 def _execute_function_call(item: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
@@ -417,9 +472,10 @@ def _execute_function_call(item: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[s
     if function_name != READ_WEBPAGE_TOOL_NAME:
         result = {"error": f"Unsupported function tool: {function_name}"}
     else:
-        result = _read_webpage(
+        result = read_webpage(
             url=arguments.get("url", ""),
             max_chars=arguments.get("max_chars", DEFAULT_WEBPAGE_MAX_CHARS),
+            backend=arguments.get("backend", DEFAULT_WEBPAGE_BACKEND),
         )
 
     output_item = {

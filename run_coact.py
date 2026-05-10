@@ -69,8 +69,17 @@ After that, if anything is wrong, tell the programmer to modify it.
 """
 
 
-def _build_task_description(enable_coding_agent: bool) -> str:
+def _build_task_description(enable_coding_agent: bool, prompt_mode: str = DEFAULT_MODE) -> str:
     task_description = BASE_TASK_DESCRIPTION
+    if prompt_mode == "inspect-source-first":
+        task_description = task_description.replace(
+            "You can use the following tools to solve the task. You can call the web search tool for research, and you can only call one helper agent per reply:",
+            "You can use the following tools to solve the task. In source-guided mode you should inspect the provided page with read_webpage before delegating, and you can only call one helper agent per reply:",
+        )
+        task_description = task_description.replace(
+            "## Web Search\nUse web_search to gather reliable public instructions before you plan or declare a task infeasible.\nPrefer official documentation and strong Stack Exchange answers when relevant.\nIf the task includes a source URL or a research policy, you must follow it instead of relying on memory.\nSummarize research faithfully and preserve all actionable details needed for execution and verification.\n\n",
+            "## Source Page Inspector\nUse read_webpage to inspect the provided source URL directly before you plan or declare a task infeasible.\nTreat the source page as primary evidence and preserve all actionable details needed for execution and verification.\nOnly rely on helper-agent web search if the source page is missing information required to complete or verify the task.\n\n",
+        )
     if enable_coding_agent:
         task_description = task_description.replace(
             "4. Verify the result and see if it fulfills the user's requirement.",
@@ -114,14 +123,14 @@ def _build_task_instruction(task_config: Dict[str, object], mode: str) -> str:
             f"{instruction}\n\n"
             "# Source-guided policy\n"
             f"Source URL: {source}\n"
-            "- Before planning or taking GUI actions, you must first call the custom web_search tool and use it to inspect the provided source page or source domain.\n"
+            "- Before planning or taking GUI actions, you must first call the custom read_webpage tool on the provided source URL.\n"
             "- Use the source page as the primary guidance for the task.\n"
-            "- Do not declare the task infeasible until you have used the web_search tool for the source-guided lookup and reviewed the returned evidence.\n"
+            "- Do not declare the task infeasible until you have inspected the source page and reviewed the returned evidence.\n"
             "- Preserve all actionable details from the source-guided lookup, including settings, values, value types, restart requirements, verification requirements, and related follow-up changes.\n"
             "- If the source-guided lookup contains multiple actionable details, decide explicitly which are required and which are optional, and keep every required detail in the execution plan.\n"
             "- When delegating, restate every required detail directly in the delegated task instead of relying on a shortened summary.\n"
             "- Form your plan according to the information on the source page, then execute it in the UI.\n"
-            "- Use broader web search only if the source page does not contain enough information to complete the task or verify a missing step."
+            "- If the source page does not contain enough information to complete the task or verify a missing step, delegate the missing research to a helper that has web-search capability."
         )
 
     return instruction
@@ -353,8 +362,9 @@ def process_task(task_info,
             with llm_config:
                 orchestrator = OrchestratorAgent(
                     name="orchestrator",
-                    system_message=_build_task_description(enable_coding_agent),
+                    system_message=_build_task_description(enable_coding_agent, mode),
                     enable_coding_agent=enable_coding_agent,
+                    prompt_mode=mode,
                 )
                 orchestrator_proxy = OrchestratorUserProxyAgent(
                     name="orchestrator_proxy",

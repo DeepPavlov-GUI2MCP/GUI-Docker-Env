@@ -121,7 +121,8 @@ class Emulator:
 # emulator_id -> Emulator
 emulators: Dict[str, Emulator] = dict()
 # token usage/current state
-token_usage: Dict[str, Dict] = dict()  # token -> {"current": int, "limit": int, "emulator_ids": set()}
+token_usage: Dict[str, Dict] = dict()  # token -> {"current": int, "pending": int, "limit": int, "emulator_ids": set(), "pending_ids": set()}
+OSWORLD_DOCKER_IMAGE = "happysixd/osworld-docker"
 
 def _sum_network_bytes(networks):
     rx = 0
@@ -253,12 +254,71 @@ def _ensure_token_initialized(token: str) -> bool:
     if token not in token_usage:
         token_usage[token] = {
             "current": 0,
+            "pending": 0,
             "limit": lim if lim is not None else 0,
             "emulator_ids": set(),
+            "pending_ids": set(),
         }
     else:
         token_usage[token]["limit"] = lim if lim is not None else 0
+        token_usage[token].setdefault("current", 0)
+        token_usage[token].setdefault("pending", 0)
+        token_usage[token].setdefault("emulator_ids", set())
+        token_usage[token].setdefault("pending_ids", set())
     return True
+
+
+def _token_reserved_count(token: str) -> int:
+    usage = token_usage.get(token, {})
+    return int(usage.get("current", 0) or 0) + int(usage.get("pending", 0) or 0)
+
+
+def _is_osworld_container(container) -> bool:
+    try:
+        image_tags = container.image.tags if container.image else []
+        if any(OSWORLD_DOCKER_IMAGE in tag for tag in image_tags):
+            return True
+    except Exception:
+        pass
+    try:
+        image_name = str(container.attrs.get("Config", {}).get("Image", "") or "")
+        return OSWORLD_DOCKER_IMAGE in image_name
+    except Exception:
+        return False
+
+
+def _force_remove_orphaned_osworld_containers() -> None:
+    try:
+        dclient = docker.from_env()
+        containers = [c for c in dclient.containers.list(all=True) if _is_osworld_container(c)]
+    except Exception as e:
+        logger.warning(f"Failed to inspect existing Docker containers during startup cleanup: {e}")
+        return
+
+    removed = 0
+    for container in containers:
+        try:
+            container.remove(force=True)
+            removed += 1
+            logger.info(f"Removed orphaned OSWorld container {container.id[:12]}")
+        except Exception as e:
+            logger.warning(f"Failed to remove orphaned OSWorld container {container.id[:12]}: {e}")
+
+    if removed:
+        logger.info(f"Startup cleanup removed {removed} orphaned OSWorld container(s)")
+
+
+def _reset_runtime_state() -> None:
+    with lock:
+        emulators.clear()
+        for token, lim in (TOKEN_LIMITS or {}).items():
+            token_usage[token] = {
+                "current": 0,
+                "pending": 0,
+                "limit": int(lim),
+                "emulator_ids": set(),
+                "pending_ids": set(),
+            }
 
 @app.route("/ping", methods=["GET"])
 def read_root():
@@ -280,14 +340,19 @@ def start_emulator():
         if not ok:
             return jsonify({"message": f"Unknown or unauthorized token '{token}'", "code": 403}), 403
         current = token_usage[token]["current"]
+        pending = token_usage[token]["pending"]
         limit = token_usage[token]["limit"]
-        if current >= limit:
-            return jsonify({"message": f"Token quota exceeded for '{token}': {current}/{limit}", "code": 429}), 429
+        reserved = current + pending
+        if reserved >= limit:
+            return jsonify({"message": f"Token quota exceeded for '{token}': {reserved}/{limit}", "code": 429}), 429
         
-        # Immediately pre-allocate quota (atomic operation)
-        token_usage[token]["current"] += 1
-        token_usage[token]["emulator_ids"].add(emulator_id)
-        logger.info(f"Pre-allocated quota for token '{token}': {current+1}/{limit}, emulator_id={emulator_id}")
+        # Reserve startup capacity without counting it as a running emulator.
+        token_usage[token]["pending"] += 1
+        token_usage[token]["pending_ids"].add(emulator_id)
+        logger.info(
+            f"Reserved startup slot for token '{token}': "
+            f"current={current}, pending={pending + 1}, limit={limit}, emulator_id={emulator_id}"
+        )
 
     # Start emulator outside the lock
     provider = DockerProvider(region="")
@@ -320,7 +385,14 @@ def start_emulator():
             emulator_id=emulator_id,
             token=token,
         )
-        emulators[emulator_id] = emu
+        with lock:
+            _ensure_token_initialized(token)
+            token_usage[token]["pending_ids"].discard(emulator_id)
+            if token_usage[token]["pending"] > 0:
+                token_usage[token]["pending"] -= 1
+            token_usage[token]["current"] += 1
+            token_usage[token]["emulator_ids"].add(emulator_id)
+            emulators[emulator_id] = emu
 
         logger.info(f"Successfully started emulator {emulator_id} for token '{token}'")
         return jsonify({
@@ -336,12 +408,17 @@ def start_emulator():
             }
         })
     except Exception as e:
-        # Rollback quota on failure
+        # Roll back the startup reservation on failure.
         logger.error(f"Failed to start emulator {emulator_id}: {e}")
         with lock:
-            token_usage[token]["current"] -= 1
-            token_usage[token]["emulator_ids"].discard(emulator_id)
-            logger.info(f"Rolled back quota for token '{token}': {token_usage[token]['current']}/{limit}")
+            _ensure_token_initialized(token)
+            token_usage[token]["pending_ids"].discard(emulator_id)
+            if token_usage[token]["pending"] > 0:
+                token_usage[token]["pending"] -= 1
+            logger.info(
+                f"Rolled back startup slot for token '{token}': "
+                f"current={token_usage[token]['current']}, pending={token_usage[token]['pending']}, limit={limit}"
+            )
         try:
             if provider and provider.container:
                 provider.stop_emulator(path_to_vm=PATH_TO_VM)
@@ -418,8 +495,9 @@ def status():
             {
                 "token": t,
                 "current": v["current"],
+                "pending": v.get("pending", 0),
                 "limit": v["limit"],
-                "available": max(v["limit"] - v["current"], 0),
+                "available": max(v["limit"] - _token_reserved_count(t), 0),
             }
             for t, v in token_usage.items()
         ]
@@ -439,8 +517,10 @@ def tokens():
         result = {
             t: {
                 "current": v["current"],
+                "pending": v.get("pending", 0),
                 "limit": v["limit"],
-                "emulator_count": len(v["emulator_ids"])
+                "emulator_count": len(v["emulator_ids"]),
+                "pending_count": len(v.get("pending_ids", set())),
             }
             for t, v in token_usage.items()
         }
@@ -794,8 +874,18 @@ if __name__ == '__main__':
     with lock:
         for t, lim in (TOKEN_LIMITS or {}).items():
             if t not in token_usage:
-                token_usage[t] = {"current": 0, "limit": int(lim), "emulator_ids": set()}
+                token_usage[t] = {
+                    "current": 0,
+                    "pending": 0,
+                    "limit": int(lim),
+                    "emulator_ids": set(),
+                    "pending_ids": set(),
+                }
             else:
                 token_usage[t]["limit"] = int(lim)
+                token_usage[t].setdefault("pending", 0)
+                token_usage[t].setdefault("pending_ids", set())
     port = int(os.getenv("OSWORLD_SERVER_PORT", _cfg_get("remote_docker_server.port", 50003)))
+    _force_remove_orphaned_osworld_containers()
+    _reset_runtime_state()
     app.run(debug=True, host="0.0.0.0", port=port)

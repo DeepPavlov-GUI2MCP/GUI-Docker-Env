@@ -15,7 +15,15 @@ from .autogen.llm_config import LLMConfig
 from .autogen.agentchat.conversable_agent import ConversableAgent
 from .autogen.agentchat.contrib.multimodal_conversable_agent import MultimodalConversableAgent
 
-from .cua_agent import DEFAULT_CUA_MODEL, _build_openai_client, run_cua, validate_cua_model
+from .cua_agent import (
+    DEFAULT_CUA_MODEL,
+    DEFAULT_WEBPAGE_BACKEND,
+    READ_WEBPAGE_TOOL,
+    _build_openai_client,
+    read_webpage,
+    run_cua,
+    validate_cua_model,
+)
 from .coding_agent import TerminalProxyAgent, CODER_SYSTEM_MESSAGE
 
 
@@ -82,6 +90,14 @@ class OrchestratorAgent(MultimodalConversableAgent):
             },
         },
     }
+    CALL_READ_WEBPAGE_TOOL = {
+        "type": "function",
+        "function": {
+            "name": READ_WEBPAGE_TOOL["name"],
+            "description": READ_WEBPAGE_TOOL["description"],
+            "parameters": READ_WEBPAGE_TOOL["parameters"],
+        },
+    }
 
     CALL_API_SUMMARY_AGENT_TOOL = {
         "type": "function",
@@ -113,6 +129,7 @@ class OrchestratorAgent(MultimodalConversableAgent):
         code_execution_config: Optional[Union[dict[str, Any], Literal[False]]] = False,
         description: Optional[str] = DEFAULT_DESCRIPTION,
         enable_coding_agent: bool = False,
+        prompt_mode: str = "default",
         **kwargs: Any,
     ):
         super().__init__(
@@ -135,7 +152,10 @@ class OrchestratorAgent(MultimodalConversableAgent):
         if self.enable_coding_agent:
             self.update_tool_signature(self.CALL_CODING_AGENT_TOOL, is_remove=False)
         self.update_tool_signature(self.CALL_GUI_AGENT_TOOL, is_remove=False)
-        self.update_tool_signature(self.CALL_WEB_SEARCH_TOOL, is_remove=False)
+        if prompt_mode == "inspect-source-first":
+            self.update_tool_signature(self.CALL_READ_WEBPAGE_TOOL, is_remove=False)
+        else:
+            self.update_tool_signature(self.CALL_WEB_SEARCH_TOOL, is_remove=False)
         # self.assistant.update_tool_signature(self.CALL_API_SUMMARY_AGENT_TOOL, is_remove=False)  # TODO: add this tool later
 
 
@@ -213,8 +233,11 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         )
         function_map = {
             "call_gui_agent": lambda **args: self._call_gui_agent(**args, screen_width=screen_width, screen_height=screen_height),
-            "web_search": lambda **args: self._web_search(**args),
         }
+        if prompt_mode == "inspect-source-first":
+            function_map["read_webpage"] = lambda **args: self._read_webpage(**args)
+        else:
+            function_map["web_search"] = lambda **args: self._web_search(**args)
         if enable_coding_agent:
             function_map["call_coding_agent"] = lambda **args: self._call_coding_agent(**args)
         self.register_function(function_map=function_map)
@@ -375,6 +398,28 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
             lines.append("")
             lines.append("Sources:")
             lines.extend(f"- {title}: {url}" if title else f"- {url}" for title, url in sources[:8])
+        return "\n".join(lines)
+
+    def _read_webpage(
+        self,
+        url: str,
+        max_chars: int = 12000,
+        backend: str = DEFAULT_WEBPAGE_BACKEND,
+    ) -> str:
+        result = read_webpage(url=url, max_chars=max_chars, backend=backend)
+        lines = ["# Webpage inspection"]
+        if result.get("title"):
+            lines.append(f"Title: {result['title']}")
+        if result.get("url"):
+            lines.append(f"URL: {result['url']}")
+        lines.append(f"Backend: {result.get('backend', backend)}")
+        if result.get("error"):
+            lines.extend(["", f"Error: {result['error']}"])
+            return "\n".join(lines)
+        lines.extend(["", result.get("content", "") or "No readable content returned."])
+        if result.get("truncated"):
+            lines.append("")
+            lines.append(f"Truncated to {max_chars} characters.")
         return "\n".join(lines)
     
     def _call_coding_agent(self, task: str, environment: str) -> str:
