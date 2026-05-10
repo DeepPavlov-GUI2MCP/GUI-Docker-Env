@@ -128,7 +128,7 @@ def state_for(result_dirs: list[Path], domain: str, task_id: str) -> tuple[str, 
     return "TODO", "-"
 
 
-def render(tasks: list[tuple[str, str]], result_dirs: list[Path], title: str, refresh_seconds: float) -> str:
+def collect_rows(tasks: list[tuple[str, str]], result_dirs: list[Path]) -> tuple[list[tuple[str, str, str]], dict[str, int]]:
     rows = []
     done = running = todo = err = 0
     for domain, task_id in tasks:
@@ -142,7 +142,21 @@ def render(tasks: list[tuple[str, str]], result_dirs: list[Path], title: str, re
         else:
             todo += 1
         rows.append((task_id, state, result))
+    counts = {"DONE": done, "RUNN": running, "ERR ": err, "TODO": todo}
+    return rows, counts
 
+
+def render(
+    tasks: list[tuple[str, str]],
+    result_dirs: list[Path],
+    title: str,
+    refresh_seconds: float,
+) -> str:
+    rows, counts = collect_rows(tasks, result_dirs)
+    done = counts["DONE"]
+    running = counts["RUNN"]
+    err = counts["ERR "]
+    todo = counts["TODO"]
     id_width = max(len("TASK ID"), max(len(task_id) for task_id, _state, _result in rows))
     state_width = len("STATE")
     result_width = len("RESULT")
