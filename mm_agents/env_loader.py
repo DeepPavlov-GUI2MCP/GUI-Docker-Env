@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Optional
+import os
 
 _ROOT: Optional[Path] = None
 _LOADED = False
@@ -28,4 +29,14 @@ def load_mm_agents_env() -> None:
         load_dotenv(default, override=False)
     if local.is_file():
         load_dotenv(local, override=True)
+    for key in (
+        "OPENAI_BASE_URL",
+        "OPENAI_API_BASE",
+        "UITARS_OPENAI_BASE_URL",
+        "UITARS_OPENAI_BASE_URLS",
+        "AZURE_OPENAI_API_BASE",
+        "AZURE_OPENAI_ENDPOINT",
+    ):
+        if os.environ.get(key, "").strip() == "":
+            os.environ.pop(key, None)
     _LOADED = True
