@@ -25,24 +25,38 @@ DEFAULT_MODE = "default"
 SUPPORTED_MODES = (DEFAULT_MODE, "search-first", "inspect-source-first")
 
 
-TASK_DESCRIPTION = """# Your role
+BASE_TASK_DESCRIPTION = """# Your role
 You are a task solver, you need to complete a computer-using task step-by-step.
 1. Describe the screenshot.
 2. Provide a detailed plan, including a list of user requirements like specific file name, file path, etc.
 3. Follow the following instructions and complete the task with your skills.
     - If you think the task is impossible to complete (no file, wrong environment, etc.), reply with "INFEASIBLE" to end the conversation.
-    - **Do not** do (or let coding/GUI agent do) anything else out of the user's instruction like change the file name. This will make the task fail.
+    - **Do not** do (or let a helper agent do) anything else out of the user's instruction like change the file name. This will make the task fail.
     - Check every screenshot carefully and see if it fulfills the task requirement.
-    - You MUST try the Coding Agent first for file operation tasks like spreadsheet modification.
+    - When research or a source page contains actionable details, preserve all of them in your plan instead of reducing them to a minimal subset.
+    - Treat concrete settings, values, value types, restart requirements, verification requirements, and related follow-up changes as actionable details that must be tracked explicitly.
+    - Before delegating, identify which discovered details are required and which are optional. Do not omit or downgrade a detail unless the evidence clearly says it is optional or irrelevant.
+    - When you delegate to a helper agent, copy every required detail into the delegated task so the helper does not need to reconstruct the plan from memory.
 4. Verify the result and see if it fulfills the user's requirement.
 
 # Your helpers
-You can use the following tools to solve the task. You can call the web search tool for research, and you can only call one of gui agent or coding agent per reply:
+You can use the following tools to solve the task. You can call the web search tool for research, and you can only call one helper agent per reply:
 
 ## Web Search
 Use web_search to gather reliable public instructions before you plan or declare a task infeasible.
 Prefer official documentation and strong Stack Exchange answers when relevant.
 If the task includes a source URL or a research policy, you must follow it instead of relying on memory.
+Summarize research faithfully and preserve all actionable details needed for execution and verification.
+
+## GUI Operator
+Let a GUI agent to solve a subtask you assigned. 
+GUI agent can operate the computer by clicking and typing (but not accurate). 
+When web search is enabled, the GUI agent can also look up app documentation or help pages before taking GUI actions.
+Require a detailed task description.
+When you call GUI agent, it will only have a **20-step** budget to complete your task. Each step is a one-time interaction with OS like mouse click or keyboard typing. Please take this into account when you plan the actions.
+"""
+
+CODING_AGENT_SECTION = """
 
 ## Programmer
 Let a programmer to solve a subtask you assigned. 
@@ -52,15 +66,26 @@ Can use any python package you instructed.
 Will return a summary with the output of the code.
 When letting coding agent to modify the spreadsheet, after the task completed, you MUST make sure EVERY modified value in the spreadsheet is in the desired position (e.g., filled in the expected cell) by a GUI Operator.
 After that, if anything is wrong, tell the programmer to modify it.
-
-## GUI Operator
-Let a GUI agent to solve a subtask you assigned. 
-GUI agent can operate the computer by clicking and typing (but not accurate). 
-When web search is enabled, the GUI agent can also look up app documentation or help pages before taking GUI actions.
-Require a detailed task description.
-When you call GUI agent, it will only have a **20-step** budget to complete your task. Each step is a one-time interaction with OS like mouse click or keyboard typing. Please take this into account when you plan the actions.
-If you let GUI Operator to check the result, you MUST let it close and reopen the file because programmer's result will NOT be updated to the screen. 
 """
+
+
+def _build_task_description(enable_coding_agent: bool) -> str:
+    task_description = BASE_TASK_DESCRIPTION
+    if enable_coding_agent:
+        task_description = task_description.replace(
+            "4. Verify the result and see if it fulfills the user's requirement.",
+            "    - You MUST try the Coding Agent first for file operation tasks like spreadsheet modification.\n"
+            "4. Verify the result and see if it fulfills the user's requirement.",
+        )
+        task_description = task_description.replace(
+            "## GUI Operator",
+            f"{CODING_AGENT_SECTION}\n## GUI Operator",
+        )
+        task_description += (
+            "\nIf you let GUI Operator to check the result, you MUST let it close and reopen the file "
+            "because programmer's result will NOT be updated to the screen.\n"
+        )
+    return task_description
 
 
 def _build_task_instruction(task_config: Dict[str, object], mode: str) -> str:
@@ -75,6 +100,9 @@ def _build_task_instruction(task_config: Dict[str, object], mode: str) -> str:
             "- Prioritize official documentation for the application involved in the task.\n"
             "- Also look for strong Stack Exchange family answers such as Super User, Stack Overflow, or Ask Ubuntu when they are relevant.\n"
             "- Do not declare the task infeasible until you have used the web_search tool and reviewed the returned evidence.\n"
+            "- Preserve all actionable details from the research, including settings, values, value types, restart requirements, verification requirements, and related follow-up changes.\n"
+            "- If the research contains multiple actionable details, decide explicitly which are required and which are optional, and keep every required detail in the execution plan.\n"
+            "- When delegating, restate every required detail directly in the delegated task instead of relying on a shortened summary.\n"
             "- Only after collecting relevant instructions should you form a plan and execute the task.\n"
             "- Do not rely on any hidden task source URL in this mode. Work only from your own search results and the observed UI."
         )
@@ -89,6 +117,9 @@ def _build_task_instruction(task_config: Dict[str, object], mode: str) -> str:
             "- Before planning or taking GUI actions, you must first call the custom web_search tool and use it to inspect the provided source page or source domain.\n"
             "- Use the source page as the primary guidance for the task.\n"
             "- Do not declare the task infeasible until you have used the web_search tool for the source-guided lookup and reviewed the returned evidence.\n"
+            "- Preserve all actionable details from the source-guided lookup, including settings, values, value types, restart requirements, verification requirements, and related follow-up changes.\n"
+            "- If the source-guided lookup contains multiple actionable details, decide explicitly which are required and which are optional, and keep every required detail in the execution plan.\n"
+            "- When delegating, restate every required detail directly in the delegated task instead of relying on a shortened summary.\n"
             "- Form your plan according to the information on the source page, then execute it in the UI.\n"
             "- Use broader web search only if the source page does not contain enough information to complete the task or verify a missing step."
         )
@@ -124,6 +155,12 @@ def config() -> argparse.Namespace:
     parser.add_argument("--orchestrator_model", type=str, default="o3")
     parser.add_argument("--coding_model", type=str, default="o4-mini")
     parser.add_argument("--cua_model", type=str, default=os.environ.get("OPENAI_CUA_MODEL", DEFAULT_CUA_MODEL))
+    parser.add_argument(
+        "--enable_coding_agent",
+        action="store_true",
+        default=False,
+        help="Expose the coding agent tool to the CoAct orchestrator.",
+    )
     parser.add_argument(
         "--mode",
         type=str,
@@ -282,6 +319,7 @@ def process_task(task_info,
                 cua_model=DEFAULT_CUA_MODEL,
                 mode=DEFAULT_MODE,
                 enable_web_search=False,
+                enable_coding_agent=False,
                 save_dir='results',
                 orchestrator_max_steps=15,
                 cua_max_steps=25,
@@ -315,7 +353,8 @@ def process_task(task_info,
             with llm_config:
                 orchestrator = OrchestratorAgent(
                     name="orchestrator",
-                    system_message=TASK_DESCRIPTION
+                    system_message=_build_task_description(enable_coding_agent),
+                    enable_coding_agent=enable_coding_agent,
                 )
                 orchestrator_proxy = OrchestratorUserProxyAgent(
                     name="orchestrator_proxy",
@@ -334,6 +373,7 @@ def process_task(task_info,
                     cua_max_steps=cua_max_steps,
                     coding_max_steps=coding_max_steps,
                     enable_web_search=enable_web_search,
+                    enable_coding_agent=enable_coding_agent,
                     region=region,
                     client_password=client_password,
                     user_instruction=task_instruction,
@@ -479,6 +519,7 @@ if __name__ == "__main__":
                                cua_model=args.cua_model,
                                mode=args.mode,
                                enable_web_search=args.enable_web_search,
+                               enable_coding_agent=args.enable_coding_agent,
                                orchestrator_model=args.orchestrator_model,
                                oai_config_list=oai_config_list,
                                orchestrator_max_steps=args.orchestrator_max_steps,
