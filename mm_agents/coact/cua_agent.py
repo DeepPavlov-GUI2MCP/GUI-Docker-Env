@@ -1,10 +1,15 @@
 import base64
+import json
 import logging
 import os
+import re
 import time
+from html import unescape
+from html.parser import HTMLParser
 from typing import Any, Dict, List, Optional, Tuple
 
 import openai
+import requests
 from desktop_env.desktop_env import DesktopEnv
 from openai import OpenAI
 from mm_agents.env_loader import load_mm_agents_env
@@ -16,9 +21,11 @@ logger = logging.getLogger("desktopenv")
 GPT4O_INPUT_PRICE_PER_1M_TOKENS = 3.00
 GPT4O_OUTPUT_PRICE_PER_1M_TOKENS = 12.00
 DEFAULT_CUA_MODEL = "gpt-5.5"
+DEFAULT_PROMPT_MODE = "default"
 
-PROMPT_TEMPLATE = """# Task
+BASE_PROMPT_TEMPLATE = """# Task
 {instruction}
+{source_block}
 
 # Hints
 - Sudo password is "{CLIENT_PASSWORD}".
@@ -26,15 +33,108 @@ PROMPT_TEMPLATE = """# Task
 - Do not use shortcut to reload the application except for the browser, just close and reopen.
 - If "The document has been changed by others" pops out, you should click "cancel" and reopen the file.
 - You may use the built-in web search tool to look up documentation for the current app, site, or workflow when that helps you complete the task.
+- If the source page is directly relevant, inspect it with `read_webpage` before you act in the UI.
 - Prefer focused documentation lookups over broad browsing, and use normal GUI actions to apply what you learned.
+{mode_hints}
 - If you have completed the user task, reply with the information you want the user to know along with 'TERMINATE'.
 - If you don't know how to continue the task, reply your concern or question along with 'IDK'.
 """.strip()
 DEFAULT_REPLY = "Please continue the user task. If you have completed the user task, reply with the information you want the user to know along with 'TERMINATE'."
 SEARCH_TOOL_TYPE = "web_search"
+READ_WEBPAGE_TOOL_NAME = "read_webpage"
 SUPPORTED_CUA_MODEL_PREFIXES = ("gpt-5",)
 LEGACY_CUA_MODELS = {"computer-use-preview"}
 MAX_RESPONSE_MULTIPLIER = 3
+DEFAULT_WEBPAGE_MAX_CHARS = 12000
+MAX_WEBPAGE_MAX_CHARS = 20000
+REQUEST_TIMEOUT_SECONDS = 20
+
+READ_WEBPAGE_TOOL = {
+    "type": "function",
+    "name": READ_WEBPAGE_TOOL_NAME,
+    "description": "Fetch a webpage by URL and return extracted text content for planning.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "url": {
+                "type": "string",
+                "description": "The absolute URL of the page to inspect.",
+            },
+            "max_chars": {
+                "type": "integer",
+                "description": "Maximum number of extracted characters to return.",
+                "default": DEFAULT_WEBPAGE_MAX_CHARS,
+                "minimum": 500,
+                "maximum": MAX_WEBPAGE_MAX_CHARS,
+            },
+        },
+        "required": ["url"],
+    },
+}
+
+
+class _HTMLTextExtractor(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.parts: List[str] = []
+        self._skip_depth = 0
+
+    def handle_starttag(self, tag: str, attrs: List[Tuple[str, Optional[str]]]) -> None:
+        del attrs
+        if tag in {"script", "style", "noscript"}:
+            self._skip_depth += 1
+        elif tag in {"p", "div", "section", "article", "li", "tr", "td", "th", "h1", "h2", "h3", "h4", "h5", "h6", "br"}:
+            self.parts.append("\n")
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in {"script", "style", "noscript"} and self._skip_depth > 0:
+            self._skip_depth -= 1
+        elif tag in {"p", "div", "section", "article", "li", "tr", "td", "th", "h1", "h2", "h3", "h4", "h5", "h6", "br"}:
+            self.parts.append("\n")
+
+    def handle_data(self, data: str) -> None:
+        if self._skip_depth == 0 and data.strip():
+            self.parts.append(data)
+
+    def get_text(self) -> str:
+        text = unescape(" ".join(self.parts))
+        text = re.sub(r"\r", "\n", text)
+        text = re.sub(r"[ \t\f\v]+", " ", text)
+        text = re.sub(r"\n\s*\n+", "\n\n", text)
+        return text.strip()
+
+
+def _mode_hints(prompt_mode: str) -> str:
+    if prompt_mode == "search-first":
+        return (
+            "- In this task mode, you must always search the web first before planning or taking GUI actions.\n"
+            "- Search for official documentation and relevant Stack Exchange answers for the application and workflow in the task.\n"
+            "- Only after you have gathered relevant instructions should you form a plan and execute it in the UI."
+        )
+    if prompt_mode == "inspect-source-first":
+        return (
+            "- In this task mode, you must first inspect the provided source page and derive instructions from it before planning or taking GUI actions.\n"
+            "- Treat the source page as your primary guidance.\n"
+            "- Use broader web search only if the source page is missing information needed to complete or verify the task."
+        )
+    return "- Use web search only when it materially helps you complete the task."
+
+
+def _build_prompt(
+    instruction: str,
+    client_password: str,
+    prompt_mode: str = DEFAULT_PROMPT_MODE,
+    task_source: Optional[str] = None,
+) -> str:
+    source_block = ""
+    if prompt_mode == "inspect-source-first" and task_source and "Source URL:" not in instruction:
+        source_block = f"\n# Source URL\n{task_source}\n"
+    return BASE_PROMPT_TEMPLATE.format(
+        instruction=instruction,
+        source_block=source_block,
+        CLIENT_PASSWORD=client_password,
+        mode_hints=_mode_hints(prompt_mode),
+    )
 
 
 def validate_cua_model(cua_model: str) -> None:
@@ -230,7 +330,117 @@ def _build_cua_tools(enable_web_search: bool) -> List[Dict[str, Any]]:
     tools: List[Dict[str, Any]] = [{"type": "computer"}]
     if enable_web_search:
         tools.append({"type": SEARCH_TOOL_TYPE, "search_context_size": "medium"})
+        tools.append(READ_WEBPAGE_TOOL)
     return tools
+
+
+def _parse_function_arguments(arguments: Any) -> Dict[str, Any]:
+    if isinstance(arguments, dict):
+        return arguments
+    if isinstance(arguments, str):
+        try:
+            parsed = json.loads(arguments)
+        except json.JSONDecodeError:
+            return {}
+        if isinstance(parsed, dict):
+            return parsed
+    return {}
+
+
+def _bounded_max_chars(value: Any) -> int:
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError):
+        parsed = DEFAULT_WEBPAGE_MAX_CHARS
+    return max(500, min(parsed, MAX_WEBPAGE_MAX_CHARS))
+
+
+def _extract_title(html: str) -> Optional[str]:
+    match = re.search(r"<title[^>]*>(.*?)</title>", html, flags=re.IGNORECASE | re.DOTALL)
+    if not match:
+        return None
+    return unescape(re.sub(r"\s+", " ", match.group(1))).strip() or None
+
+
+def _read_webpage(url: str, max_chars: int = DEFAULT_WEBPAGE_MAX_CHARS) -> Dict[str, Any]:
+    cleaned_url = str(url).strip()
+    if not cleaned_url:
+        return {"url": cleaned_url, "title": None, "content": "", "truncated": False, "error": "Missing URL."}
+    if not cleaned_url.startswith(("http://", "https://")):
+        return {
+            "url": cleaned_url,
+            "title": None,
+            "content": "",
+            "truncated": False,
+            "error": "Only http:// and https:// URLs are supported.",
+        }
+
+    try:
+        response = requests.get(
+            cleaned_url,
+            headers={
+                "User-Agent": (
+                    "Mozilla/5.0 (X11; Linux x86_64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+                )
+            },
+            timeout=REQUEST_TIMEOUT_SECONDS,
+        )
+        response.raise_for_status()
+    except requests.RequestException as exc:
+        return {
+            "url": cleaned_url,
+            "title": None,
+            "content": "",
+            "truncated": False,
+            "error": f"Failed to fetch page: {exc}",
+        }
+
+    parser = _HTMLTextExtractor()
+    parser.feed(response.text)
+    parser.close()
+    text_content = parser.get_text()
+    bounded_chars = _bounded_max_chars(max_chars)
+    truncated = len(text_content) > bounded_chars
+    return {
+        "url": response.url,
+        "title": _extract_title(response.text),
+        "content": text_content[:bounded_chars],
+        "truncated": truncated,
+        "error": None if text_content else "Could not extract readable page text.",
+    }
+
+
+def _execute_function_call(item: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    function_name = item.get("name")
+    arguments = _parse_function_arguments(item.get("arguments"))
+    if function_name != READ_WEBPAGE_TOOL_NAME:
+        result = {"error": f"Unsupported function tool: {function_name}"}
+    else:
+        result = _read_webpage(
+            url=arguments.get("url", ""),
+            max_chars=arguments.get("max_chars", DEFAULT_WEBPAGE_MAX_CHARS),
+        )
+
+    output_item = {
+        "type": "function_call_output",
+        "call_id": item["call_id"],
+        "output": json.dumps(result),
+    }
+    tool_event = {
+        "type": "function_call",
+        "tool_name": function_name,
+        "call_id": item.get("call_id"),
+        "arguments": arguments,
+        "output_preview": {
+            "url": result.get("url"),
+            "title": result.get("title"),
+            "truncated": result.get("truncated"),
+            "error": result.get("error"),
+            "content_chars": len(result.get("content", "")),
+        },
+    }
+    return output_item, tool_event
 
 
 def _actions_from_computer_call(action_call: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -350,6 +560,8 @@ def run_cua(
     sleep_after_execution: float = 0.3,
     truncate_history_inputs: int = 100,
     client_password: str = "",
+    prompt_mode: str = DEFAULT_PROMPT_MODE,
+    task_source: Optional[str] = None,
 ) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]]]:
     client = _build_openai_client()
     validate_cua_model(cua_model)
@@ -363,7 +575,15 @@ def run_cua(
     history_inputs = [{
         "role": "user",
         "content": [
-            {"type": "input_text", "text": PROMPT_TEMPLATE.format(instruction=instruction, CLIENT_PASSWORD=client_password)},
+            {
+                "type": "input_text",
+                "text": _build_prompt(
+                    instruction=instruction,
+                    client_password=client_password,
+                    prompt_mode=prompt_mode,
+                    task_source=task_source,
+                ),
+            },
             {"type": "input_image", "image_url": f"data:image/png;base64,{screenshot_b64}", "detail": "original"},
         ],
     }]
@@ -409,6 +629,14 @@ def run_cua(
                         "action": item.get("action"),
                     }
                 )
+                continue
+
+            if item_type == "function_call":
+                follow_up_item, tool_event = _execute_function_call(item)
+                tool_events.append(tool_event)
+                history_inputs.append(_sanitize_images(follow_up_item))
+                follow_up_inputs.append(follow_up_item)
+                should_continue = True
                 continue
 
             if item_type == "computer_call":

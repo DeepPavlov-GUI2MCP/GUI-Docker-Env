@@ -21,6 +21,8 @@ import sys
 load_mm_agents_env()
 
 DEFAULT_OAI_CONFIG_PATH = str((Path(__file__).resolve().parent / "mm_agents" / "coact" / "OAI_CONFIG_LIST").resolve())
+DEFAULT_MODE = "default"
+SUPPORTED_MODES = (DEFAULT_MODE, "search-first", "inspect-source-first")
 
 
 TASK_DESCRIPTION = """# Your role
@@ -35,7 +37,12 @@ You are a task solver, you need to complete a computer-using task step-by-step.
 4. Verify the result and see if it fulfills the user's requirement.
 
 # Your helpers
-You can use the following tools to solve the task. You can only call one of gui agent or coding agent per reply:
+You can use the following tools to solve the task. You can call the web search tool for research, and you can only call one of gui agent or coding agent per reply:
+
+## Web Search
+Use web_search to gather reliable public instructions before you plan or declare a task infeasible.
+Prefer official documentation and strong Stack Exchange answers when relevant.
+If the task includes a source URL or a research policy, you must follow it instead of relying on memory.
 
 ## Programmer
 Let a programmer to solve a subtask you assigned. 
@@ -54,6 +61,48 @@ Require a detailed task description.
 When you call GUI agent, it will only have a **20-step** budget to complete your task. Each step is a one-time interaction with OS like mouse click or keyboard typing. Please take this into account when you plan the actions.
 If you let GUI Operator to check the result, you MUST let it close and reopen the file because programmer's result will NOT be updated to the screen. 
 """
+
+
+def _build_task_instruction(task_config: Dict[str, object], mode: str) -> str:
+    instruction = str(task_config["instruction"]).strip()
+    source = str(task_config.get("source", "")).strip()
+
+    if mode == "search-first":
+        return (
+            f"{instruction}\n\n"
+            "# Research policy\n"
+            "- Before planning or taking GUI actions, you must first call the custom web_search tool to look for relevant instructions on the internet.\n"
+            "- Prioritize official documentation for the application involved in the task.\n"
+            "- Also look for strong Stack Exchange family answers such as Super User, Stack Overflow, or Ask Ubuntu when they are relevant.\n"
+            "- Do not declare the task infeasible until you have used the web_search tool and reviewed the returned evidence.\n"
+            "- Only after collecting relevant instructions should you form a plan and execute the task.\n"
+            "- Do not rely on any hidden task source URL in this mode. Work only from your own search results and the observed UI."
+        )
+
+    if mode == "inspect-source-first":
+        if not source:
+            raise ValueError("Mode 'inspect-source-first' requires the task JSON to include a non-empty 'source' URL.")
+        return (
+            f"{instruction}\n\n"
+            "# Source-guided policy\n"
+            f"Source URL: {source}\n"
+            "- Before planning or taking GUI actions, you must first call the custom web_search tool and use it to inspect the provided source page or source domain.\n"
+            "- Use the source page as the primary guidance for the task.\n"
+            "- Do not declare the task infeasible until you have used the web_search tool for the source-guided lookup and reviewed the returned evidence.\n"
+            "- Form your plan according to the information on the source page, then execute it in the UI.\n"
+            "- Use broader web search only if the source page does not contain enough information to complete the task or verify a missing step."
+        )
+
+    return instruction
+
+
+def _build_initial_message(task_instruction: str) -> str:
+    return (
+        f"{task_instruction}\n"
+        "Check my computer screenshot and describe it first. If this task is possible to complete, please complete it on my computer. "
+        'If not, reply with "INFEASIBLE" to end the conversation.\n'
+        "I will not provide further information to you."
+    )
 
 
 def config() -> argparse.Namespace:
@@ -75,6 +124,13 @@ def config() -> argparse.Namespace:
     parser.add_argument("--orchestrator_model", type=str, default="o3")
     parser.add_argument("--coding_model", type=str, default="o4-mini")
     parser.add_argument("--cua_model", type=str, default=os.environ.get("OPENAI_CUA_MODEL", DEFAULT_CUA_MODEL))
+    parser.add_argument(
+        "--mode",
+        type=str,
+        choices=SUPPORTED_MODES,
+        default=DEFAULT_MODE,
+        help="Prompt strategy for the GUI search path.",
+    )
     parser.add_argument(
         "--enable_web_search",
         "--enable_duckduckgo_search",
@@ -224,6 +280,7 @@ def process_task(task_info,
                 orchestrator_model="o3",
                 coding_model='o4-mini',
                 cua_model=DEFAULT_CUA_MODEL,
+                mode=DEFAULT_MODE,
                 enable_web_search=False,
                 save_dir='results',
                 orchestrator_max_steps=15,
@@ -249,7 +306,9 @@ def process_task(task_info,
         os.makedirs(history_save_dir)
     
     task_config = json.load(open(cfg))
+    task_instruction = _build_task_instruction(task_config, mode)
     retry = 0
+    orchestrator_proxy = None
 
     while True:
         try:
@@ -277,7 +336,13 @@ def process_task(task_info,
                     enable_web_search=enable_web_search,
                     region=region,
                     client_password=client_password,
-                    user_instruction=task_config["instruction"]
+                    user_instruction=task_instruction,
+                    prompt_mode=mode,
+                    task_source=(
+                        str(task_config.get("source", "")).strip() or None
+                        if mode == "inspect-source-first"
+                        else None
+                    ),
                 )
 
             orchestrator_proxy.reset(task_config=task_config)
@@ -289,9 +354,7 @@ def process_task(task_info,
                 
             orchestrator_proxy.initiate_chat(
                 recipient=orchestrator,
-                message=f"""{task_config["instruction"]}
-Check my computer screenshot and describe it first. If this task is possible to complete, please complete it on my computer. If not, reply with "INFEASIBLE" to end the conversation.
-I will not provide further information to you.""" + "<img data:image/png;base64," + base64.b64encode(screenshot).decode("utf-8") + ">",
+                message=_build_initial_message(task_instruction) + "<img data:image/png;base64," + base64.b64encode(screenshot).decode("utf-8") + ">",
                 max_turns=orchestrator_max_steps
             )
             
@@ -346,7 +409,7 @@ I will not provide further information to you.""" + "<img data:image/png;base64,
             with open(os.path.join(history_save_dir, f'err_reason.txt'), "w") as f:
                 f.write(f"Fatal error: {str(e)}")
         finally:
-            if orchestrator_proxy.env is not None:
+            if orchestrator_proxy is not None and orchestrator_proxy.env is not None:
                 orchestrator_proxy.env.close()
     
     return domain, score
@@ -355,6 +418,8 @@ I will not provide further information to you.""" + "<img data:image/png;base64,
 if __name__ == "__main__":
     args = config()
     validate_cua_model(args.cua_model)
+    if args.mode != DEFAULT_MODE:
+        args.enable_web_search = True
     oai_config_list = _load_oai_config_list(args.oai_config_path)
 
     tasks = []
@@ -412,6 +477,7 @@ if __name__ == "__main__":
                                save_dir=args.result_dir,
                                coding_model=args.coding_model,
                                cua_model=args.cua_model,
+                               mode=args.mode,
                                enable_web_search=args.enable_web_search,
                                orchestrator_model=args.orchestrator_model,
                                oai_config_list=oai_config_list,

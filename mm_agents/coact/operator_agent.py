@@ -5,14 +5,17 @@ import base64
 import json
 import os
 import traceback
+from urllib.parse import urlparse
 from typing import Any, Callable, Literal, Optional, Union
+
+from openai import OpenAI
 from desktop_env.desktop_env import DesktopEnv
 
 from .autogen.llm_config import LLMConfig
 from .autogen.agentchat.conversable_agent import ConversableAgent
 from .autogen.agentchat.contrib.multimodal_conversable_agent import MultimodalConversableAgent
 
-from .cua_agent import DEFAULT_CUA_MODEL, run_cua, validate_cua_model
+from .cua_agent import DEFAULT_CUA_MODEL, _build_openai_client, run_cua, validate_cua_model
 from .coding_agent import TerminalProxyAgent, CODER_SYSTEM_MESSAGE
 
 
@@ -53,6 +56,29 @@ class OrchestratorAgent(MultimodalConversableAgent):
                         "description": "[REQUIRED] The environment description of the coding agent. It should be a detailed description of the system state, including the opened files, the running processes, etc.",
                     }
                 },
+            },
+        },
+    }
+
+    CALL_WEB_SEARCH_TOOL = {
+        "type": "function",
+        "function": {
+            "name": "web_search",
+            "description": """Search the public web for task-relevant instructions, documentation, and troubleshooting guidance. Use this before deciding a task is infeasible when research is required.""",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "[REQUIRED] The search query with task and app context.",
+                    },
+                    "allowed_domains": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Optional list of domains to restrict results to, such as official docs or Stack Exchange sites.",
+                    },
+                },
+                "required": ["query"],
             },
         },
     }
@@ -106,6 +132,7 @@ class OrchestratorAgent(MultimodalConversableAgent):
 
         self.update_tool_signature(self.CALL_CODING_AGENT_TOOL, is_remove=False)
         self.update_tool_signature(self.CALL_GUI_AGENT_TOOL, is_remove=False)
+        self.update_tool_signature(self.CALL_WEB_SEARCH_TOOL, is_remove=False)
         # self.assistant.update_tool_signature(self.CALL_API_SUMMARY_AGENT_TOOL, is_remove=False)  # TODO: add this tool later
 
 
@@ -163,6 +190,8 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         client_password: str = "",
         user_instruction: str = "",
         enable_web_search: bool = False,
+        prompt_mode: str = "default",
+        task_source: Optional[str] = None,
     ):
         description = (
             description if description is not None else self.DEFAULT_USER_PROXY_AGENT_DESCRIPTIONS[human_input_mode]
@@ -182,6 +211,7 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
             function_map={
                 "call_gui_agent": lambda **args: self._call_gui_agent(**args, screen_width=screen_width, screen_height=screen_height),
                 "call_coding_agent": lambda **args: self._call_coding_agent(**args),
+                "web_search": lambda **args: self._web_search(**args),
             }
         )
         self._code_execution_config = code_execution_config
@@ -223,6 +253,10 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         validate_cua_model(gui_model)
         self.gui_model = gui_model
         self.enable_web_search = enable_web_search
+        self.prompt_mode = prompt_mode
+        self.task_source = task_source
+        self.web_search_client: OpenAI = _build_openai_client()
+        self.web_search_model = os.environ.get("OPENAI_WEB_SEARCH_MODEL", self.gui_model)
 
     def reset(self, task_config: dict[str, Any]):
         obs = self.env.reset(task_config=task_config)
@@ -247,6 +281,8 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
                 sleep_after_execution=self.cua_config["sleep_after_execution"],
                 truncate_history_inputs=self.cua_config["truncate_history_inputs"],
                 client_password=self.client_password,
+                prompt_mode=self.prompt_mode,
+                task_source=self.task_source,
             )
             screenshot = self.env.controller.get_screenshot()
 
@@ -274,6 +310,67 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         else:
             result = f"I didn't complete the task and I have to go. Now I'm working on \"{result}\", please check the current screenshot."
         return f"# Response from GUI agent: {result}<img data:image/png;base64,{base64.b64encode(screenshot).decode('utf-8')}>"
+
+    def _web_search(self, query: str, allowed_domains: Optional[list[str]] = None) -> str:
+        cleaned_query = str(query).strip()
+        if not cleaned_query:
+            return "# Web search error: missing query."
+
+        normalized_domains = [
+            domain.strip().lower()
+            for domain in (allowed_domains or [])
+            if isinstance(domain, str) and domain.strip()
+        ]
+        if self.prompt_mode == "inspect-source-first" and self.task_source:
+            source_domain = urlparse(self.task_source).netloc.strip().lower()
+            if source_domain and source_domain not in normalized_domains:
+                normalized_domains.insert(0, source_domain)
+
+        tool: dict[str, Any] = {"type": "web_search", "search_context_size": "medium"}
+        if normalized_domains:
+            tool["filters"] = {"allowed_domains": normalized_domains}
+
+        try:
+            response = self.web_search_client.responses.create(
+                model=self.web_search_model,
+                tools=[tool],
+                input=cleaned_query,
+                include=["web_search_call.action.sources"],
+            )
+        except Exception as exc:
+            return f"# Web search error: {type(exc).__name__}: {exc}"
+
+        response_dump = response.model_dump(mode="json") if hasattr(response, "model_dump") else {}
+        response_text = getattr(response, "output_text", "").strip()
+        sources: list[tuple[str, str]] = []
+
+        for item in response_dump.get("output", []):
+            if item.get("type") == "web_search_call":
+                for source in item.get("action", {}).get("sources", []) or []:
+                    title = str(source.get("title") or source.get("url") or "").strip()
+                    url = str(source.get("url") or "").strip()
+                    if url and (title, url) not in sources:
+                        sources.append((title, url))
+            if item.get("type") == "message":
+                for content_item in item.get("content", []) or []:
+                    if content_item.get("type") != "output_text":
+                        continue
+                    for annotation in content_item.get("annotations", []) or []:
+                        if annotation.get("type") != "url_citation":
+                            continue
+                        title = str(annotation.get("title") or annotation.get("url") or "").strip()
+                        url = str(annotation.get("url") or "").strip()
+                        if url and (title, url) not in sources:
+                            sources.append((title, url))
+
+        lines = ["# Web search result", response_text or "No text summary returned."]
+        if normalized_domains:
+            lines.extend(["", f"Restricted domains: {', '.join(normalized_domains)}"])
+        if sources:
+            lines.append("")
+            lines.append("Sources:")
+            lines.extend(f"- {title}: {url}" if title else f"- {url}" for title, url in sources[:8])
+        return "\n".join(lines)
     
     def _call_coding_agent(self, task: str, environment: str) -> str:
         """Run a coding agent to solve the task."""
