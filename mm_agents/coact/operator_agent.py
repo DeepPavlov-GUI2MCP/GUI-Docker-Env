@@ -112,6 +112,7 @@ class OrchestratorAgent(MultimodalConversableAgent):
         human_input_mode: Optional[str] = "NEVER",
         code_execution_config: Optional[Union[dict[str, Any], Literal[False]]] = False,
         description: Optional[str] = DEFAULT_DESCRIPTION,
+        enable_coding_agent: bool = False,
         **kwargs: Any,
     ):
         super().__init__(
@@ -130,7 +131,9 @@ class OrchestratorAgent(MultimodalConversableAgent):
         else:
             self.update_system_message(system_message)
 
-        self.update_tool_signature(self.CALL_CODING_AGENT_TOOL, is_remove=False)
+        self.enable_coding_agent = enable_coding_agent
+        if self.enable_coding_agent:
+            self.update_tool_signature(self.CALL_CODING_AGENT_TOOL, is_remove=False)
         self.update_tool_signature(self.CALL_GUI_AGENT_TOOL, is_remove=False)
         self.update_tool_signature(self.CALL_WEB_SEARCH_TOOL, is_remove=False)
         # self.assistant.update_tool_signature(self.CALL_API_SUMMARY_AGENT_TOOL, is_remove=False)  # TODO: add this tool later
@@ -190,6 +193,7 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         client_password: str = "",
         user_instruction: str = "",
         enable_web_search: bool = False,
+        enable_coding_agent: bool = False,
         prompt_mode: str = "default",
         task_source: Optional[str] = None,
     ):
@@ -207,13 +211,13 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
             default_auto_reply=default_auto_reply.format(user_instruction=user_instruction),
             description=description,
         )
-        self.register_function(
-            function_map={
-                "call_gui_agent": lambda **args: self._call_gui_agent(**args, screen_width=screen_width, screen_height=screen_height),
-                "call_coding_agent": lambda **args: self._call_coding_agent(**args),
-                "web_search": lambda **args: self._web_search(**args),
-            }
-        )
+        function_map = {
+            "call_gui_agent": lambda **args: self._call_gui_agent(**args, screen_width=screen_width, screen_height=screen_height),
+            "web_search": lambda **args: self._web_search(**args),
+        }
+        if enable_coding_agent:
+            function_map["call_coding_agent"] = lambda **args: self._call_coding_agent(**args)
+        self.register_function(function_map=function_map)
         self._code_execution_config = code_execution_config
         self.cua_config = {
             "max_steps": cua_max_steps,
@@ -253,6 +257,7 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         validate_cua_model(gui_model)
         self.gui_model = gui_model
         self.enable_web_search = enable_web_search
+        self.enable_coding_agent = enable_coding_agent
         self.prompt_mode = prompt_mode
         self.task_source = task_source
         self.web_search_client: OpenAI = _build_openai_client()
@@ -374,6 +379,8 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
     
     def _call_coding_agent(self, task: str, environment: str) -> str:
         """Run a coding agent to solve the task."""
+        if not self.enable_coding_agent:
+            return "# Coding agent is disabled for this run."
         default_auto_reply = "I'm a code interpreter and I can only execute your code or end the conversation. If you think the problem is solved, please reply me only with 'TERMINATE'."
         try:
             screenshot = self.env.controller.get_screenshot()
