@@ -8,6 +8,10 @@ from typing import Any, Dict, List, Tuple
 import openai
 from desktop_env.desktop_env import DesktopEnv
 from openai import OpenAI  # pip install --upgrade openai>=1.30
+from mm_agents.env_loader import load_mm_agents_env
+from mm_agents.coact.autogen.tools.experimental.duckduckgo.duckduckgo_search import _duckduckgo_search
+
+load_mm_agents_env()
 
 logger = logging.getLogger("desktopenv")
 
@@ -22,10 +26,35 @@ PROMPT_TEMPLATE = """# Task
 - Keep the windows/applications opened at the end of the task.
 - Do not use shortcut to reload the application except for the browser, just close and reopen.
 - If "The document has been changed by others" pops out, you should click "cancel" and reopen the file.
+- You may use `duckduckgo_search` to look up documentation for the current app, site, or workflow when that helps you complete the task.
+- Prefer focused documentation lookups over broad browsing, and use normal GUI actions to apply what you learned.
 - If you have completed the user task, reply with the information you want the user to know along with 'TERMINATE'.
 - If you don't know how to continue the task, reply your concern or question along with 'IDK'.
 """.strip()
 DEFAULT_REPLY = "Please continue the user task. If you have completed the user task, reply with the information you want the user to know along with 'TERMINATE'."
+
+DUCKDUCKGO_SEARCH_TOOL = {
+    "type": "function",
+    "name": "duckduckgo_search",
+    "description": "Search DuckDuckGo for app documentation, help pages, or task-relevant reference material.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "query": {
+                "type": "string",
+                "description": "Targeted search query for documentation related to the current app or task.",
+            },
+            "num_results": {
+                "type": "integer",
+                "description": "Maximum number of search results to return.",
+                "default": 5,
+                "minimum": 1,
+                "maximum": 10,
+            },
+        },
+        "required": ["query"],
+    },
+}
 
 
 def _cua_to_pyautogui(action) -> str:
@@ -101,23 +130,94 @@ def _to_input_items(output_items: list) -> list:
     return cleaned  # keep just the most recent 50 items
 
 
+def _build_openai_client() -> OpenAI:
+    api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("OPENAI_API_KEY_CUA")
+    base_url = os.environ.get("OPENAI_BASE_URL")
+    kwargs: Dict[str, Any] = {}
+    if base_url:
+        kwargs["base_url"] = base_url
+    if api_key:
+        kwargs["api_key"] = api_key
+    elif base_url:
+        kwargs["api_key"] = "EMPTY"
+    return OpenAI(**kwargs)
+
+
+def _build_cua_tools(
+    screen_width: int,
+    screen_height: int,
+    environment: str,
+    enable_duckduckgo_search: bool,
+) -> List[Dict[str, Any]]:
+    tools: List[Dict[str, Any]] = [{
+        "type": "computer_use_preview",
+        "display_width": screen_width,
+        "display_height": screen_height,
+        "environment": environment,
+    }]
+    if enable_duckduckgo_search:
+        tools.append(DUCKDUCKGO_SEARCH_TOOL)
+    return tools
+
+
+def _parse_tool_arguments(arguments: Any) -> Dict[str, Any]:
+    if isinstance(arguments, dict):
+        return arguments
+    if isinstance(arguments, str):
+        try:
+            parsed = json.loads(arguments)
+        except json.JSONDecodeError:
+            return {}
+        if isinstance(parsed, dict):
+            return parsed
+    return {}
+
+
+def _execute_function_tool(action_call: Dict[str, Any]) -> str:
+    name = action_call["name"]
+    args = _parse_tool_arguments(action_call.get("arguments", {}))
+    if name != "duckduckgo_search":
+        return json.dumps({"error": f"Unsupported function tool: {name}"})
+
+    query = str(args.get("query", "")).strip()
+    if not query:
+        return json.dumps({"error": "duckduckgo_search requires a non-empty query"})
+
+    try:
+        num_results = int(args.get("num_results", 5))
+    except (TypeError, ValueError):
+        num_results = 5
+    num_results = max(1, min(num_results, 10))
+
+    results = _duckduckgo_search(query=query, num_results=num_results)
+    return json.dumps(
+        {
+            "query": query,
+            "results": results,
+        },
+        ensure_ascii=False,
+    )
+
+
 def call_openai_cua(client: OpenAI,
                     history_inputs: list,
+                    cua_model: str,
                     screen_width: int = 1920,
                     screen_height: int = 1080,
-                    environment: str = "linux") -> Tuple[Any, float]:
+                    environment: str = "linux",
+                    enable_duckduckgo_search: bool = False) -> Tuple[Any, float]:
     retry = 0
     response = None
     while retry < 3:
         try:
             response = client.responses.create(
-                model="computer-use-preview",
-                tools=[{
-                    "type": "computer_use_preview",
-                    "display_width": screen_width,
-                    "display_height": screen_height,
-                    "environment": environment,
-                }],
+                model=cua_model,
+                tools=_build_cua_tools(
+                    screen_width=screen_width,
+                    screen_height=screen_height,
+                    environment=environment,
+                    enable_duckduckgo_search=enable_duckduckgo_search,
+                ),
                 input=history_inputs,
                 reasoning={
                     "summary": "concise"
@@ -153,13 +253,15 @@ def run_cua(
     instruction: str,
     max_steps: int,
     save_path: str = './',
+    cua_model: str = os.environ.get("OPENAI_CUA_MODEL", "computer-use-preview"),
+    enable_duckduckgo_search: bool = False,
     screen_width: int = 1920,
     screen_height: int = 1080,
     sleep_after_execution: float = 0.3,
     truncate_history_inputs: int = 100,
     client_password: str = "",
 ) -> Tuple[str, float]:
-    client = OpenAI()
+    client = _build_openai_client()
 
     # 0 / reset & first screenshot
     logger.info(f"Instruction: {instruction}")
@@ -175,7 +277,14 @@ def run_cua(
         ],
     }]
 
-    response, cost = call_openai_cua(client, history_inputs, screen_width, screen_height)
+    response, cost = call_openai_cua(
+        client,
+        history_inputs,
+        cua_model=cua_model,
+        screen_width=screen_width,
+        screen_height=screen_height,
+        enable_duckduckgo_search=enable_duckduckgo_search,
+    )
     total_cost = cost
     logger.info(f"Cost: ${cost:.6f} | Total Cost: ${total_cost:.6f}")
     step_no = 0
@@ -188,8 +297,9 @@ def run_cua(
         step_no += 1
         history_inputs += _to_input_items(response.output)
 
-        # --- robustly pull out computer_call(s) ------------------------------
-        calls: List[Dict[str, Any]] = []
+        # --- robustly pull out computer_call(s) and function_call(s) ---------
+        computer_calls: List[Dict[str, Any]] = []
+        function_calls: List[Dict[str, Any]] = []
         # completed = False
         breakflag = False
         for i, o in enumerate(response.output):
@@ -197,7 +307,13 @@ def run_cua(
             if not isinstance(typ, str):
                 typ = str(typ).split(".")[-1]
             if typ == "computer_call":
-                calls.append(o if isinstance(o, dict) else o.model_dump())
+                computer_calls.append(o if isinstance(o, dict) else o.model_dump())
+            elif typ == "function_call":
+                function_calls.append({
+                    "call_id": o.call_id if not isinstance(o, dict) else o["call_id"],
+                    "name": o.name if not isinstance(o, dict) else o["name"],
+                    "arguments": o.arguments if not isinstance(o, dict) else o.get("arguments", {}),
+                })
             elif typ == "reasoning" and len(o.summary) > 0:
                 reasoning = o.summary[0].text
                 reasoning_list.append(reasoning)
@@ -238,7 +354,18 @@ def run_cua(
         if breakflag:
             break
 
-        for action_call in calls:
+        for action_call in function_calls:
+            tool_output = _execute_function_tool(action_call)
+            logger.info(f"[Function Call]: {action_call['name']}({action_call['arguments']})")
+            history_inputs.append(
+                {
+                    "type": "function_call_output",
+                    "call_id": action_call["call_id"],
+                    "output": tool_output,
+                }
+            )
+
+        for action_call in computer_calls:
             py_cmd = _cua_to_pyautogui(action_call["action"])
 
             # --- execute in VM ---------------------------------------------------
@@ -265,6 +392,9 @@ def run_cua(
                     }
                     for psc in action_call.get("pending_safety_checks", [])
                 ]
+
+        if function_calls and not computer_calls:
+            step_no -= 1
         
         # truncate history inputs while preserving call_id pairs
         if len(history_inputs) > truncate_history_inputs:
@@ -287,14 +417,21 @@ def run_cua(
                         call_id_types[call_id] = []
                     call_id_types[call_id].append(item_type)
             
-            # Find unpaired call_ids (should have both computer_call and computer_call_output)
+            expected_pairs = {
+                "computer_call": "computer_call_output",
+                "function_call": "function_call_output",
+            }
+
+            # Find unpaired call_ids (should have both call and output)
             unpaired_call_ids = []
             for call_id, types in call_id_types.items():
-                # Check if we have both call and output
-                has_call = 'computer_call' in types
-                has_output = 'computer_call_output' in types
-                if not (has_call and has_output):
-                    unpaired_call_ids.append(call_id)
+                for call_type, output_type in expected_pairs.items():
+                    if call_type in types and output_type not in types:
+                        unpaired_call_ids.append(call_id)
+                        break
+                    if output_type in types and call_type not in types:
+                        unpaired_call_ids.append(call_id)
+                        break
             
             # Add missing pairs from original history while preserving order
             if unpaired_call_ids:
@@ -323,7 +460,14 @@ def run_cua(
                     
                     history_inputs.insert(insert_pos, missing_item)
 
-        response, cost = call_openai_cua(client, history_inputs, screen_width, screen_height)
+        response, cost = call_openai_cua(
+            client,
+            history_inputs,
+            cua_model=cua_model,
+            screen_width=screen_width,
+            screen_height=screen_height,
+            enable_duckduckgo_search=enable_duckduckgo_search,
+        )
         total_cost += cost
         logger.info(f"Cost: ${cost:.6f} | Total Cost: ${total_cost:.6f}")
     

@@ -4,16 +4,20 @@ import glob
 import datetime
 import shutil
 import traceback
+from pathlib import Path
 from typing import Dict, List
 import json
 import time
 import os
 from mm_agents.coact.operator_agent import OrchestratorAgent, OrchestratorUserProxyAgent
 from mm_agents.coact.autogen import LLMConfig
+from mm_agents.env_loader import load_mm_agents_env
 import logging
 from multiprocessing import Pool, cpu_count
 from functools import partial
 import sys
+
+load_mm_agents_env()
 
 
 TASK_DESCRIPTION = """# Your role
@@ -42,6 +46,7 @@ After that, if anything is wrong, tell the programmer to modify it.
 ## GUI Operator
 Let a GUI agent to solve a subtask you assigned. 
 GUI agent can operate the computer by clicking and typing (but not accurate). 
+When DuckDuckGo search is enabled, the GUI agent can also look up app documentation or help pages before taking GUI actions.
 Require a detailed task description.
 When you call GUI agent, it will only have a **20-step** budget to complete your task. Each step is a one-time interaction with OS like mouse click or keyboard typing. Please take this into account when you plan the actions.
 If you let GUI Operator to check the result, you MUST let it close and reopen the file because programmer's result will NOT be updated to the screen. 
@@ -66,7 +71,13 @@ def config() -> argparse.Namespace:
     parser.add_argument("--oai_config_path", type=str, default="/home/ubuntu/OSWorld/mm_agents/coact/OAI_CONFIG_LIST")
     parser.add_argument("--orchestrator_model", type=str, default="o3")
     parser.add_argument("--coding_model", type=str, default="o4-mini")
-    parser.add_argument("--cua_model", type=str, default="computer-use-preview")
+    parser.add_argument("--cua_model", type=str, default=os.environ.get("OPENAI_CUA_MODEL", "computer-use-preview"))
+    parser.add_argument(
+        "--enable_duckduckgo_search",
+        action="store_true",
+        default=os.environ.get("COACT_ENABLE_DUCKDUCKGO_SEARCH", "").lower() in {"1", "true", "yes", "on"},
+        help="Enable DuckDuckGo documentation search in the GUI agent path",
+    )
     parser.add_argument("--orchestrator_max_steps", type=int, default=15)
     parser.add_argument("--coding_max_steps", type=int, default=20)
     parser.add_argument("--cua_max_steps", type=int, default=25)
@@ -74,6 +85,12 @@ def config() -> argparse.Namespace:
 
     # example config
     parser.add_argument("--domain", type=str, default="all")
+    parser.add_argument(
+        "--task_id",
+        type=str,
+        default=None,
+        help="Run exactly one task. Accepts either a bare task id or a direct path to a task json file.",
+    )
     parser.add_argument(
         "--test_all_meta_path", type=str, default="evaluation_examples/test_all.json"
     )
@@ -128,11 +145,50 @@ logger.addHandler(stdout_handler)
 logger = logging.getLogger("desktopenv.expeiment")
 
 
+def _resolve_task_path(test_config_base_dir: str, task_id: str, domain: str) -> tuple[str, str, str]:
+    task_arg = Path(task_id)
+    if task_arg.is_file():
+        cfg_path = task_arg.resolve()
+        resolved_task_id = cfg_path.stem
+        resolved_domain = domain if domain != "all" else cfg_path.parent.name or "custom"
+        return resolved_domain, resolved_task_id, str(cfg_path)
+
+    base_dir = Path(test_config_base_dir)
+    candidate_paths: List[Path] = []
+
+    if domain != "all":
+        domain_candidate = base_dir / domain / f"{task_id}.json"
+        if domain_candidate.is_file():
+            candidate_paths.append(domain_candidate)
+
+    if not candidate_paths:
+        candidate_paths = sorted(base_dir.glob(f"**/{task_id}.json"))
+
+    if not candidate_paths:
+        raise FileNotFoundError(
+            f"Could not resolve task '{task_id}'. Pass a valid task id under '{test_config_base_dir}' "
+            f"or a direct path to a task json file."
+        )
+
+    if len(candidate_paths) > 1:
+        matches = ", ".join(str(path) for path in candidate_paths[:5])
+        raise ValueError(
+            f"Task id '{task_id}' matched multiple json files. "
+            f"Please disambiguate with --domain or pass a direct path. Matches: {matches}"
+        )
+
+    cfg_path = candidate_paths[0].resolve()
+    resolved_domain = domain if domain != "all" else cfg_path.parent.name or "custom"
+    return resolved_domain, task_id, str(cfg_path)
+
+
 def process_task(task_info, 
                 provider_name,
                 path_to_vm,
                 orchestrator_model="o3",
                 coding_model='o4-mini',
+                cua_model="computer-use-preview",
+                enable_duckduckgo_search=False,
                 save_dir='results',
                 orchestrator_max_steps=15,
                 cua_max_steps=25,
@@ -177,9 +233,11 @@ def process_task(task_info,
                     code_execution_config=False,
                     history_save_dir=history_save_dir,
                     llm_model=coding_model,
+                    gui_model=cua_model,
                     truncate_history_inputs=cua_max_steps + 1,
                     cua_max_steps=cua_max_steps,
                     coding_max_steps=coding_max_steps,
+                    enable_duckduckgo_search=enable_duckduckgo_search,
                     region=region,
                     client_password=client_password,
                     user_instruction=task_config["instruction"]
@@ -260,22 +318,33 @@ I will not provide further information to you.""" + "<img data:image/png;base64,
 if __name__ == "__main__":
     args = config()
 
-    with open(args.test_all_meta_path, encoding="utf-8") as f:
-        test_all_meta = json.load(f)
-    if args.domain != "all":
-        test_all_meta = {args.domain: test_all_meta[args.domain]}
-
     tasks = []
     scores: Dict[str, List[float]] = {}
-    for domain in test_all_meta:
+    if args.task_id:
+        domain, ex_id, cfg = _resolve_task_path(args.test_config_base_dir, args.task_id, args.domain)
         scores[domain] = []
-        for ex_id in test_all_meta[domain]:
-            if os.path.exists(os.path.join(args.result_dir, 'coact', f"{domain}/{ex_id}/result.txt")):
-                result = open(os.path.join(args.result_dir, 'coact', f"{domain}/{ex_id}/result.txt"), "r").read()
-                print(f"Results already exist in {domain}/{ex_id}, result: {result}")
-                continue
-            cfg = os.path.join(args.test_config_base_dir, f"{domain}/{ex_id}.json")
+        result_path = os.path.join(args.result_dir, 'coact', f"{domain}/{ex_id}/result.txt")
+        if os.path.exists(result_path):
+            result = open(result_path, "r").read()
+            print(f"Results already exist in {domain}/{ex_id}, result: {result}")
+        else:
             tasks.append((domain, ex_id, cfg))
+        test_all_meta = {domain: [ex_id]}
+    else:
+        with open(args.test_all_meta_path, encoding="utf-8") as f:
+            test_all_meta = json.load(f)
+        if args.domain != "all":
+            test_all_meta = {args.domain: test_all_meta[args.domain]}
+
+        for domain in test_all_meta:
+            scores[domain] = []
+            for ex_id in test_all_meta[domain]:
+                if os.path.exists(os.path.join(args.result_dir, 'coact', f"{domain}/{ex_id}/result.txt")):
+                    result = open(os.path.join(args.result_dir, 'coact', f"{domain}/{ex_id}/result.txt"), "r").read()
+                    print(f"Results already exist in {domain}/{ex_id}, result: {result}")
+                    continue
+                cfg = os.path.join(args.test_config_base_dir, f"{domain}/{ex_id}.json")
+                tasks.append((domain, ex_id, cfg))
     # Check if there are any tasks to process
     if not tasks:
         print("No tasks to process. All tasks have already been completed.")
@@ -303,6 +372,8 @@ if __name__ == "__main__":
                                path_to_vm=args.path_to_vm,
                                save_dir=args.result_dir,
                                coding_model=args.coding_model,
+                               cua_model=args.cua_model,
+                               enable_duckduckgo_search=args.enable_duckduckgo_search,
                                orchestrator_model=args.orchestrator_model,
                                config_path=args.oai_config_path, 
                                orchestrator_max_steps=args.orchestrator_max_steps,

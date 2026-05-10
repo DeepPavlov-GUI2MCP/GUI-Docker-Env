@@ -158,9 +158,11 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         coding_max_steps: int = 30,
         history_save_dir: str = "",
         llm_model: str = "o4-mini",
+        gui_model: str = "computer-use-preview",
         region: str = "us-east-1",
         client_password: str = "",
         user_instruction: str = "",
+        enable_duckduckgo_search: bool = False,
     ):
         description = (
             description if description is not None else self.DEFAULT_USER_PROXY_AGENT_DESCRIPTIONS[human_input_mode]
@@ -215,6 +217,8 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         self.coding_max_steps = coding_max_steps
         self.llm_config = llm_config
         self.llm_model = llm_model
+        self.gui_model = gui_model
+        self.enable_duckduckgo_search = enable_duckduckgo_search
 
     def reset(self, task_config: dict[str, Any]):
         obs = self.env.reset(task_config=task_config)
@@ -231,6 +235,8 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
                                                    task,
                                                    save_path=cua_path,
                                                    max_steps=self.cua_config["max_steps"],
+                                                   cua_model=self.gui_model,
+                                                   enable_duckduckgo_search=self.enable_duckduckgo_search,
                                                    screen_width=screen_width,
                                                    screen_height=screen_height,
                                                    sleep_after_execution=self.cua_config["sleep_after_execution"],

@@ -63,6 +63,7 @@ azure-mgmt-network
 docker
 loguru
 dotenv
+duckduckgo_search
 tldextract
 anthropic
 alibabacloud_ecs20140526
