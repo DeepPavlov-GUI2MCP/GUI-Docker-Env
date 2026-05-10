@@ -12,7 +12,7 @@ from .autogen.llm_config import LLMConfig
 from .autogen.agentchat.conversable_agent import ConversableAgent
 from .autogen.agentchat.contrib.multimodal_conversable_agent import MultimodalConversableAgent
 
-from .cua_agent import run_cua
+from .cua_agent import DEFAULT_CUA_MODEL, run_cua, validate_cua_model
 from .coding_agent import TerminalProxyAgent, CODER_SYSTEM_MESSAGE
 
 
@@ -158,11 +158,11 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         coding_max_steps: int = 30,
         history_save_dir: str = "",
         llm_model: str = "o4-mini",
-        gui_model: str = "computer-use-preview",
+        gui_model: str = DEFAULT_CUA_MODEL,
         region: str = "us-east-1",
         client_password: str = "",
         user_instruction: str = "",
-        enable_duckduckgo_search: bool = False,
+        enable_web_search: bool = False,
     ):
         description = (
             description if description is not None else self.DEFAULT_USER_PROXY_AGENT_DESCRIPTIONS[human_input_mode]
@@ -193,9 +193,12 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         self.region = region
         self.client_password = client_password
 
-        from desktop_env.providers.aws.manager import IMAGE_ID_MAP
         screen_size = (screen_width, screen_height)
-        ami_id = IMAGE_ID_MAP[region].get(screen_size, IMAGE_ID_MAP[region][(1920, 1080)])
+        snapshot_name = "init_state"
+        if provider_name == "aws":
+            from desktop_env.providers.aws.manager import IMAGE_ID_MAP
+
+            snapshot_name = IMAGE_ID_MAP[region].get(screen_size, IMAGE_ID_MAP[region][(1920, 1080)])
 
         self.env = DesktopEnv(
             path_to_vm=path_to_vm,
@@ -203,7 +206,7 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
             provider_name=provider_name,
             os_type="Ubuntu",
             region=region,
-            snapshot_name=ami_id,
+            snapshot_name=snapshot_name,
             screen_size=screen_size,
             headless=True,
             require_a11y_tree=observation_type in ["a11y_tree", "screenshot_a11y_tree", "som"],
@@ -217,8 +220,9 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         self.coding_max_steps = coding_max_steps
         self.llm_config = llm_config
         self.llm_model = llm_model
+        validate_cua_model(gui_model)
         self.gui_model = gui_model
-        self.enable_duckduckgo_search = enable_duckduckgo_search
+        self.enable_web_search = enable_web_search
 
     def reset(self, task_config: dict[str, Any]):
         obs = self.env.reset(task_config=task_config)
@@ -231,30 +235,35 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         if not os.path.exists(cua_path):
             os.makedirs(cua_path)
         try:
-            history_inputs, result, cost = run_cua(self.env,
-                                                   task,
-                                                   save_path=cua_path,
-                                                   max_steps=self.cua_config["max_steps"],
-                                                   cua_model=self.gui_model,
-                                                   enable_duckduckgo_search=self.enable_duckduckgo_search,
-                                                   screen_width=screen_width,
-                                                   screen_height=screen_height,
-                                                   sleep_after_execution=self.cua_config["sleep_after_execution"],
-                                                   truncate_history_inputs=self.cua_config["truncate_history_inputs"],
-                                                   client_password=self.client_password
-                                                   )
+            history_inputs, result, cost, raw_transcript, tool_events = run_cua(
+                self.env,
+                task,
+                save_path=cua_path,
+                max_steps=self.cua_config["max_steps"],
+                cua_model=self.gui_model,
+                enable_web_search=self.enable_web_search,
+                screen_width=screen_width,
+                screen_height=screen_height,
+                sleep_after_execution=self.cua_config["sleep_after_execution"],
+                truncate_history_inputs=self.cua_config["truncate_history_inputs"],
+                client_password=self.client_password,
+            )
             screenshot = self.env.controller.get_screenshot()
 
             with open(os.path.join(cua_path, "history_inputs.json"), "w") as f:
                 json.dump(history_inputs, f)
+            with open(os.path.join(cua_path, "responses.json"), "w") as f:
+                json.dump(raw_transcript, f)
+            with open(os.path.join(cua_path, "tool_events.json"), "w") as f:
+                json.dump(tool_events, f)
             with open(os.path.join(cua_path, "result.txt"), "w") as f:
                 f.write(result)
             with open(os.path.join(cua_path, "cost.txt"), "w") as f:
                 f.write(str(cost))
             self.cua_call_count += 1
 
-        except Exception:
-            return f"# Response from GUI agent error: {traceback.format_exc()}"
+        except Exception as e:
+            return f"# Response from GUI agent error ({type(e).__name__}): {e}\n{traceback.format_exc()}"
 
         if "TERMINATE" in result:
             result = result.replace("TERMINATE", "").strip()

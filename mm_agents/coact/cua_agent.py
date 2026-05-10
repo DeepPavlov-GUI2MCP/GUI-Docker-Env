@@ -1,15 +1,13 @@
 import base64
-import json
 import logging
 import os
 import time
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import openai
 from desktop_env.desktop_env import DesktopEnv
-from openai import OpenAI  # pip install --upgrade openai>=1.30
+from openai import OpenAI
 from mm_agents.env_loader import load_mm_agents_env
-from mm_agents.coact.autogen.tools.experimental.duckduckgo.duckduckgo_search import _duckduckgo_search
 
 load_mm_agents_env()
 
@@ -17,6 +15,7 @@ logger = logging.getLogger("desktopenv")
 
 GPT4O_INPUT_PRICE_PER_1M_TOKENS = 3.00
 GPT4O_OUTPUT_PRICE_PER_1M_TOKENS = 12.00
+DEFAULT_CUA_MODEL = "gpt-5.5"
 
 PROMPT_TEMPLATE = """# Task
 {instruction}
@@ -26,39 +25,68 @@ PROMPT_TEMPLATE = """# Task
 - Keep the windows/applications opened at the end of the task.
 - Do not use shortcut to reload the application except for the browser, just close and reopen.
 - If "The document has been changed by others" pops out, you should click "cancel" and reopen the file.
-- You may use `duckduckgo_search` to look up documentation for the current app, site, or workflow when that helps you complete the task.
+- You may use the built-in web search tool to look up documentation for the current app, site, or workflow when that helps you complete the task.
 - Prefer focused documentation lookups over broad browsing, and use normal GUI actions to apply what you learned.
 - If you have completed the user task, reply with the information you want the user to know along with 'TERMINATE'.
 - If you don't know how to continue the task, reply your concern or question along with 'IDK'.
 """.strip()
 DEFAULT_REPLY = "Please continue the user task. If you have completed the user task, reply with the information you want the user to know along with 'TERMINATE'."
+SEARCH_TOOL_TYPE = "web_search"
+SUPPORTED_CUA_MODEL_PREFIXES = ("gpt-5",)
+LEGACY_CUA_MODELS = {"computer-use-preview"}
+MAX_RESPONSE_MULTIPLIER = 3
 
-DUCKDUCKGO_SEARCH_TOOL = {
-    "type": "function",
-    "name": "duckduckgo_search",
-    "description": "Search DuckDuckGo for app documentation, help pages, or task-relevant reference material.",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "query": {
-                "type": "string",
-                "description": "Targeted search query for documentation related to the current app or task.",
-            },
-            "num_results": {
-                "type": "integer",
-                "description": "Maximum number of search results to return.",
-                "default": 5,
-                "minimum": 1,
-                "maximum": 10,
-            },
-        },
-        "required": ["query"],
-    },
-}
+
+def validate_cua_model(cua_model: str) -> None:
+    if not cua_model:
+        raise ValueError("Missing GUI model. Set `OPENAI_CUA_MODEL` or pass `--cua_model`.")
+    if cua_model in LEGACY_CUA_MODELS:
+        raise ValueError(
+            "The CoAct GUI agent now uses the GA `computer` tool and no longer supports "
+            f"`{cua_model}`. Use a current computer-use model such as `{DEFAULT_CUA_MODEL}`."
+        )
+    if not any(cua_model.startswith(prefix) for prefix in SUPPORTED_CUA_MODEL_PREFIXES):
+        raise ValueError(
+            "Unsupported GUI model for the GA `computer` tool path: "
+            f"`{cua_model}`. Use a current gpt-5 computer-use model such as `{DEFAULT_CUA_MODEL}`."
+        )
+
+
+def _normalize_key(key: str) -> str:
+    normalized = str(key).strip().lower().replace("arrow", "")
+    aliases = {
+        "ctrl": "ctrl",
+        "control": "ctrl",
+        "alt": "alt",
+        "option": "alt",
+        "shift": "shift",
+        "meta": "win",
+        "cmd": "win",
+        "command": "win",
+        "super": "win",
+        "windows": "win",
+        "return": "enter",
+        "esc": "escape",
+        "pgup": "pageup",
+        "pgdn": "pagedown",
+        "spacebar": "space",
+        "del": "delete",
+    }
+    return aliases.get(normalized, normalized)
+
+
+def _wrap_with_modifiers(command: str, keys: Optional[List[str]]) -> str:
+    if not keys:
+        return command
+    normalized_keys = [_normalize_key(key) for key in keys if str(key).strip()]
+    if not normalized_keys:
+        return command
+    keydowns = [f"pyautogui.keyDown('{key}')" for key in normalized_keys]
+    keyups = [f"pyautogui.keyUp('{key}')" for key in reversed(normalized_keys)]
+    return "; ".join(keydowns + [command] + keyups)
 
 
 def _cua_to_pyautogui(action) -> str:
-    """Convert an Action (dict **or** Pydantic model) into a pyautogui call."""
     def fld(key: str, default: Any = None) -> Any:
         return action.get(key, default) if isinstance(action, dict) else getattr(action, key, default)
 
@@ -75,32 +103,45 @@ def _cua_to_pyautogui(action) -> str:
             button = 'middle'
         elif button == 3 or button == 'right':
             button = 'right'
+        elif button == 'wheel':
+            button = 'middle'
 
         if act_type == "click":
-            return f"pyautogui.click({fld('x')}, {fld('y')}, button='{button}')"
+            return _wrap_with_modifiers(
+                f"pyautogui.click({fld('x')}, {fld('y')}, button='{button}')",
+                fld("keys"),
+            )
         if act_type == "double_click":
-            return f"pyautogui.doubleClick({fld('x')}, {fld('y')}, button='{button}')"
+            return _wrap_with_modifiers(
+                f"pyautogui.doubleClick({fld('x')}, {fld('y')}, button='{button}')",
+                fld("keys"),
+            )
         
     if act_type == "scroll":
-        cmd = ""
-        if fld('scroll_y', 0) != 0:
-            cmd += f"pyautogui.scroll({-fld('scroll_y', 0) / 100}, x={fld('x', 0)}, y={fld('y', 0)});"
-        return cmd
+        scroll_y = int(round(-fld("scroll_y", 0) / 100))
+        scroll_x = int(round(fld("scroll_x", 0) / 100))
+        commands: List[str] = []
+        if scroll_y:
+            commands.append(f"pyautogui.scroll({scroll_y}, x={fld('x', 0)}, y={fld('y', 0)})")
+        if scroll_x:
+            commands.append(f"pyautogui.hscroll({scroll_x}, x={fld('x', 0)}, y={fld('y', 0)})")
+        return _wrap_with_modifiers("; ".join(commands) if commands else "WAIT", fld("keys"))
+
     if act_type == "drag":
         path = fld('path', [{"x": 0, "y": 0}, {"x": 0, "y": 0}])
         cmd = f"pyautogui.moveTo({path[0]['x']}, {path[0]['y']}, _pause=False); "
-        cmd += f"pyautogui.dragTo({path[1]['x']}, {path[1]['y']}, duration=0.5, button='left')"
-        return cmd
+        cmd += f"pyautogui.dragTo({path[-1]['x']}, {path[-1]['y']}, duration=0.5, button='left')"
+        return _wrap_with_modifiers(cmd, fld("keys"))
 
     if act_type == 'move':
-        return f"pyautogui.moveTo({fld('x')}, {fld('y')})"
+        return _wrap_with_modifiers(f"pyautogui.moveTo({fld('x')}, {fld('y')})", fld("keys"))
 
     if act_type == "keypress":
-        keys = fld("keys", []) or [fld("key")]
+        keys = [_normalize_key(key) for key in (fld("keys", []) or [fld("key")]) if key]
         if len(keys) == 1:
             return f"pyautogui.press('{keys[0].lower()}')"
         else:
-            return "pyautogui.hotkey('{}')".format("', '".join(keys)).lower()
+            return f"pyautogui.hotkey({', '.join(repr(key) for key in keys)})"
         
     if act_type == "type":
         text = str(fld("text", ""))
@@ -112,22 +153,64 @@ def _cua_to_pyautogui(action) -> str:
     return "WAIT"  # fallback
 
 
-def _to_input_items(output_items: list) -> list:
-    """
-    Convert `response.output` into the JSON-serialisable items we're allowed
-    to resend in the next request.  We drop anything the CUA schema doesn't
-    recognise (e.g. `status`, `id`, …) and cap history length.
-    """
-    cleaned: List[Dict[str, Any]] = []
+def _item_to_dict(item: Any) -> Dict[str, Any]:
+    if isinstance(item, dict):
+        return item
+    if hasattr(item, "model_dump"):
+        return item.model_dump(mode="json")
+    raise TypeError(f"Unsupported response item type: {type(item)!r}")
 
-    for item in output_items:
-        raw: Dict[str, Any] = item if isinstance(item, dict) else item.model_dump()
 
-        # ---- strip noisy / disallowed keys ---------------------------------
-        raw.pop("status", None)
-        cleaned.append(raw)
+def _sanitize_images(value: Any) -> Any:
+    if isinstance(value, dict):
+        sanitized: Dict[str, Any] = {}
+        for key, item_value in value.items():
+            if key == "image_url" and isinstance(item_value, str) and item_value.startswith("data:image/"):
+                sanitized[key] = "<image>"
+            else:
+                sanitized[key] = _sanitize_images(item_value)
+        return sanitized
+    if isinstance(value, list):
+        return [_sanitize_images(item) for item in value]
+    return value
 
-    return cleaned  # keep just the most recent 50 items
+
+def _extract_message_text(message_item: Dict[str, Any]) -> str:
+    texts: List[str] = []
+    for content_item in message_item.get("content", []):
+        if content_item.get("type") == "output_text" and content_item.get("text"):
+            texts.append(content_item["text"])
+    return "\n".join(texts).strip()
+
+
+def _extract_reasoning_text(reasoning_item: Dict[str, Any]) -> str:
+    texts = [summary.get("text", "").strip() for summary in reasoning_item.get("summary", []) if summary.get("text")]
+    return "\n".join(text for text in texts if text)
+
+
+def _response_to_transcript_entry(response: Any) -> Dict[str, Any]:
+    usage = None
+    if hasattr(response, "usage") and response.usage:
+        usage = response.usage.model_dump(mode="json") if hasattr(response.usage, "model_dump") else response.usage
+    return _sanitize_images(
+        {
+            "response_id": getattr(response, "id", None),
+            "output": [_item_to_dict(item) for item in getattr(response, "output", [])],
+            "usage": usage,
+        }
+    )
+
+
+def _estimate_cost(cua_model: str, response: Any) -> float:
+    if not response or not getattr(response, "usage", None):
+        return 0.0
+    if cua_model != "gpt-4o":
+        return 0.0
+    input_tokens = response.usage.input_tokens
+    output_tokens = response.usage.output_tokens
+    input_cost = (input_tokens / 1_000_000) * GPT4O_INPUT_PRICE_PER_1M_TOKENS
+    output_cost = (output_tokens / 1_000_000) * GPT4O_OUTPUT_PRICE_PER_1M_TOKENS
+    return input_cost + output_cost
 
 
 def _build_openai_client() -> OpenAI:
@@ -143,109 +226,116 @@ def _build_openai_client() -> OpenAI:
     return OpenAI(**kwargs)
 
 
-def _build_cua_tools(
-    screen_width: int,
-    screen_height: int,
-    environment: str,
-    enable_duckduckgo_search: bool,
-) -> List[Dict[str, Any]]:
-    tools: List[Dict[str, Any]] = [{
-        "type": "computer_use_preview",
-        "display_width": screen_width,
-        "display_height": screen_height,
-        "environment": environment,
-    }]
-    if enable_duckduckgo_search:
-        tools.append(DUCKDUCKGO_SEARCH_TOOL)
+def _build_cua_tools(enable_web_search: bool) -> List[Dict[str, Any]]:
+    tools: List[Dict[str, Any]] = [{"type": "computer"}]
+    if enable_web_search:
+        tools.append({"type": SEARCH_TOOL_TYPE, "search_context_size": "medium"})
     return tools
 
 
-def _parse_tool_arguments(arguments: Any) -> Dict[str, Any]:
-    if isinstance(arguments, dict):
-        return arguments
-    if isinstance(arguments, str):
-        try:
-            parsed = json.loads(arguments)
-        except json.JSONDecodeError:
-            return {}
-        if isinstance(parsed, dict):
-            return parsed
-    return {}
+def _actions_from_computer_call(action_call: Dict[str, Any]) -> List[Dict[str, Any]]:
+    actions = action_call.get("actions")
+    if actions:
+        return [_item_to_dict(action) for action in actions]
+    action = action_call.get("action")
+    if action:
+        return [_item_to_dict(action)]
+    return []
 
 
-def _execute_function_tool(action_call: Dict[str, Any]) -> str:
-    name = action_call["name"]
-    args = _parse_tool_arguments(action_call.get("arguments", {}))
-    if name != "duckduckgo_search":
-        return json.dumps({"error": f"Unsupported function tool: {name}"})
+def _action_step_cost(action: Dict[str, Any]) -> int:
+    return 0 if action.get("type") == "screenshot" else 1
 
-    query = str(args.get("query", "")).strip()
-    if not query:
-        return json.dumps({"error": "duckduckgo_search requires a non-empty query"})
 
-    try:
-        num_results = int(args.get("num_results", 5))
-    except (TypeError, ValueError):
-        num_results = 5
-    num_results = max(1, min(num_results, 10))
+def _capture_screenshot(env: DesktopEnv) -> bytes:
+    screenshot = env.controller.get_screenshot()
+    return screenshot["screenshot"] if isinstance(screenshot, dict) else screenshot
 
-    results = _duckduckgo_search(query=query, num_results=num_results)
-    return json.dumps(
-        {
-            "query": query,
-            "results": results,
+
+def _execute_computer_call(
+    env: DesktopEnv,
+    action_call: Dict[str, Any],
+    action_index: int,
+    save_path: str,
+    sleep_after_execution: float,
+) -> Dict[str, Any]:
+    actions = _actions_from_computer_call(action_call)
+    latest_screenshot: Optional[bytes] = None
+
+    for action in actions:
+        if action.get("type") == "screenshot":
+            latest_screenshot = _capture_screenshot(env)
+            continue
+        py_cmd = _cua_to_pyautogui(action)
+        obs, *_ = env.step(py_cmd, sleep_after_execution)
+        latest_screenshot = obs["screenshot"]
+
+    if latest_screenshot is None:
+        latest_screenshot = _capture_screenshot(env)
+
+    screenshot_b64 = base64.b64encode(latest_screenshot).decode("utf-8")
+    with open(os.path.join(save_path, f"step_{action_index}.png"), "wb") as f:
+        f.write(latest_screenshot)
+
+    output_item: Dict[str, Any] = {
+        "type": "computer_call_output",
+        "call_id": action_call["call_id"],
+        "output": {
+            "type": "computer_screenshot",
+            "image_url": f"data:image/png;base64,{screenshot_b64}",
         },
-        ensure_ascii=False,
-    )
+    }
+    pending_safety_checks = action_call.get("pending_safety_checks", [])
+    if pending_safety_checks:
+        output_item["acknowledged_safety_checks"] = [
+            {
+                "id": safety_check["id"],
+                "code": safety_check.get("code"),
+                "message": safety_check.get("message") or "Proceed with the acknowledged safety check.",
+            }
+            for safety_check in pending_safety_checks
+        ]
+    return output_item
 
 
 def call_openai_cua(client: OpenAI,
-                    history_inputs: list,
+                    response_input: list,
                     cua_model: str,
-                    screen_width: int = 1920,
-                    screen_height: int = 1080,
-                    environment: str = "linux",
-                    enable_duckduckgo_search: bool = False) -> Tuple[Any, float]:
+                    previous_response_id: Optional[str] = None,
+                    enable_web_search: bool = False) -> Tuple[Any, float]:
     retry = 0
     response = None
+    last_error: Optional[Exception] = None
+    validate_cua_model(cua_model)
     while retry < 3:
         try:
             response = client.responses.create(
                 model=cua_model,
-                tools=_build_cua_tools(
-                    screen_width=screen_width,
-                    screen_height=screen_height,
-                    environment=environment,
-                    enable_duckduckgo_search=enable_duckduckgo_search,
-                ),
-                input=history_inputs,
-                reasoning={
-                    "summary": "concise"
-                },
-                tool_choice="required",
-                truncation="auto",
+                tools=_build_cua_tools(enable_web_search=enable_web_search),
+                input=response_input,
+                previous_response_id=previous_response_id,
+                include=["web_search_call.action.sources"] if enable_web_search else None,
+                parallel_tool_calls=False,
+                reasoning={"summary": "concise"},
             )
             break
-        except openai.BadRequestError as e:
+        except (
+            openai.APIConnectionError,
+            openai.APITimeoutError,
+            openai.BadRequestError,
+            openai.InternalServerError,
+            openai.RateLimitError,
+        ) as e:
             retry += 1
+            last_error = e
             logger.error(f"Error in response.create: {e}")
             time.sleep(0.5)
-        except openai.InternalServerError as e:
-            retry += 1
-            logger.error(f"Error in response.create: {e}")
-            time.sleep(0.5)
-    if retry == 3:
-        raise Exception("Failed to call OpenAI.")
+    if response is None:
+        if last_error is not None:
+            raise RuntimeError(f"OpenAI Responses call failed after {retry} attempts: {last_error}") from last_error
+        raise RuntimeError("OpenAI Responses call failed without returning a response.")
 
-    cost = 0.0
-    if response and hasattr(response, "usage") and response.usage:
-        input_tokens = response.usage.input_tokens
-        output_tokens = response.usage.output_tokens
-        input_cost = (input_tokens / 1_000_000) * GPT4O_INPUT_PRICE_PER_1M_TOKENS
-        output_cost = (output_tokens / 1_000_000) * GPT4O_OUTPUT_PRICE_PER_1M_TOKENS
-        cost = input_cost + output_cost
-
-    return response, cost
+    return response, _estimate_cost(cua_model=cua_model, response=response)
 
 
 def run_cua(
@@ -253,19 +343,20 @@ def run_cua(
     instruction: str,
     max_steps: int,
     save_path: str = './',
-    cua_model: str = os.environ.get("OPENAI_CUA_MODEL", "computer-use-preview"),
-    enable_duckduckgo_search: bool = False,
+    cua_model: str = os.environ.get("OPENAI_CUA_MODEL", DEFAULT_CUA_MODEL),
+    enable_web_search: bool = False,
     screen_width: int = 1920,
     screen_height: int = 1080,
     sleep_after_execution: float = 0.3,
     truncate_history_inputs: int = 100,
     client_password: str = "",
-) -> Tuple[str, float]:
+) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]]]:
     client = _build_openai_client()
+    validate_cua_model(cua_model)
 
-    # 0 / reset & first screenshot
     logger.info(f"Instruction: {instruction}")
-    obs = env.controller.get_screenshot()
+    del screen_width, screen_height, truncate_history_inputs
+    obs = _capture_screenshot(env)
     screenshot_b64 = base64.b64encode(obs).decode("utf-8")
     with open(os.path.join(save_path, "initial_screenshot.png"), "wb") as f:
         f.write(obs)
@@ -273,7 +364,7 @@ def run_cua(
         "role": "user",
         "content": [
             {"type": "input_text", "text": PROMPT_TEMPLATE.format(instruction=instruction, CLIENT_PASSWORD=client_password)},
-            {"type": "input_image", "image_url": f"data:image/png;base64,{screenshot_b64}"},
+            {"type": "input_image", "image_url": f"data:image/png;base64,{screenshot_b64}", "detail": "original"},
         ],
     }]
 
@@ -281,200 +372,110 @@ def run_cua(
         client,
         history_inputs,
         cua_model=cua_model,
-        screen_width=screen_width,
-        screen_height=screen_height,
-        enable_duckduckgo_search=enable_duckduckgo_search,
+        enable_web_search=enable_web_search,
     )
     total_cost = cost
     logger.info(f"Cost: ${cost:.6f} | Total Cost: ${total_cost:.6f}")
-    step_no = 0
-    
-    reasoning_list = []
-    reasoning = ""
+    step_count = 0
+    response_count = 0
+    action_index = 0
+    reasoning_list: List[str] = []
+    raw_transcript = [_response_to_transcript_entry(response)]
+    tool_events: List[Dict[str, Any]] = []
+    final_result = ""
 
-    # 1 / iterative dialogue
-    while step_no < max_steps:
-        step_no += 1
-        history_inputs += _to_input_items(response.output)
+    while response_count < max(max_steps * MAX_RESPONSE_MULTIPLIER, 1):
+        response_count += 1
+        follow_up_inputs: List[Dict[str, Any]] = []
+        should_continue = False
 
-        # --- robustly pull out computer_call(s) and function_call(s) ---------
-        computer_calls: List[Dict[str, Any]] = []
-        function_calls: List[Dict[str, Any]] = []
-        # completed = False
-        breakflag = False
-        for i, o in enumerate(response.output):
-            typ = o["type"] if isinstance(o, dict) else getattr(o, "type", None)
-            if not isinstance(typ, str):
-                typ = str(typ).split(".")[-1]
-            if typ == "computer_call":
-                computer_calls.append(o if isinstance(o, dict) else o.model_dump())
-            elif typ == "function_call":
-                function_calls.append({
-                    "call_id": o.call_id if not isinstance(o, dict) else o["call_id"],
-                    "name": o.name if not isinstance(o, dict) else o["name"],
-                    "arguments": o.arguments if not isinstance(o, dict) else o.get("arguments", {}),
-                })
-            elif typ == "reasoning" and len(o.summary) > 0:
-                reasoning = o.summary[0].text
-                reasoning_list.append(reasoning)
-                logger.info(f"[Reasoning]: {reasoning}")
-            elif typ == 'message':
-                if 'TERMINATE' in o.content[0].text:
-                    reasoning_list.append(f"Final output: {o.content[0].text}")
-                    reasoning = "My thinking process\n" + "\n- ".join(reasoning_list) + '\nPlease check the screenshot and see if it fulfills your requirements.'
-                    breakflag = True
+        for output_item in response.output:
+            item = _item_to_dict(output_item)
+            item_type = item.get("type")
+
+            if item_type == "reasoning":
+                reasoning_text = _extract_reasoning_text(item)
+                if reasoning_text:
+                    reasoning_list.append(reasoning_text)
+                    logger.info(f"[Reasoning]: {reasoning_text}")
+                continue
+
+            if item_type == "web_search_call":
+                tool_events.append(
+                    {
+                        "type": "web_search_call",
+                        "response_id": response.id,
+                        "status": item.get("status"),
+                        "action": item.get("action"),
+                    }
+                )
+                continue
+
+            if item_type == "computer_call":
+                actions = _actions_from_computer_call(item)
+                action_cost = sum(_action_step_cost(action) for action in actions)
+                if step_count + action_cost > max_steps:
+                    final_result = "IDK Step budget exhausted before the GUI task was completed."
                     break
-                if 'IDK' in o.content[0].text:
-                    reasoning = f"{o.content[0].text}. I don't know how to complete the task. Please check the current screenshot."
-                    breakflag = True
-                    break
-                try:
-                    json.loads(o.content[0].text)
-                    history_inputs.pop(len(history_inputs) - len(response.output) + i)
-                    step_no -= 1
-                except Exception as e:
-                    logger.info(f"[Message]: {o.content[0].text}")
-                    if '?' in o.content[0].text:
-                        history_inputs += [{
-                            "role": "user",
-                            "content": [
-                                {"type": "input_text", "text": DEFAULT_REPLY},
-                            ],
-                        }]
-                    elif "{" in o.content[0].text and "}" in o.content[0].text:
-                        history_inputs.pop(len(history_inputs) - len(response.output) + i)
-                        step_no -= 1
-                    else:
-                        logger.info(f"[Message]: {o.content[0].text}")
-                        history_inputs.pop(len(history_inputs) - len(response.output) + i)
-                        reasoning = o.content[0].text
-                        reasoning_list.append(reasoning)
-                        step_no -= 1
 
-        if breakflag:
+                step_count += action_cost
+                action_index += 1
+                tool_events.append(
+                    {
+                        "type": "computer_call",
+                        "response_id": response.id,
+                        "call_id": item.get("call_id"),
+                        "actions": actions,
+                        "pending_safety_checks": item.get("pending_safety_checks", []),
+                        "step_index": action_index,
+                    }
+                )
+                follow_up_item = _execute_computer_call(
+                    env=env,
+                    action_call=item,
+                    action_index=action_index,
+                    save_path=save_path,
+                    sleep_after_execution=sleep_after_execution,
+                )
+                history_inputs.append(_sanitize_images(follow_up_item))
+                follow_up_inputs.append(follow_up_item)
+                should_continue = True
+                continue
+
+            if item_type == "message":
+                message_text = _extract_message_text(item)
+                if message_text:
+                    logger.info(f"[Message]: {message_text}")
+                    reasoning_list.append(message_text)
+                    if "TERMINATE" in message_text or "IDK" in message_text:
+                        final_result = message_text
+                        break
+
+        if final_result:
             break
 
-        for action_call in function_calls:
-            tool_output = _execute_function_tool(action_call)
-            logger.info(f"[Function Call]: {action_call['name']}({action_call['arguments']})")
-            history_inputs.append(
-                {
-                    "type": "function_call_output",
-                    "call_id": action_call["call_id"],
-                    "output": tool_output,
-                }
-            )
-
-        for action_call in computer_calls:
-            py_cmd = _cua_to_pyautogui(action_call["action"])
-
-            # --- execute in VM ---------------------------------------------------
-            obs, *_ = env.step(py_cmd, sleep_after_execution)
-
-            # --- send screenshot back -------------------------------------------
-            screenshot_b64 = base64.b64encode(obs["screenshot"]).decode("utf-8")
-            with open(os.path.join(save_path, f"step_{step_no}.png"), "wb") as f:
-                f.write(obs["screenshot"])
-            history_inputs += [{
-                "type": "computer_call_output",
-                "call_id": action_call["call_id"],
-                "output": {
-                    "type": "computer_screenshot",
-                    "image_url": f"data:image/png;base64,{screenshot_b64}",
-                },
-            }]
-            if "pending_safety_checks" in action_call and len(action_call.get("pending_safety_checks", [])) > 0:
-                history_inputs[-1]['acknowledged_safety_checks'] = [
-                    {
-                        "id": psc["id"],
-                        "code": psc["code"],
-                        "message": "Please acknowledge this warning if you'd like to proceed."
-                    }
-                    for psc in action_call.get("pending_safety_checks", [])
-                ]
-
-        if function_calls and not computer_calls:
-            step_no -= 1
-        
-        # truncate history inputs while preserving call_id pairs
-        if len(history_inputs) > truncate_history_inputs:
-            original_history = history_inputs[:]
-            history_inputs = [history_inputs[0]] + history_inputs[-truncate_history_inputs:]
-            
-            # Find all call_ids in the truncated history
-            call_ids_in_truncated = set()
-            for item in history_inputs:
-                if isinstance(item, dict) and 'call_id' in item:
-                    call_ids_in_truncated.add(item['call_id'])
-            
-            # Check if any call_ids are missing their pairs
-            call_id_types = {}  # call_id -> list of types that reference it
-            for item in history_inputs:
-                if isinstance(item, dict) and 'call_id' in item:
-                    call_id = item['call_id']
-                    item_type = item.get('type', '')
-                    if call_id not in call_id_types:
-                        call_id_types[call_id] = []
-                    call_id_types[call_id].append(item_type)
-            
-            expected_pairs = {
-                "computer_call": "computer_call_output",
-                "function_call": "function_call_output",
+        if not should_continue:
+            follow_up_message = {
+                "role": "user",
+                "content": [{"type": "input_text", "text": DEFAULT_REPLY}],
             }
-
-            # Find unpaired call_ids (should have both call and output)
-            unpaired_call_ids = []
-            for call_id, types in call_id_types.items():
-                for call_type, output_type in expected_pairs.items():
-                    if call_type in types and output_type not in types:
-                        unpaired_call_ids.append(call_id)
-                        break
-                    if output_type in types and call_type not in types:
-                        unpaired_call_ids.append(call_id)
-                        break
-            
-            # Add missing pairs from original history while preserving order
-            if unpaired_call_ids:
-                # Find missing paired items in their original order
-                missing_items = []
-                for item in original_history:
-                    if (isinstance(item, dict) and 
-                        item.get('call_id') in unpaired_call_ids and 
-                        item not in history_inputs):
-                        missing_items.append(item)
-                
-                # Insert missing items back, preserving their original order
-                # We need to find appropriate insertion points to maintain chronology
-                for missing_item in missing_items:
-                    # Find the best insertion point based on original history order
-                    original_index = original_history.index(missing_item)
-                    
-                    # Find insertion point in truncated history
-                    insert_pos = len(history_inputs)  # default to end
-                    for i, existing_item in enumerate(history_inputs[1:], 1):  # skip first item (initial prompt)
-                        if existing_item in original_history:
-                            existing_original_index = original_history.index(existing_item)
-                            if existing_original_index > original_index:
-                                insert_pos = i
-                                break
-                    
-                    history_inputs.insert(insert_pos, missing_item)
+            history_inputs.append(_sanitize_images(follow_up_message))
+            follow_up_inputs.append(follow_up_message)
 
         response, cost = call_openai_cua(
             client,
-            history_inputs,
+            response_input=follow_up_inputs,
             cua_model=cua_model,
-            screen_width=screen_width,
-            screen_height=screen_height,
-            enable_duckduckgo_search=enable_duckduckgo_search,
+            previous_response_id=response.id,
+            enable_web_search=enable_web_search,
         )
         total_cost += cost
+        raw_transcript.append(_response_to_transcript_entry(response))
         logger.info(f"Cost: ${cost:.6f} | Total Cost: ${total_cost:.6f}")
-    
+
+    if not final_result:
+        final_result = "IDK The GUI loop stopped before producing a terminal answer."
+
     logger.info(f"Total cost for the task: ${total_cost:.4f}")
-    history_inputs[0]['content'][1]['image_url'] = "<image>"
-    for item in history_inputs:
-        if item.get('type', None) == 'computer_call_output':
-            item['output']['image_url'] = "<image>"
-    return history_inputs, reasoning, total_cost
+    return _sanitize_images(history_inputs), final_result, total_cost, raw_transcript, tool_events
 

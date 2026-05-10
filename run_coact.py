@@ -10,6 +10,7 @@ import json
 import time
 import os
 from mm_agents.coact.operator_agent import OrchestratorAgent, OrchestratorUserProxyAgent
+from mm_agents.coact.cua_agent import DEFAULT_CUA_MODEL, validate_cua_model
 from mm_agents.coact.autogen import LLMConfig
 from mm_agents.env_loader import load_mm_agents_env
 import logging
@@ -18,6 +19,8 @@ from functools import partial
 import sys
 
 load_mm_agents_env()
+
+DEFAULT_OAI_CONFIG_PATH = str((Path(__file__).resolve().parent / "mm_agents" / "coact" / "OAI_CONFIG_LIST").resolve())
 
 
 TASK_DESCRIPTION = """# Your role
@@ -46,7 +49,7 @@ After that, if anything is wrong, tell the programmer to modify it.
 ## GUI Operator
 Let a GUI agent to solve a subtask you assigned. 
 GUI agent can operate the computer by clicking and typing (but not accurate). 
-When DuckDuckGo search is enabled, the GUI agent can also look up app documentation or help pages before taking GUI actions.
+When web search is enabled, the GUI agent can also look up app documentation or help pages before taking GUI actions.
 Require a detailed task description.
 When you call GUI agent, it will only have a **20-step** budget to complete your task. Each step is a one-time interaction with OS like mouse click or keyboard typing. Please take this into account when you plan the actions.
 If you let GUI Operator to check the result, you MUST let it close and reopen the file because programmer's result will NOT be updated to the screen. 
@@ -68,15 +71,20 @@ def config() -> argparse.Namespace:
     parser.add_argument("--client_password", type=str, default="osworld-public-evaluation")
 
     # agent config
-    parser.add_argument("--oai_config_path", type=str, default="/home/ubuntu/OSWorld/mm_agents/coact/OAI_CONFIG_LIST")
+    parser.add_argument("--oai_config_path", type=str, default=DEFAULT_OAI_CONFIG_PATH)
     parser.add_argument("--orchestrator_model", type=str, default="o3")
     parser.add_argument("--coding_model", type=str, default="o4-mini")
-    parser.add_argument("--cua_model", type=str, default=os.environ.get("OPENAI_CUA_MODEL", "computer-use-preview"))
+    parser.add_argument("--cua_model", type=str, default=os.environ.get("OPENAI_CUA_MODEL", DEFAULT_CUA_MODEL))
     parser.add_argument(
+        "--enable_web_search",
         "--enable_duckduckgo_search",
+        dest="enable_web_search",
         action="store_true",
-        default=os.environ.get("COACT_ENABLE_DUCKDUCKGO_SEARCH", "").lower() in {"1", "true", "yes", "on"},
-        help="Enable DuckDuckGo documentation search in the GUI agent path",
+        default=(
+            os.environ.get("COACT_ENABLE_WEB_SEARCH", "").lower() in {"1", "true", "yes", "on"}
+            or os.environ.get("COACT_ENABLE_DUCKDUCKGO_SEARCH", "").lower() in {"1", "true", "yes", "on"}
+        ),
+        help="Enable hosted OpenAI web search in the GUI agent path",
     )
     parser.add_argument("--orchestrator_max_steps", type=int, default=15)
     parser.add_argument("--coding_max_steps", type=int, default=20)
@@ -145,6 +153,34 @@ logger.addHandler(stdout_handler)
 logger = logging.getLogger("desktopenv.expeiment")
 
 
+def _load_oai_config_list(config_path: str) -> List[Dict[str, object]]:
+    config_file = Path(config_path)
+    if not config_file.is_file():
+        raise FileNotFoundError(f"OAI config file not found: {config_path}")
+
+    with open(config_file, encoding="utf-8") as f:
+        config_list = json.load(f)
+
+    if not isinstance(config_list, list):
+        raise ValueError(f"OAI config file must contain a JSON list: {config_path}")
+
+    env_api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("OPENAI_API_KEY_CUA")
+    resolved_config_list: List[Dict[str, object]] = []
+    for entry in config_list:
+        if not isinstance(entry, dict):
+            raise ValueError(f"Invalid OAI config entry in {config_path}: expected object, got {type(entry).__name__}")
+        resolved_entry = dict(entry)
+        if resolved_entry.get("api_key") == "KEY":
+            if not env_api_key:
+                raise ValueError(
+                    "The selected OAI config uses placeholder `api_key` values. "
+                    "Set `OPENAI_API_KEY`/`OPENAI_API_KEY_CUA` or pass a populated `--oai_config_path`."
+                )
+            resolved_entry["api_key"] = env_api_key
+        resolved_config_list.append(resolved_entry)
+    return resolved_config_list
+
+
 def _resolve_task_path(test_config_base_dir: str, task_id: str, domain: str) -> tuple[str, str, str]:
     task_arg = Path(task_id)
     if task_arg.is_file():
@@ -187,8 +223,8 @@ def process_task(task_info,
                 path_to_vm,
                 orchestrator_model="o3",
                 coding_model='o4-mini',
-                cua_model="computer-use-preview",
-                enable_duckduckgo_search=False,
+                cua_model=DEFAULT_CUA_MODEL,
+                enable_web_search=False,
                 save_dir='results',
                 orchestrator_max_steps=15,
                 cua_max_steps=25,
@@ -197,15 +233,16 @@ def process_task(task_info,
                 screen_width=1920,
                 screen_height=1080,
                 sleep_after_execution=0.5,
-                config_path="OAI_CONFIG_LIST",
+                oai_config_list=None,
                 region="us-east-1",
                 client_password="",
                 ):
     """Worker function to process a single task"""
     domain, ex_id, cfg = task_info
+    validate_cua_model(cua_model)
     
     # Recreate llm_config inside the worker process
-    llm_config = LLMConfig.from_json(path=config_path).where(model=orchestrator_model)
+    llm_config = LLMConfig(config_list=oai_config_list).where(model=orchestrator_model)
     
     history_save_dir = os.path.join(save_dir, "coact", f"{domain}/{ex_id}")
     if not os.path.exists(history_save_dir):
@@ -237,7 +274,7 @@ def process_task(task_info,
                     truncate_history_inputs=cua_max_steps + 1,
                     cua_max_steps=cua_max_steps,
                     coding_max_steps=coding_max_steps,
-                    enable_duckduckgo_search=enable_duckduckgo_search,
+                    enable_web_search=enable_web_search,
                     region=region,
                     client_password=client_password,
                     user_instruction=task_config["instruction"]
@@ -317,6 +354,8 @@ I will not provide further information to you.""" + "<img data:image/png;base64,
 
 if __name__ == "__main__":
     args = config()
+    validate_cua_model(args.cua_model)
+    oai_config_list = _load_oai_config_list(args.oai_config_path)
 
     tasks = []
     scores: Dict[str, List[float]] = {}
@@ -373,9 +412,9 @@ if __name__ == "__main__":
                                save_dir=args.result_dir,
                                coding_model=args.coding_model,
                                cua_model=args.cua_model,
-                               enable_duckduckgo_search=args.enable_duckduckgo_search,
+                               enable_web_search=args.enable_web_search,
                                orchestrator_model=args.orchestrator_model,
-                               config_path=args.oai_config_path, 
+                               oai_config_list=oai_config_list,
                                orchestrator_max_steps=args.orchestrator_max_steps,
                                cua_max_steps=args.cua_max_steps,
                                coding_max_steps=args.coding_max_steps,
