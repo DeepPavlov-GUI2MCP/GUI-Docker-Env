@@ -220,6 +220,7 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         prompt_mode: str = "default",
         task_source: Optional[str] = None,
         orchestrator_client_kwargs: Optional[Dict[str, Any]] = None,
+        orchestrator_backend_config: Optional[Dict[str, Any]] = None,
         gui_client_kwargs: Optional[Dict[str, Any]] = None,
         coding_llm_config: Optional[LLMConfig] = None,
     ):
@@ -292,9 +293,13 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         self.prompt_mode = prompt_mode
         self.task_source = task_source
         self.orchestrator_client_kwargs = orchestrator_client_kwargs or {}
+        self.orchestrator_backend_config = orchestrator_backend_config or {}
         self.gui_client_kwargs = gui_client_kwargs or {}
         self.coding_llm_config = coding_llm_config or LLMConfig(api_type="openai", model=self.llm_model)
-        self.web_search_client: OpenAI = _build_openai_client(**self.orchestrator_client_kwargs)
+        self.web_search_client: OpenAI = _build_openai_client(
+            api_key=self.orchestrator_backend_config.get("api_key"),
+            base_url=self.orchestrator_backend_config.get("base_url"),
+        )
         self.web_search_model = self.orchestrator_model
 
     def reset(self, task_config: dict[str, Any]):

@@ -568,6 +568,7 @@ def process_task(task_info: Tuple[str, str, str], run_config: ResolvedRunConfig)
                     prompt_mode=run_config.mode,
                     task_source=str(task_config.get("source", "")).strip() or None,
                     orchestrator_client_kwargs=run_config.orchestrator.as_openai_client_kwargs(),
+                    orchestrator_backend_config=run_config.orchestrator.as_llm_config_entry(),
                     gui_client_kwargs=run_config.gui.as_openai_client_kwargs(),
                     coding_llm_config=coding_llm_config,
                 )
