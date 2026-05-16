@@ -5,7 +5,7 @@ import datetime
 import shutil
 import traceback
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List, Optional
 import json
 import time
 import os
@@ -320,6 +320,116 @@ def _resolve_task_path(test_config_base_dir: str, task_id: str, domain: str) -> 
     return resolved_domain, task_id, str(cfg_path)
 
 
+def _json_safe(value: Any) -> Any:
+    if isinstance(value, Path):
+        return str(value)
+    if isinstance(value, dict):
+        return {str(k): _json_safe(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(v) for v in value]
+    if isinstance(value, (str, int, float, bool)) or value is None:
+        return value
+    return str(value)
+
+
+def _redact_sensitive(value: Any, key: str = "") -> Any:
+    lowered_key = key.lower()
+    if any(marker in lowered_key for marker in ("api_key", "password", "secret", "token", "credential")):
+        return "<redacted>" if value else value
+    if isinstance(value, dict):
+        return {str(k): _redact_sensitive(v, str(k)) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_redact_sensitive(item, key) for item in value]
+    return _json_safe(value)
+
+
+def _resolve_metadata_path(path: Optional[str]) -> Optional[str]:
+    if not path:
+        return None
+    return str(Path(path).expanduser().resolve())
+
+
+def _write_json_file(path: str | Path, payload: Dict[str, Any]) -> None:
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with open(target, "w", encoding="utf-8") as f:
+        json.dump(_json_safe(payload), f, ensure_ascii=False, indent=2)
+
+
+def _build_run_metadata(
+    args: argparse.Namespace,
+    tasks: List[tuple[str, str, str]],
+    selected_tasks: List[tuple[str, str, str]],
+    test_all_meta: Dict[str, List[str]],
+    oai_config_list: List[Dict[str, object]],
+) -> Dict[str, Any]:
+    return {
+        "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "run_id": datetime_str,
+        "entrypoint": str(Path(__file__).resolve()),
+        "args": _redact_sensitive(vars(args)),
+        "models": {
+            "orchestrator_model": args.orchestrator_model,
+            "coding_model": args.coding_model,
+            "cua_model": args.cua_model,
+        },
+        "features": {
+            "mode": args.mode,
+            "enable_web_search": args.enable_web_search,
+            "enable_coding_agent": args.enable_coding_agent,
+        },
+        "files": {
+            "oai_config_path": _resolve_metadata_path(args.oai_config_path),
+            "test_all_meta_path": _resolve_metadata_path(args.test_all_meta_path),
+            "test_config_base_dir": _resolve_metadata_path(args.test_config_base_dir),
+            "result_dir": _resolve_metadata_path(args.result_dir),
+        },
+        "tasks": [
+            {
+                "domain": domain,
+                "task_id": ex_id,
+                "config_path": _resolve_metadata_path(cfg),
+            }
+            for domain, ex_id, cfg in tasks
+        ],
+        "selected_tasks": [
+            {
+                "domain": domain,
+                "task_id": ex_id,
+                "config_path": _resolve_metadata_path(cfg),
+                "will_process": (domain, ex_id, cfg) in tasks,
+            }
+            for domain, ex_id, cfg in selected_tasks
+        ],
+        "selected_task_ids": test_all_meta,
+        "oai_config_list": _redact_sensitive(oai_config_list),
+        "environment": {
+            "OPENAI_BASE_URL": os.environ.get("OPENAI_BASE_URL"),
+            "OPENAI_CUA_MODEL": os.environ.get("OPENAI_CUA_MODEL"),
+            "COACT_ENABLE_WEB_SEARCH": os.environ.get("COACT_ENABLE_WEB_SEARCH"),
+            "COACT_ENABLE_DUCKDUCKGO_SEARCH": os.environ.get("COACT_ENABLE_DUCKDUCKGO_SEARCH"),
+            "OPENAI_API_KEY_set": bool(os.environ.get("OPENAI_API_KEY")),
+            "OPENAI_API_KEY_CUA_set": bool(os.environ.get("OPENAI_API_KEY_CUA")),
+        },
+    }
+
+
+def _build_task_metadata(
+    domain: str,
+    ex_id: str,
+    cfg: str,
+    settings: Dict[str, Any],
+) -> Dict[str, Any]:
+    return {
+        "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "run_id": datetime_str,
+        "domain": domain,
+        "task_id": ex_id,
+        "task_config_path": _resolve_metadata_path(cfg),
+        "settings": _redact_sensitive(settings),
+    }
+
+
 def process_task(task_info, 
                 provider_name,
                 path_to_vm,
@@ -351,6 +461,33 @@ def process_task(task_info,
     history_save_dir = os.path.join(save_dir, "coact", f"{domain}/{ex_id}")
     if not os.path.exists(history_save_dir):
         os.makedirs(history_save_dir)
+    task_metadata = _build_task_metadata(
+        domain,
+        ex_id,
+        cfg,
+        {
+            "provider_name": provider_name,
+            "path_to_vm": path_to_vm,
+            "orchestrator_model": orchestrator_model,
+            "coding_model": coding_model,
+            "cua_model": cua_model,
+            "mode": mode,
+            "enable_web_search": enable_web_search,
+            "enable_coding_agent": enable_coding_agent,
+            "save_dir": save_dir,
+            "orchestrator_max_steps": orchestrator_max_steps,
+            "cua_max_steps": cua_max_steps,
+            "coding_max_steps": coding_max_steps,
+            "cut_off_steps": cut_off_steps,
+            "screen_width": screen_width,
+            "screen_height": screen_height,
+            "sleep_after_execution": sleep_after_execution,
+            "region": region,
+            "client_password": client_password,
+            "oai_config_list": oai_config_list,
+        },
+    )
+    _write_json_file(os.path.join(history_save_dir, "metadata.json"), task_metadata)
     
     task_config = json.load(open(cfg))
     task_instruction = _build_task_instruction(task_config, mode)
@@ -447,6 +584,7 @@ def process_task(task_info,
             if retry < 3:
                 shutil.rmtree(history_save_dir)
                 os.makedirs(history_save_dir)
+                _write_json_file(os.path.join(history_save_dir, "metadata.json"), task_metadata)
                 print(f"Retry {retry} times, error: {str(e)}")
                 traceback.print_exc()
                 continue
@@ -473,9 +611,11 @@ if __name__ == "__main__":
     oai_config_list = _load_oai_config_list(args.oai_config_path)
 
     tasks = []
+    selected_tasks = []
     scores: Dict[str, List[float]] = {}
     if args.task_id:
         domain, ex_id, cfg = _resolve_task_path(args.test_config_base_dir, args.task_id, args.domain)
+        selected_tasks.append((domain, ex_id, cfg))
         scores[domain] = []
         result_path = os.path.join(args.result_dir, 'coact', f"{domain}/{ex_id}/result.txt")
         if os.path.exists(result_path):
@@ -493,12 +633,17 @@ if __name__ == "__main__":
         for domain in test_all_meta:
             scores[domain] = []
             for ex_id in test_all_meta[domain]:
+                cfg = os.path.join(args.test_config_base_dir, f"{domain}/{ex_id}.json")
+                selected_tasks.append((domain, ex_id, cfg))
                 if os.path.exists(os.path.join(args.result_dir, 'coact', f"{domain}/{ex_id}/result.txt")):
                     result = open(os.path.join(args.result_dir, 'coact', f"{domain}/{ex_id}/result.txt"), "r").read()
                     print(f"Results already exist in {domain}/{ex_id}, result: {result}")
                     continue
-                cfg = os.path.join(args.test_config_base_dir, f"{domain}/{ex_id}.json")
                 tasks.append((domain, ex_id, cfg))
+    run_metadata = _build_run_metadata(args, tasks, selected_tasks, test_all_meta, oai_config_list)
+    metadata_dir = Path(args.result_dir) / "coact"
+    _write_json_file(metadata_dir / f"run_metadata_{datetime_str}.json", run_metadata)
+    _write_json_file(metadata_dir / "run_metadata_latest.json", run_metadata)
     # Check if there are any tasks to process
     if not tasks:
         print("No tasks to process. All tasks have already been completed.")
