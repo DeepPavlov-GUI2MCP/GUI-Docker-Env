@@ -26,16 +26,12 @@ DEFAULT_PROMPT_MODE = "default"
 
 BASE_PROMPT_TEMPLATE = """# Task
 {instruction}
-{source_block}
 
 # Hints
 - Sudo password is "{CLIENT_PASSWORD}".
 - Keep the windows/applications opened at the end of the task.
 - Do not use shortcut to reload the application except for the browser, just close and reopen.
 - If "The document has been changed by others" pops out, you should click "cancel" and reopen the file.
-- You may use the built-in web search tool to look up documentation for the current app, site, or workflow when that helps you complete the task.
-- If the source page is directly relevant, inspect it with `read_webpage` before you act in the UI.
-- Prefer focused documentation lookups over broad browsing, and use normal GUI actions to apply what you learned.
 {mode_hints}
 - If you have completed the user task, reply with the information you want the user to know along with 'TERMINATE'.
 - If you don't know how to continue the task, reply your concern or question along with 'IDK'.
@@ -117,17 +113,15 @@ class _HTMLTextExtractor(HTMLParser):
 def _mode_hints(prompt_mode: str) -> str:
     if prompt_mode == "search-first":
         return (
-            "- In this task mode, you must always search the web first before planning or taking GUI actions.\n"
-            "- Search for official documentation and relevant Stack Exchange answers for the application and workflow in the task.\n"
-            "- Only after you have gathered relevant instructions should you form a plan and execute it in the UI."
+            "- The orchestrator may provide research-backed instructions for this task.\n"
+            "- Focus on carrying out the delegated GUI actions precisely and efficiently."
         )
     if prompt_mode == "inspect-source-first":
         return (
-            "- In this task mode, you must first inspect the provided source page and derive instructions from it before planning or taking GUI actions.\n"
-            "- Treat the source page as your primary guidance.\n"
-            "- Use broader web search only if the source page is missing information needed to complete or verify the task."
+            "- The orchestrator may provide source-guided instructions for this task.\n"
+            "- Focus on carrying out the delegated GUI actions precisely and efficiently."
         )
-    return "- Use web search only when it materially helps you complete the task."
+    return "- Focus on carrying out the delegated GUI actions precisely and efficiently."
 
 
 def _build_prompt(
@@ -136,12 +130,9 @@ def _build_prompt(
     prompt_mode: str = DEFAULT_PROMPT_MODE,
     task_source: Optional[str] = None,
 ) -> str:
-    source_block = ""
-    if prompt_mode == "inspect-source-first" and task_source and "Source URL:" not in instruction:
-        source_block = f"\n# Source URL\n{task_source}\n"
+    del task_source
     return BASE_PROMPT_TEMPLATE.format(
         instruction=instruction,
-        source_block=source_block,
         CLIENT_PASSWORD=client_password,
         mode_hints=_mode_hints(prompt_mode),
     )
@@ -151,15 +142,7 @@ def validate_cua_model(cua_model: str) -> None:
     if not cua_model:
         raise ValueError("Missing GUI model. Set `OPENAI_CUA_MODEL` or pass `--cua_model`.")
     if cua_model in LEGACY_CUA_MODELS:
-        raise ValueError(
-            "The CoAct GUI agent now uses the GA `computer` tool and no longer supports "
-            f"`{cua_model}`. Use a current computer-use model such as `{DEFAULT_CUA_MODEL}`."
-        )
-    if not any(cua_model.startswith(prefix) for prefix in SUPPORTED_CUA_MODEL_PREFIXES):
-        raise ValueError(
-            "Unsupported GUI model for the GA `computer` tool path: "
-            f"`{cua_model}`. Use a current gpt-5 computer-use model such as `{DEFAULT_CUA_MODEL}`."
-        )
+        raise ValueError(f"Unsupported legacy GUI model `{cua_model}`.")
 
 
 def _normalize_key(key: str) -> str:
@@ -323,9 +306,9 @@ def _estimate_cost(cua_model: str, response: Any) -> float:
     return input_cost + output_cost
 
 
-def _build_openai_client() -> OpenAI:
-    api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("OPENAI_API_KEY_CUA")
-    base_url = os.environ.get("OPENAI_BASE_URL")
+def _build_openai_client(api_key: Optional[str] = None, base_url: Optional[str] = None) -> OpenAI:
+    api_key = api_key if api_key is not None else (os.environ.get("OPENAI_API_KEY") or os.environ.get("OPENAI_API_KEY_CUA"))
+    base_url = base_url if base_url is not None else os.environ.get("OPENAI_BASE_URL")
     kwargs: Dict[str, Any] = {}
     if base_url:
         kwargs["base_url"] = base_url
@@ -336,12 +319,8 @@ def _build_openai_client() -> OpenAI:
     return OpenAI(**kwargs)
 
 
-def _build_cua_tools(enable_web_search: bool) -> List[Dict[str, Any]]:
-    tools: List[Dict[str, Any]] = [{"type": "computer"}]
-    if enable_web_search:
-        tools.append({"type": SEARCH_TOOL_TYPE, "search_context_size": "medium"})
-        tools.append(READ_WEBPAGE_TOOL)
-    return tools
+def _build_cua_tools() -> List[Dict[str, Any]]:
+    return [{"type": "computer"}]
 
 
 def _parse_function_arguments(arguments: Any) -> Dict[str, Any]:
@@ -567,8 +546,7 @@ def _execute_computer_call(
 def call_openai_cua(client: OpenAI,
                     response_input: list,
                     cua_model: str,
-                    previous_response_id: Optional[str] = None,
-                    enable_web_search: bool = False) -> Tuple[Any, float]:
+                    previous_response_id: Optional[str] = None) -> Tuple[Any, float]:
     retry = 0
     response = None
     last_error: Optional[Exception] = None
@@ -577,10 +555,9 @@ def call_openai_cua(client: OpenAI,
         try:
             response = client.responses.create(
                 model=cua_model,
-                tools=_build_cua_tools(enable_web_search=enable_web_search),
+                tools=_build_cua_tools(),
                 input=response_input,
                 previous_response_id=previous_response_id,
-                include=["web_search_call.action.sources"] if enable_web_search else None,
                 parallel_tool_calls=False,
                 reasoning={"summary": "concise"},
             )
@@ -610,7 +587,8 @@ def run_cua(
     max_steps: int,
     save_path: str = './',
     cua_model: str = os.environ.get("OPENAI_CUA_MODEL", DEFAULT_CUA_MODEL),
-    enable_web_search: bool = False,
+    base_url: Optional[str] = None,
+    api_key: Optional[str] = None,
     screen_width: int = 1920,
     screen_height: int = 1080,
     sleep_after_execution: float = 0.3,
@@ -619,7 +597,7 @@ def run_cua(
     prompt_mode: str = DEFAULT_PROMPT_MODE,
     task_source: Optional[str] = None,
 ) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]]]:
-    client = _build_openai_client()
+    client = _build_openai_client(api_key=api_key, base_url=base_url)
     validate_cua_model(cua_model)
 
     logger.info(f"Instruction: {instruction}")
@@ -648,7 +626,6 @@ def run_cua(
         client,
         history_inputs,
         cua_model=cua_model,
-        enable_web_search=enable_web_search,
     )
     total_cost = cost
     logger.info(f"Cost: ${cost:.6f} | Total Cost: ${total_cost:.6f}")
@@ -751,7 +728,6 @@ def run_cua(
             response_input=follow_up_inputs,
             cua_model=cua_model,
             previous_response_id=response.id,
-            enable_web_search=enable_web_search,
         )
         total_cost += cost
         raw_transcript.append(_response_to_transcript_entry(response))

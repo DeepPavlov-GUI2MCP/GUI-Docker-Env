@@ -6,7 +6,7 @@ import json
 import os
 import traceback
 from urllib.parse import urlparse
-from typing import Any, Callable, Literal, Optional, Union
+from typing import Any, Callable, Dict, Literal, Optional, Union
 
 from openai import OpenAI
 from desktop_env.desktop_env import DesktopEnv
@@ -129,7 +129,8 @@ class OrchestratorAgent(MultimodalConversableAgent):
         code_execution_config: Optional[Union[dict[str, Any], Literal[False]]] = False,
         description: Optional[str] = DEFAULT_DESCRIPTION,
         enable_coding_agent: bool = False,
-        prompt_mode: str = "default",
+        enable_web_search_tool: bool = False,
+        enable_read_webpage_tool: bool = False,
         **kwargs: Any,
     ):
         super().__init__(
@@ -152,10 +153,10 @@ class OrchestratorAgent(MultimodalConversableAgent):
         if self.enable_coding_agent:
             self.update_tool_signature(self.CALL_CODING_AGENT_TOOL, is_remove=False)
         self.update_tool_signature(self.CALL_GUI_AGENT_TOOL, is_remove=False)
-        if prompt_mode == "inspect-source-first":
-            self.update_tool_signature(self.CALL_READ_WEBPAGE_TOOL, is_remove=False)
-        else:
+        if enable_web_search_tool:
             self.update_tool_signature(self.CALL_WEB_SEARCH_TOOL, is_remove=False)
+        if enable_read_webpage_tool:
+            self.update_tool_signature(self.CALL_READ_WEBPAGE_TOOL, is_remove=False)
         # self.assistant.update_tool_signature(self.CALL_API_SUMMARY_AGENT_TOOL, is_remove=False)  # TODO: add this tool later
 
 
@@ -209,13 +210,18 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         history_save_dir: str = "",
         llm_model: str = "o4-mini",
         gui_model: str = DEFAULT_CUA_MODEL,
+        orchestrator_model: str = "o3",
         region: str = "us-east-1",
         client_password: str = "",
         user_instruction: str = "",
-        enable_web_search: bool = False,
+        enable_web_search_tool: bool = False,
+        enable_read_webpage_tool: bool = False,
         enable_coding_agent: bool = False,
         prompt_mode: str = "default",
         task_source: Optional[str] = None,
+        orchestrator_client_kwargs: Optional[Dict[str, Any]] = None,
+        gui_client_kwargs: Optional[Dict[str, Any]] = None,
+        coding_llm_config: Optional[LLMConfig] = None,
     ):
         description = (
             description if description is not None else self.DEFAULT_USER_PROXY_AGENT_DESCRIPTIONS[human_input_mode]
@@ -234,9 +240,9 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         function_map = {
             "call_gui_agent": lambda **args: self._call_gui_agent(**args, screen_width=screen_width, screen_height=screen_height),
         }
-        if prompt_mode == "inspect-source-first":
+        if enable_read_webpage_tool:
             function_map["read_webpage"] = lambda **args: self._read_webpage(**args)
-        else:
+        if enable_web_search_tool:
             function_map["web_search"] = lambda **args: self._web_search(**args)
         if enable_coding_agent:
             function_map["call_coding_agent"] = lambda **args: self._call_coding_agent(**args)
@@ -277,14 +283,19 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         self.coding_max_steps = coding_max_steps
         self.llm_config = llm_config
         self.llm_model = llm_model
+        self.orchestrator_model = orchestrator_model
         validate_cua_model(gui_model)
         self.gui_model = gui_model
-        self.enable_web_search = enable_web_search
+        self.enable_web_search_tool = enable_web_search_tool
+        self.enable_read_webpage_tool = enable_read_webpage_tool
         self.enable_coding_agent = enable_coding_agent
         self.prompt_mode = prompt_mode
         self.task_source = task_source
-        self.web_search_client: OpenAI = _build_openai_client()
-        self.web_search_model = os.environ.get("OPENAI_WEB_SEARCH_MODEL", self.gui_model)
+        self.orchestrator_client_kwargs = orchestrator_client_kwargs or {}
+        self.gui_client_kwargs = gui_client_kwargs or {}
+        self.coding_llm_config = coding_llm_config or LLMConfig(api_type="openai", model=self.llm_model)
+        self.web_search_client: OpenAI = _build_openai_client(**self.orchestrator_client_kwargs)
+        self.web_search_model = self.orchestrator_model
 
     def reset(self, task_config: dict[str, Any]):
         obs = self.env.reset(task_config=task_config)
@@ -303,7 +314,8 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
                 save_path=cua_path,
                 max_steps=self.cua_config["max_steps"],
                 cua_model=self.gui_model,
-                enable_web_search=self.enable_web_search,
+                base_url=self.gui_client_kwargs.get("base_url"),
+                api_key=self.gui_client_kwargs.get("api_key"),
                 screen_width=screen_width,
                 screen_height=screen_height,
                 sleep_after_execution=self.cua_config["sleep_after_execution"],
@@ -431,7 +443,7 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
             screenshot = self.env.controller.get_screenshot()
             coding_agent = MultimodalConversableAgent(
                 name="coding_agent",
-                llm_config=LLMConfig(api_type="openai", model=self.llm_model),
+                llm_config=self.coding_llm_config,
                 system_message=CODER_SYSTEM_MESSAGE.format(CLIENT_PASSWORD=self.client_password),
             )
             code_interpreter = TerminalProxyAgent(
@@ -473,7 +485,7 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
             # Review the group chat history
             summarizer = ConversableAgent(
                 name="summarizer",
-                llm_config=LLMConfig(api_type="openai", model=self.llm_model),
+                llm_config=self.coding_llm_config,
                 system_message=self.CONVERSATION_REVIEW_PROMPT,
             )
             summarized_history = summarizer.generate_oai_reply(
