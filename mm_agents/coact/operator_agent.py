@@ -210,6 +210,7 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         history_save_dir: str = "",
         llm_model: str = "o4-mini",
         gui_model: str = DEFAULT_CUA_MODEL,
+        gui_protocol: Literal["openai", "vllm"] = "openai",
         orchestrator_model: str = "o3",
         region: str = "us-east-1",
         client_password: str = "",
@@ -285,8 +286,10 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         self.llm_config = llm_config
         self.llm_model = llm_model
         self.orchestrator_model = orchestrator_model
-        validate_cua_model(gui_model)
+        if gui_protocol == "openai":
+            validate_cua_model(gui_model)
         self.gui_model = gui_model
+        self.gui_protocol = gui_protocol
         self.enable_web_search_tool = enable_web_search_tool
         self.enable_read_webpage_tool = enable_read_webpage_tool
         self.enable_coding_agent = enable_coding_agent
@@ -319,6 +322,7 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
                 save_path=cua_path,
                 max_steps=self.cua_config["max_steps"],
                 cua_model=self.gui_model,
+                gui_protocol=self.gui_protocol,
                 base_url=self.gui_client_kwargs.get("base_url"),
                 api_key=self.gui_client_kwargs.get("api_key"),
                 screen_width=screen_width,

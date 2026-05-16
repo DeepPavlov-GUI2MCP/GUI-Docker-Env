@@ -22,6 +22,8 @@ logger = logging.getLogger("desktopenv")
 GPT4O_INPUT_PRICE_PER_1M_TOKENS = 3.00
 GPT4O_OUTPUT_PRICE_PER_1M_TOKENS = 12.00
 DEFAULT_CUA_MODEL = "gpt-5.5"
+DEFAULT_GUI_PROTOCOL = "openai"
+SUPPORTED_GUI_PROTOCOLS = (DEFAULT_GUI_PROTOCOL, "vllm")
 DEFAULT_PROMPT_MODE = "default"
 
 BASE_PROMPT_TEMPLATE = """# Task
@@ -581,12 +583,192 @@ def call_openai_cua(client: OpenAI,
     return response, _estimate_cost(cua_model=cua_model, response=response)
 
 
+def _build_vllm_runtime_conf() -> Dict[str, Any]:
+    return {
+        "infer_mode": "qwen25vl_normal",
+        "prompt_style": "qwen25vl_normal",
+        "input_swap": False,
+        "language": "English",
+        "history_n": 5,
+        "max_pixels": 16384 * 28 * 28,
+        "min_pixels": 100 * 28 * 28,
+        "callusr_tolerance": 3,
+        "temperature": 0.0,
+        "top_p": 0.95,
+        "top_k": -1,
+        "max_tokens": 2048,
+    }
+
+
+def _build_vllm_instruction(
+    instruction: str,
+    client_password: str,
+    prompt_mode: str = DEFAULT_PROMPT_MODE,
+    task_source: Optional[str] = None,
+) -> str:
+    lines = [instruction.strip()]
+    if client_password:
+        lines.append(f'Sudo password: "{client_password}".')
+    lines.extend(
+        [
+            "Keep the windows/applications opened at the end of the task.",
+            "Do not reload applications with shortcuts except for browsers.",
+            'If a dialog says "The document has been changed by others", choose "cancel" and reopen the file.',
+            "If the UI needs time to update, use wait().",
+            "If the environment is broken or the task is impossible, use error_env() or call_user().",
+        ]
+    )
+    if prompt_mode in {"search-first", "inspect-source-first"} and task_source:
+        lines.append(f"Task source URL: {task_source}")
+    return "\n".join(line for line in lines if line).strip()
+
+
+def _is_vllm_error_prediction(prediction: str) -> bool:
+    normalized = (prediction or "").strip().lower()
+    return (
+        normalized.startswith("client error")
+        or normalized.startswith("parsing action error")
+        or normalized.startswith("error when parsing response")
+    )
+
+
+def _run_cua_vllm(
+    env: DesktopEnv,
+    instruction: str,
+    max_steps: int,
+    save_path: str = "./",
+    cua_model: str = "ui-tars-1.5",
+    base_url: Optional[str] = None,
+    api_key: Optional[str] = None,
+    sleep_after_execution: float = 0.3,
+    client_password: str = "",
+    prompt_mode: str = DEFAULT_PROMPT_MODE,
+    task_source: Optional[str] = None,
+) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]]]:
+    from mm_agents.uitars15_v1 import UITARSAgent
+
+    vllm_instruction = _build_vllm_instruction(
+        instruction=instruction,
+        client_password=client_password,
+        prompt_mode=prompt_mode,
+        task_source=task_source,
+    )
+    agent = UITARSAgent(
+        model=cua_model,
+        action_space="pyautogui",
+        observation_type="screenshot",
+        max_trajectory_length=max(max_steps, 1),
+        model_type="qwen25vl",
+        runtime_conf=_build_vllm_runtime_conf(),
+        base_url=base_url,
+        api_key=api_key or "empty",
+    )
+    agent.reset()
+
+    logger.info(f"Instruction: {instruction}")
+    obs = env._get_obs()
+    initial_screenshot = obs["screenshot"]
+    screenshot_b64 = base64.b64encode(initial_screenshot).decode("utf-8")
+    with open(os.path.join(save_path, "initial_screenshot.png"), "wb") as f:
+        f.write(initial_screenshot)
+
+    history_inputs: List[Dict[str, Any]] = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "input_text", "text": vllm_instruction},
+                {"type": "input_image", "image_url": f"data:image/png;base64,{screenshot_b64}", "detail": "original"},
+            ],
+        }
+    ]
+    raw_transcript: List[Dict[str, Any]] = []
+    tool_events: List[Dict[str, Any]] = []
+    total_cost = 0.0
+    final_result = ""
+    step_count = 0
+    action_index = 0
+
+    while step_count < max_steps:
+        prediction, actions = agent.predict(vllm_instruction, obs)
+        raw_transcript.append(
+            {
+                "protocol": "vllm",
+                "step_index": action_index + 1,
+                "prediction": prediction,
+                "actions": list(actions),
+            }
+        )
+        history_inputs.append(
+            {
+                "role": "assistant",
+                "content": [{"type": "output_text", "text": prediction}],
+            }
+        )
+
+        if not actions:
+            final_result = "IDK The GUI loop stopped before producing an action."
+            break
+
+        for action in actions:
+            if step_count >= max_steps:
+                final_result = "IDK Step budget exhausted before the GUI task was completed."
+                break
+
+            action_index += 1
+            step_count += 1
+            obs, reward, done, info = env.step(action, sleep_after_execution)
+            screenshot = obs["screenshot"]
+            screenshot_b64 = base64.b64encode(screenshot).decode("utf-8")
+            with open(os.path.join(save_path, f"step_{action_index}.png"), "wb") as f:
+                f.write(screenshot)
+
+            tool_events.append(
+                {
+                    "type": "vllm_action",
+                    "step_index": action_index,
+                    "prediction": prediction,
+                    "action": action,
+                    "reward": reward,
+                    "done": done,
+                    "info": info,
+                }
+            )
+            history_inputs.append(
+                {
+                    "role": "tool",
+                    "content": [
+                        {"type": "tool_result", "text": str(action)},
+                        {"type": "input_image", "image_url": f"data:image/png;base64,{screenshot_b64}", "detail": "original"},
+                    ],
+                }
+            )
+
+            if action == "DONE":
+                if _is_vllm_error_prediction(prediction):
+                    final_result = f"IDK {prediction}".strip()
+                else:
+                    final_result = prediction if "TERMINATE" in prediction else f"{prediction}\nTERMINATE"
+                break
+            if action == "FAIL":
+                final_result = f"IDK {prediction}".strip()
+                break
+
+        if final_result:
+            break
+
+    if not final_result:
+        final_result = "IDK Step budget exhausted before the GUI task was completed."
+
+    return _sanitize_images(history_inputs), final_result, total_cost, raw_transcript, tool_events
+
+
 def run_cua(
     env: DesktopEnv,
     instruction: str,
     max_steps: int,
     save_path: str = './',
     cua_model: str = os.environ.get("OPENAI_CUA_MODEL", DEFAULT_CUA_MODEL),
+    gui_protocol: str = DEFAULT_GUI_PROTOCOL,
     base_url: Optional[str] = None,
     api_key: Optional[str] = None,
     screen_width: int = 1920,
@@ -597,6 +779,24 @@ def run_cua(
     prompt_mode: str = DEFAULT_PROMPT_MODE,
     task_source: Optional[str] = None,
 ) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]]]:
+    if gui_protocol not in SUPPORTED_GUI_PROTOCOLS:
+        raise ValueError(f"Unsupported GUI protocol `{gui_protocol}`. Expected one of {SUPPORTED_GUI_PROTOCOLS}.")
+    if gui_protocol == "vllm":
+        del screen_width, screen_height, truncate_history_inputs
+        return _run_cua_vllm(
+            env=env,
+            instruction=instruction,
+            max_steps=max_steps,
+            save_path=save_path,
+            cua_model=cua_model,
+            base_url=base_url,
+            api_key=api_key,
+            sleep_after_execution=sleep_after_execution,
+            client_password=client_password,
+            prompt_mode=prompt_mode,
+            task_source=task_source,
+        )
+
     client = _build_openai_client(api_key=api_key, base_url=base_url)
     validate_cua_model(cua_model)
 

@@ -9,6 +9,8 @@ import yaml
 
 DEFAULT_MODE = "default"
 SUPPORTED_MODES = (DEFAULT_MODE, "search-first", "inspect-source-first")
+DEFAULT_GUI_PROTOCOL = "openai"
+SUPPORTED_GUI_PROTOCOLS = (DEFAULT_GUI_PROTOCOL, "vllm")
 
 
 @dataclass(frozen=True)
@@ -16,6 +18,7 @@ class BackendSettings:
     model: str
     base_url: Optional[str] = None
     api_key: Optional[str] = None
+    protocol: str = DEFAULT_GUI_PROTOCOL
 
     def as_llm_config_entry(self) -> Dict[str, Any]:
         entry: Dict[str, Any] = {
@@ -129,13 +132,19 @@ def load_config_file(path: str) -> ResolvedRunConfig:
     return resolved
 
 
-def _parse_backend(root: Dict[str, Any], key: str) -> BackendSettings:
+def _parse_backend(root: Dict[str, Any], key: str, *, default_protocol: str = DEFAULT_GUI_PROTOCOL) -> BackendSettings:
     backend = _get_mapping(root, key)
     model = _get_required_str(backend, "model", context=key)
+    protocol = _get_optional_str(backend, "protocol", default_protocol) or default_protocol
+    if protocol not in SUPPORTED_GUI_PROTOCOLS:
+        raise ValueError(
+            f"Unsupported `{key}.protocol` value `{protocol}`. Expected one of {SUPPORTED_GUI_PROTOCOLS}."
+        )
     return BackendSettings(
         model=model,
         base_url=_get_optional_str(backend, "base_url"),
         api_key=_get_optional_str(backend, "api_key"),
+        protocol=protocol,
     )
 
 

@@ -18,7 +18,9 @@ from mm_agents.coact.autogen import LLMConfig
 from mm_agents.coact.cua_agent import DEFAULT_CUA_MODEL, validate_cua_model
 from mm_agents.coact.operator_agent import OrchestratorAgent, OrchestratorUserProxyAgent
 from mm_agents.coact.run_config import (
+    DEFAULT_GUI_PROTOCOL,
     DEFAULT_MODE,
+    SUPPORTED_GUI_PROTOCOLS,
     SUPPORTED_MODES,
     BackendSettings,
     ResolvedRunConfig,
@@ -108,6 +110,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--gui_model", "--cua_model", dest="gui_model", type=str, default=os.environ.get("OPENAI_CUA_MODEL", DEFAULT_CUA_MODEL))
     parser.add_argument("--gui_base_url", type=str, default=None)
     parser.add_argument("--gui_api_key", type=str, default=None)
+    parser.add_argument("--gui_protocol", type=str, choices=SUPPORTED_GUI_PROTOCOLS, default=DEFAULT_GUI_PROTOCOL)
     parser.add_argument("--enable_coding_agent", action="store_true", default=False, help="Expose the coding agent tool to the CoAct orchestrator.")
     parser.add_argument("--mode", type=str, choices=SUPPORTED_MODES, default=DEFAULT_MODE, help="Prompt strategy for the orchestrator research path.")
     parser.add_argument(
@@ -276,6 +279,7 @@ def _resolve_args_backend(
     model: str,
     base_url: Optional[str],
     api_key: Optional[str],
+    protocol: str = DEFAULT_GUI_PROTOCOL,
     env_base_url: Optional[str],
     env_api_key: Optional[str],
     legacy_entry: Optional[Dict[str, Any]] = None,
@@ -285,7 +289,7 @@ def _resolve_args_backend(
     resolved_api_key = api_key if api_key is not None else entry.get("api_key") or env_api_key
     if resolved_api_key == "KEY":
         resolved_api_key = env_api_key
-    return BackendSettings(model=model, base_url=resolved_base_url, api_key=resolved_api_key)
+    return BackendSettings(model=model, base_url=resolved_base_url, api_key=resolved_api_key, protocol=protocol)
 
 
 def _resolve_run_config_from_args(args: argparse.Namespace) -> ResolvedRunConfig:
@@ -298,6 +302,7 @@ def _resolve_run_config_from_args(args: argparse.Namespace) -> ResolvedRunConfig
         model=args.orchestrator_model,
         base_url=args.orchestrator_base_url,
         api_key=args.orchestrator_api_key,
+        protocol=DEFAULT_GUI_PROTOCOL,
         env_base_url=env_base_url,
         env_api_key=env_api_key,
         legacy_entry=_lookup_oai_entry(legacy_config_list, args.orchestrator_model),
@@ -306,6 +311,7 @@ def _resolve_run_config_from_args(args: argparse.Namespace) -> ResolvedRunConfig
         model=args.coding_model,
         base_url=args.coding_base_url,
         api_key=args.coding_api_key,
+        protocol=DEFAULT_GUI_PROTOCOL,
         env_base_url=env_base_url,
         env_api_key=env_api_key,
         legacy_entry=_lookup_oai_entry(legacy_config_list, args.coding_model),
@@ -314,6 +320,7 @@ def _resolve_run_config_from_args(args: argparse.Namespace) -> ResolvedRunConfig
         model=args.gui_model,
         base_url=args.gui_base_url,
         api_key=args.gui_api_key,
+        protocol=args.gui_protocol,
         env_base_url=env_base_url,
         env_api_key=env_gui_api_key,
     )
@@ -441,13 +448,14 @@ def _build_run_metadata(
             {
                 "orchestrator": run_config.orchestrator.as_llm_config_entry(),
                 "coding": run_config.coding.as_llm_config_entry(),
-                "gui": run_config.gui.as_openai_client_kwargs() | {"model": run_config.gui.model},
+                "gui": run_config.gui.as_openai_client_kwargs() | {"model": run_config.gui.model, "protocol": run_config.gui.protocol},
             }
         ),
         "features": {
             "mode": run_config.mode,
             "enable_web_search": run_config.enable_web_search,
             "enable_coding_agent": run_config.enable_coding_agent,
+            "gui_protocol": run_config.gui.protocol,
         },
         "files": {
             "test_all_meta_path": _resolve_metadata_path(run_config.test_all_meta_path),
@@ -495,7 +503,7 @@ def _build_task_metadata(domain: str, ex_id: str, cfg: str, run_config: Resolved
             {
                 "orchestrator": run_config.orchestrator.as_llm_config_entry(),
                 "coding": run_config.coding.as_llm_config_entry(),
-                "gui": run_config.gui.as_openai_client_kwargs() | {"model": run_config.gui.model},
+                "gui": run_config.gui.as_openai_client_kwargs() | {"model": run_config.gui.model, "protocol": run_config.gui.protocol},
             }
         ),
     }
@@ -511,7 +519,8 @@ def _resolve_research_tool_flags(run_config: ResolvedRunConfig) -> Tuple[bool, b
 
 def process_task(task_info: Tuple[str, str, str], run_config: ResolvedRunConfig):
     domain, ex_id, cfg = task_info
-    validate_cua_model(run_config.gui.model)
+    if run_config.gui.protocol == DEFAULT_GUI_PROTOCOL:
+        validate_cua_model(run_config.gui.model)
     orchestrator_llm_config = LLMConfig(config_list=[run_config.orchestrator.as_llm_config_entry()])
     coding_llm_config = LLMConfig(config_list=[run_config.coding.as_llm_config_entry()])
     enable_web_search_tool, enable_read_webpage_tool = _resolve_research_tool_flags(run_config)
@@ -570,6 +579,7 @@ def process_task(task_info: Tuple[str, str, str], run_config: ResolvedRunConfig)
                     orchestrator_client_kwargs=run_config.orchestrator.as_openai_client_kwargs(),
                     orchestrator_backend_config=run_config.orchestrator.as_llm_config_entry(),
                     gui_client_kwargs=run_config.gui.as_openai_client_kwargs(),
+                    gui_protocol=run_config.gui.protocol,
                     coding_llm_config=coding_llm_config,
                 )
 

@@ -650,11 +650,17 @@ class UITARSAgent:
         def _ev(name: str) -> str:
             return (os.environ.get(name) or "").strip()
 
-        raw_bases = (
-            _ev("OPENAI_BASE_URL")
-            or _ev("UITARS_OPENAI_BASE_URL")
-            or _ev("UITARS_OPENAI_BASE_URLS")
-        )
+        configured_base_urls = kwargs.get("base_urls") or kwargs.get("base_url")
+        if isinstance(configured_base_urls, (list, tuple)):
+            raw_bases = ",".join(str(part).strip() for part in configured_base_urls if str(part).strip())
+        elif configured_base_urls is None:
+            raw_bases = (
+                _ev("OPENAI_BASE_URL")
+                or _ev("UITARS_OPENAI_BASE_URL")
+                or _ev("UITARS_OPENAI_BASE_URLS")
+            )
+        else:
+            raw_bases = str(configured_base_urls).strip()
         if raw_bases:
             baseurl_list = []
             for part in raw_bases.split(","):
@@ -667,11 +673,8 @@ class UITARSAgent:
             random.shuffle(baseurl_list)
         if not raw_bases or not baseurl_list:
             baseurl_list = ["http://127.0.0.1:8010/v1"]
-        api_key = (
-            os.environ.get("OPENAI_API_KEY")
-            or os.environ.get("UITARS_OPENAI_API_KEY")
-            or "empty"
-        )
+        configured_api_key = kwargs.get("api_key")
+        api_key = configured_api_key or os.environ.get("OPENAI_API_KEY") or os.environ.get("UITARS_OPENAI_API_KEY") or "empty"
         self.vlm = openai.OpenAI(api_key=api_key, base_url=baseurl_list[0])
 
         self.thoughts = []

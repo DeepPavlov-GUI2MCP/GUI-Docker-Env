@@ -9,6 +9,7 @@ coact:
     api_key: ""
 
   gui:
+    protocol: openai
     model: gpt-5.5
     base_url: https://api.openai.com/v1
     api_key: ""
