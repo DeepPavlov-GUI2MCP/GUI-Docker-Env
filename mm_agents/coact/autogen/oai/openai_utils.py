@@ -43,7 +43,26 @@ DEFAULT_AZURE_API_VERSION = "2024-02-01"
 
 # The below pricing is for 1K tokens. Whenever there is an update in the LLM's pricing,
 # Please convert it to 1K tokens and update in the below dictionary in the format: (input_token_price, output_token_price).
+# Source: https://platform.openai.com/docs/pricing?latest-pricing=standard&legacy-pricing=standard
 OAI_PRICE1K = {
+    # gpt-5.5
+    "gpt-5.5": (0.005, 0.03),
+    "gpt-5.5-pro": (0.03, 0.18),
+    # gpt-5.4
+    "gpt-5.4": (0.0025, 0.015),
+    "gpt-5.4-mini": (0.00075, 0.0045),
+    "gpt-5.4-nano": (0.0002, 0.00125),
+    "gpt-5.4-pro": (0.03, 0.18),
+    # gpt-5.2
+    "gpt-5.2": (0.00175, 0.014),
+    "gpt-5.2-pro": (0.021, 0.168),
+    # gpt-5.1
+    "gpt-5.1": (0.00125, 0.01),
+    # gpt-5
+    "gpt-5": (0.00125, 0.01),
+    "gpt-5-mini": (0.00025, 0.002),
+    "gpt-5-nano": (0.00005, 0.0004),
+    "gpt-5-pro": (0.015, 0.12),
     # https://openai.com/api/pricing/
     # o1
     "o1-preview-2024-09-12": (0.0015, 0.0060),
@@ -57,7 +76,11 @@ OAI_PRICE1K = {
     "o1-pro-2025-03-19": (0.15, 0.6),
     # o3
     "o3": (0.0011, 0.0044),
+    "o3-pro": (0.02, 0.08),
     "o3-mini-2025-01-31": (0.0011, 0.0044),
+    "o3-mini": (0.0011, 0.0044),
+    # o4
+    "o4-mini": (0.0011, 0.0044),
     # gpt-4o
     "gpt-4o": (0.005, 0.015),
     "gpt-4o-2024-05-13": (0.005, 0.015),
@@ -120,6 +143,62 @@ OAI_PRICE1K = {
     # deepseek
     "deepseek-chat": (0.00027, 0.0011),
 }
+
+_DATE_SUFFIX_RE = re.compile(r"-\d{4}-\d{2}-\d{2}$")
+_MODEL_PRICE_ALIASES = {
+    "gpt-5.1-mini": "gpt-5-mini",
+    "gpt-5.1-nano": "gpt-5-nano",
+    "gpt-5.1-pro": "gpt-5-pro",
+}
+
+
+def resolve_oai_price_1k(model: Optional[str]) -> Optional[Union[float, tuple[float, float]]]:
+    if not model:
+        return None
+
+    candidates: list[str] = []
+    normalized = model.strip()
+    if normalized:
+        candidates.append(normalized)
+        if "/" in normalized:
+            candidates.append(normalized.split("/", 1)[1])
+
+    seen: set[str] = set()
+    for candidate in candidates.copy():
+        if candidate in seen:
+            continue
+        seen.add(candidate)
+        stripped = _DATE_SUFFIX_RE.sub("", candidate)
+        if stripped != candidate:
+            candidates.append(stripped)
+        alias = _MODEL_PRICE_ALIASES.get(candidate)
+        if alias:
+            candidates.append(alias)
+        stripped_alias = _MODEL_PRICE_ALIASES.get(stripped)
+        if stripped_alias:
+            candidates.append(stripped_alias)
+
+    for candidate in candidates:
+        price = OAI_PRICE1K.get(candidate)
+        if price is not None:
+            return price
+    return None
+
+
+def calculate_oai_model_cost(
+    model: Optional[str],
+    input_tokens: Optional[int],
+    output_tokens: Optional[int],
+) -> Optional[float]:
+    price_1k = resolve_oai_price_1k(model)
+    if price_1k is None:
+        return None
+
+    n_input_tokens = int(input_tokens or 0)
+    n_output_tokens = int(output_tokens or 0)
+    if isinstance(price_1k, tuple):
+        return (price_1k[0] * n_input_tokens + price_1k[1] * n_output_tokens) / 1000
+    return price_1k * (n_input_tokens + n_output_tokens) / 1000
 
 
 def get_key(config: dict[str, Any]) -> str:

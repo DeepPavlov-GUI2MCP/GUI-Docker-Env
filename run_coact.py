@@ -48,8 +48,10 @@ You are a task solver, you need to complete a computer-using task step-by-step.
     - Check every screenshot carefully and see if it fulfills the task requirement.
     - When research or a source page contains actionable details, preserve all of them in your plan instead of reducing them to a minimal subset.
     - Treat concrete settings, values, value types, restart requirements, verification requirements, and related follow-up changes as actionable details that must be tracked explicitly.
-    - Before delegating, identify which discovered details are required and which are optional. Do not omit or downgrade a detail unless the evidence clearly says it is optional or irrelevant.
+    - Treat every actionable detail as required by default. Only mark a detail optional when the evidence clearly and explicitly says it is optional or irrelevant to completing the task successfully.
+    - If a source mentions additional, supporting, caveated, "useful in combination", or "optional"-sounding settings that make the main fix actually work, treat them as mandatory and include them in the plan and delegated task.
     - When you delegate, copy every required detail into the delegated task so the helper does not need to reconstruct the plan from memory.
+    - When planning GUI navigation, prefer built-in search bars over scrolling or manual browsing whenever they can reach the target more directly. When delegating a settings task, explicitly tell the GUI agent to use the relevant settings search bar first if available.
 4. Verify the result and see if it fulfills the user's requirement.
 """
 
@@ -230,7 +232,8 @@ def _build_task_instruction(task_config: Dict[str, object], mode: str) -> str:
             "- Also look for strong Stack Exchange family answers such as Super User, Stack Overflow, or Ask Ubuntu when relevant.",
             "- Do not declare the task infeasible until you have used web_search and reviewed the returned evidence.",
             "- Preserve all actionable details from the research, including settings, values, value types, restart requirements, verification requirements, and related follow-up changes.",
-            "- If the research contains multiple actionable details, decide explicitly which are required and which are optional, and keep every required detail in the execution plan.",
+            "- Treat actionable details as required by default. Only mark a detail optional when the evidence clearly and explicitly says it is optional or irrelevant.",
+            "- If the research includes supporting, caveated, or 'optional'-sounding settings that are needed to make the main fix work reliably, include them as mandatory execution steps.",
             "- When delegating, restate every required detail directly in the delegated task instead of relying on a shortened summary.",
             "- Only after collecting relevant instructions should you form a plan and execute the task.",
         ]
@@ -247,6 +250,8 @@ def _build_task_instruction(task_config: Dict[str, object], mode: str) -> str:
             "- If a source URL is provided, you may inspect it with read_webpage before or during planning when it seems useful.",
             "- You may also use web_search when additional context or troubleshooting guidance would help.",
             "- Preserve all actionable details from any research you use, including settings, values, value types, restart requirements, verification requirements, and related follow-up changes.",
+            "- Treat actionable details as required by default. Only mark a detail optional when the evidence clearly and explicitly says it is optional or irrelevant.",
+            "- If a source includes supporting, caveated, or 'optional'-sounding settings that are needed to make the main fix work reliably, include them as mandatory execution steps.",
             "- When delegating, restate every required detail directly in the delegated task instead of relying on a shortened summary.",
         ]
         if source:

@@ -30,7 +30,7 @@ from ..logger.logger_utils import get_current_ts
 from ..runtime_logging import log_chat_completion, log_new_client, log_new_wrapper, logging_enabled
 from ..token_count_utils import count_token
 from .client_utils import FormatterProtocol, logging_formatter
-from .openai_utils import OAI_PRICE1K, get_key, is_valid_api_key
+from .openai_utils import calculate_oai_model_cost, get_key, is_valid_api_key, resolve_oai_price_1k
 
 TOOL_ENABLED = False
 with optional_import_block() as openai_result:
@@ -701,7 +701,8 @@ class OpenAIClient:
     def cost(self, response: Union[ChatCompletion, Completion]) -> float:
         """Calculate the cost of the response."""
         model = response.model
-        if model not in OAI_PRICE1K:
+        price_1k = resolve_oai_price_1k(model)
+        if price_1k is None:
             # log warning that the model is not found
             logger.warning(
                 f'Model {model} is not found. The cost will be 0. In your config_list, add field {{"price" : [prompt_price_per_1k, completion_token_price_per_1k]}} for customized pricing.'
@@ -710,13 +711,8 @@ class OpenAIClient:
 
         n_input_tokens = response.usage.prompt_tokens if response.usage is not None else 0  # type: ignore [union-attr]
         n_output_tokens = response.usage.completion_tokens if response.usage is not None else 0  # type: ignore [union-attr]
-        if n_output_tokens is None:
-            n_output_tokens = 0
-        tmp_price1K = OAI_PRICE1K[model]  # noqa: N806
-        # First value is input token rate, second value is output token rate
-        if isinstance(tmp_price1K, tuple):
-            return (tmp_price1K[0] * n_input_tokens + tmp_price1K[1] * n_output_tokens) / 1000  # type: ignore [no-any-return]
-        return tmp_price1K * (n_input_tokens + n_output_tokens) / 1000  # type: ignore [operator]
+        cost = calculate_oai_model_cost(model, n_input_tokens, n_output_tokens)
+        return 0 if cost is None else cost
 
     @staticmethod
     def get_usage(response: Union[ChatCompletion, Completion]) -> dict:

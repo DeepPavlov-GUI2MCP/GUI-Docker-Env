@@ -14,13 +14,12 @@ import trafilatura
 from desktop_env.desktop_env import DesktopEnv
 from openai import OpenAI
 from mm_agents.env_loader import load_mm_agents_env
+from mm_agents.coact.autogen.oai.openai_utils import calculate_oai_model_cost
 
 load_mm_agents_env()
 
 logger = logging.getLogger("desktopenv")
 
-GPT4O_INPUT_PRICE_PER_1M_TOKENS = 3.00
-GPT4O_OUTPUT_PRICE_PER_1M_TOKENS = 12.00
 DEFAULT_CUA_MODEL = "gpt-5.5"
 DEFAULT_GUI_PROTOCOL = "openai"
 SUPPORTED_GUI_PROTOCOLS = (DEFAULT_GUI_PROTOCOL, "vllm")
@@ -299,13 +298,11 @@ def _response_to_transcript_entry(response: Any) -> Dict[str, Any]:
 def _estimate_cost(cua_model: str, response: Any) -> float:
     if not response or not getattr(response, "usage", None):
         return 0.0
-    if cua_model != "gpt-4o":
-        return 0.0
-    input_tokens = response.usage.input_tokens
-    output_tokens = response.usage.output_tokens
-    input_cost = (input_tokens / 1_000_000) * GPT4O_INPUT_PRICE_PER_1M_TOKENS
-    output_cost = (output_tokens / 1_000_000) * GPT4O_OUTPUT_PRICE_PER_1M_TOKENS
-    return input_cost + output_cost
+    response_model = getattr(response, "model", None) or cua_model
+    input_tokens = getattr(response.usage, "input_tokens", 0)
+    output_tokens = getattr(response.usage, "output_tokens", 0)
+    cost = calculate_oai_model_cost(response_model, input_tokens, output_tokens)
+    return 0.0 if cost is None else cost
 
 
 def _build_openai_client(api_key: Optional[str] = None, base_url: Optional[str] = None) -> OpenAI:
