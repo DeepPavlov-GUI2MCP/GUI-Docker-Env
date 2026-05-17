@@ -129,6 +129,7 @@ class OrchestratorAgent(MultimodalConversableAgent):
         code_execution_config: Optional[Union[dict[str, Any], Literal[False]]] = False,
         description: Optional[str] = DEFAULT_DESCRIPTION,
         enable_coding_agent: bool = False,
+        enable_gui_agent_tool: bool = True,
         enable_web_search_tool: bool = False,
         enable_read_webpage_tool: bool = False,
         **kwargs: Any,
@@ -152,7 +153,8 @@ class OrchestratorAgent(MultimodalConversableAgent):
         self.enable_coding_agent = enable_coding_agent
         if self.enable_coding_agent:
             self.update_tool_signature(self.CALL_CODING_AGENT_TOOL, is_remove=False)
-        self.update_tool_signature(self.CALL_GUI_AGENT_TOOL, is_remove=False)
+        if enable_gui_agent_tool:
+            self.update_tool_signature(self.CALL_GUI_AGENT_TOOL, is_remove=False)
         if enable_web_search_tool:
             self.update_tool_signature(self.CALL_WEB_SEARCH_TOOL, is_remove=False)
         if enable_read_webpage_tool:
@@ -316,7 +318,7 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         if not os.path.exists(cua_path):
             os.makedirs(cua_path)
         try:
-            history_inputs, result, cost, raw_transcript, tool_events = run_cua(
+            history_inputs, result, cost, raw_transcript, tool_events, _step_count = run_cua(
                 self.env,
                 task,
                 save_path=cua_path,

@@ -583,7 +583,11 @@ def call_openai_cua(client: OpenAI,
     return response, _estimate_cost(cua_model=cua_model, response=response)
 
 
-def _build_vllm_runtime_conf() -> Dict[str, Any]:
+def _build_vllm_runtime_conf(
+    *,
+    temperature: float = 0.0,
+    top_p: float = 0.95,
+) -> Dict[str, Any]:
     return {
         "infer_mode": "qwen25vl_normal",
         "prompt_style": "qwen25vl_normal",
@@ -593,8 +597,8 @@ def _build_vllm_runtime_conf() -> Dict[str, Any]:
         "max_pixels": 16384 * 28 * 28,
         "min_pixels": 100 * 28 * 28,
         "callusr_tolerance": 3,
-        "temperature": 0.0,
-        "top_p": 0.95,
+        "temperature": temperature,
+        "top_p": top_p,
         "top_k": -1,
         "max_tokens": 2048,
     }
@@ -644,7 +648,9 @@ def _run_cua_vllm(
     client_password: str = "",
     prompt_mode: str = DEFAULT_PROMPT_MODE,
     task_source: Optional[str] = None,
-) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]]]:
+    temperature: float = 0.0,
+    top_p: float = 0.95,
+) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]], int]:
     from mm_agents.uitars15_v1 import UITARSAgent
 
     vllm_instruction = _build_vllm_instruction(
@@ -659,7 +665,7 @@ def _run_cua_vllm(
         observation_type="screenshot",
         max_trajectory_length=max(max_steps, 1),
         model_type="qwen25vl",
-        runtime_conf=_build_vllm_runtime_conf(),
+        runtime_conf=_build_vllm_runtime_conf(temperature=temperature, top_p=top_p),
         base_url=base_url,
         api_key=api_key or "empty",
     )
@@ -759,7 +765,7 @@ def _run_cua_vllm(
     if not final_result:
         final_result = "IDK Step budget exhausted before the GUI task was completed."
 
-    return _sanitize_images(history_inputs), final_result, total_cost, raw_transcript, tool_events
+    return _sanitize_images(history_inputs), final_result, total_cost, raw_transcript, tool_events, step_count
 
 
 def run_cua(
@@ -778,7 +784,9 @@ def run_cua(
     client_password: str = "",
     prompt_mode: str = DEFAULT_PROMPT_MODE,
     task_source: Optional[str] = None,
-) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]]]:
+    temperature: Optional[float] = None,
+    top_p: Optional[float] = None,
+) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]], int]:
     if gui_protocol not in SUPPORTED_GUI_PROTOCOLS:
         raise ValueError(f"Unsupported GUI protocol `{gui_protocol}`. Expected one of {SUPPORTED_GUI_PROTOCOLS}.")
     if gui_protocol == "vllm":
@@ -795,6 +803,8 @@ def run_cua(
             client_password=client_password,
             prompt_mode=prompt_mode,
             task_source=task_source,
+            temperature=0.0 if temperature is None else temperature,
+            top_p=0.95 if top_p is None else top_p,
         )
 
     client = _build_openai_client(api_key=api_key, base_url=base_url)
@@ -937,5 +947,5 @@ def run_cua(
         final_result = "IDK The GUI loop stopped before producing a terminal answer."
 
     logger.info(f"Total cost for the task: ${total_cost:.4f}")
-    return _sanitize_images(history_inputs), final_result, total_cost, raw_transcript, tool_events
+    return _sanitize_images(history_inputs), final_result, total_cost, raw_transcript, tool_events, step_count
 

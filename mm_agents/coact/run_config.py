@@ -2,13 +2,15 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 import yaml
 
 
 DEFAULT_MODE = "default"
 SUPPORTED_MODES = (DEFAULT_MODE, "search-first", "inspect-source-first")
+DEFAULT_SCRIPT_MODE = "standard"
+SUPPORTED_SCRIPT_MODES = (DEFAULT_SCRIPT_MODE, "multi-rollout")
 DEFAULT_GUI_PROTOCOL = "openai"
 SUPPORTED_GUI_PROTOCOLS = (DEFAULT_GUI_PROTOCOL, "vllm")
 
@@ -43,9 +45,18 @@ class BackendSettings:
 
 
 @dataclass(frozen=True)
+class MultiRolloutSettings:
+    k_per_grid_point: int = 1
+    temperatures: Tuple[float, ...] = (0.0,)
+    top_ps: Tuple[float, ...] = (0.95,)
+    cua_max_steps: Optional[int] = None
+
+
+@dataclass(frozen=True)
 class ResolvedRunConfig:
     config_mode: bool
     config_path: Optional[str]
+    script_mode: str
     provider_name: str
     path_to_vm: Optional[str]
     screen_width: int
@@ -70,12 +81,14 @@ class ResolvedRunConfig:
     result_dir: str
     num_envs: int
     log_level: str
+    multi_rollout: MultiRolloutSettings
 
     def as_metadata_args(self) -> Dict[str, Any]:
         payload = asdict(self)
         payload["orchestrator"] = asdict(self.orchestrator)
         payload["gui"] = asdict(self.gui)
         payload["coding"] = asdict(self.coding)
+        payload["multi_rollout"] = asdict(self.multi_rollout)
         return payload
 
 
@@ -96,14 +109,19 @@ def load_config_file(path: str) -> ResolvedRunConfig:
 
     runtime = _get_mapping(root, "runtime")
     tasks = _get_mapping(root, "tasks")
+    multi_rollout = _get_mapping(root, "multi_rollout")
 
     mode = _get_optional_str(root, "mode", DEFAULT_MODE)
     if mode not in SUPPORTED_MODES:
         raise ValueError(f"Unsupported mode `{mode}` in {path}. Expected one of {SUPPORTED_MODES}.")
+    script_mode = _get_optional_str(root, "script_mode", DEFAULT_SCRIPT_MODE)
+    if script_mode not in SUPPORTED_SCRIPT_MODES:
+        raise ValueError(f"Unsupported script_mode `{script_mode}` in {path}. Expected one of {SUPPORTED_SCRIPT_MODES}.")
 
     resolved = ResolvedRunConfig(
         config_mode=True,
         config_path=str(config_path),
+        script_mode=script_mode,
         provider_name=_get_optional_str(runtime, "provider_name", "aws"),
         path_to_vm=_get_optional_str(runtime, "path_to_vm"),
         screen_width=_get_optional_int(runtime, "screen_width", 1920),
@@ -128,6 +146,7 @@ def load_config_file(path: str) -> ResolvedRunConfig:
         result_dir=_get_optional_str(runtime, "result_dir", "./results_coact"),
         num_envs=_get_optional_int(runtime, "num_envs", 1),
         log_level=_get_optional_str(runtime, "log_level", "INFO").upper(),
+        multi_rollout=_parse_multi_rollout_settings(multi_rollout),
     )
     return resolved
 
@@ -145,6 +164,33 @@ def _parse_backend(root: Dict[str, Any], key: str, *, default_protocol: str = DE
         base_url=_get_optional_str(backend, "base_url"),
         api_key=_get_optional_str(backend, "api_key"),
         protocol=protocol,
+    )
+
+
+def _parse_multi_rollout_settings(root: Dict[str, Any]) -> MultiRolloutSettings:
+    k_per_grid_point = _get_optional_int(root, "k_per_grid_point", 1)
+    temperatures = tuple(_get_float_list(root, "temperatures", default=(0.0,)))
+    top_ps = tuple(_get_float_list(root, "top_ps", default=(0.95,)))
+    cua_max_steps = _get_optional_int_or_none(root, "cua_max_steps")
+
+    if k_per_grid_point < 1:
+        raise ValueError("`multi_rollout.k_per_grid_point` must be at least 1.")
+    if not temperatures:
+        raise ValueError("`multi_rollout.temperatures` must contain at least one value.")
+    if not top_ps:
+        raise ValueError("`multi_rollout.top_ps` must contain at least one value.")
+    for temperature in temperatures:
+        if temperature < 0:
+            raise ValueError("`multi_rollout.temperatures` values must be non-negative.")
+    for top_p in top_ps:
+        if not 0 < top_p <= 1:
+            raise ValueError("`multi_rollout.top_ps` values must be in (0, 1].")
+
+    return MultiRolloutSettings(
+        k_per_grid_point=k_per_grid_point,
+        temperatures=temperatures,
+        top_ps=top_ps,
+        cua_max_steps=cua_max_steps,
     )
 
 
@@ -193,3 +239,25 @@ def _get_optional_bool(root: Dict[str, Any], key: str, default: bool) -> bool:
     if not isinstance(value, bool):
         raise ValueError(f"`{key}` must be a boolean.")
     return value
+
+
+def _get_optional_int_or_none(root: Dict[str, Any], key: str) -> Optional[int]:
+    if key not in root or root.get(key) is None:
+        return None
+    value = root.get(key)
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"`{key}` must be an integer or null.")
+    return value
+
+
+def _get_float_list(root: Dict[str, Any], key: str, *, default: Tuple[float, ...]) -> list[float]:
+    value = root.get(key, list(default))
+    if not isinstance(value, list) or not value:
+        raise ValueError(f"`{key}` must be a non-empty list.")
+
+    result: list[float] = []
+    for item in value:
+        if isinstance(item, bool) or not isinstance(item, (int, float)):
+            raise ValueError(f"`{key}` entries must be numbers.")
+        result.append(float(item))
+    return result

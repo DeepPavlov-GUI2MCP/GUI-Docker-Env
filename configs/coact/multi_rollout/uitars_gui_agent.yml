@@ -1,0 +1,49 @@
+coact:
+  mode: default
+  script_mode: multi-rollout
+  enable_coding_agent: false
+  enable_web_search: false
+
+  orchestrator:
+    model: gpt-5.5
+    base_url: https://api.openai.com/v1
+    api_key: ""
+
+  gui:
+    protocol: vllm
+    model: ui-tars-1.5
+    base_url: null
+    api_key: ""
+
+  coding:
+    model: gpt-5.1-mini
+    base_url: https://api.openai.com/v1
+    api_key: ""
+
+  multi_rollout:
+    k_per_grid_point: 3
+    cua_max_steps: 20
+    temperatures: [0.7, 1.0, 1.2]
+    top_ps: [0.95, 0.99]
+
+  runtime:
+    provider_name: aws
+    path_to_vm: null
+    screen_width: 1920
+    screen_height: 1080
+    sleep_after_execution: 0.5
+    region: us-east-1
+    client_password: osworld-public-evaluation
+    orchestrator_max_steps: 15
+    coding_max_steps: 20
+    cua_max_steps: 25
+    cut_off_steps: 200
+    result_dir: ./results_coact
+    num_envs: 1
+    log_level: INFO
+
+  tasks:
+    domain: all
+    task_id: null
+    test_all_meta_path: evaluation_examples/test_all.json
+    test_config_base_dir: evaluation_examples/examples
