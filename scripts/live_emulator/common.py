@@ -396,6 +396,34 @@ def execute_python_json(server_port: int, code: str, *, timeout: int = 90) -> di
     return parsed
 
 
+def execute_step_action(server_port: int, action: dict[str, Any], *, timeout: int = 90, sleep_after: float = 0.5) -> dict[str, Any]:
+    action_type = str(action.get("type", "")).strip().lower()
+    if action_type == "click":
+        x = int(action["x"])
+        y = int(action["y"])
+        button = str(action.get("button") or "left")
+        code = f"import pyautogui, time; pyautogui.FAILSAFE=False; pyautogui.click({x}, {y}, button={button!r}); time.sleep({sleep_after})"
+        return execute_python(server_port, build_python_command(code, wrap_pyautogui=False), timeout=timeout)
+    if action_type == "type":
+        text = str(action.get("text", ""))
+        code = f"import pyautogui, time; pyautogui.FAILSAFE=False; pyautogui.typewrite({text!r}); time.sleep({sleep_after})"
+        return execute_python(server_port, build_python_command(code, wrap_pyautogui=False), timeout=timeout)
+    if action_type == "keypress":
+        keys = [str(key).lower() for key in (action.get("keys") or []) if str(key).strip()]
+        if not keys:
+            raise LiveEmulatorError("Keypress action missing keys.")
+        if len(keys) == 1:
+            snippet = f"pyautogui.press({keys[0]!r})"
+        else:
+            joined = ", ".join(repr(key) for key in keys)
+            snippet = f"pyautogui.hotkey({joined})"
+        code = f"import pyautogui, time; pyautogui.FAILSAFE=False; {snippet}; time.sleep({sleep_after})"
+        return execute_python(server_port, build_python_command(code, wrap_pyautogui=False), timeout=timeout)
+    if action_type == "screenshot":
+        return {"status": "success", "returncode": 0, "output": "", "error": ""}
+    raise LiveEmulatorError(f"Unsupported action type: {action_type}")
+
+
 def fetch_screenshot(server_port: int) -> bytes:
     response = _request("GET", f"http://localhost:{server_port}/screenshot", timeout=20, stream=True)
     return response.content
