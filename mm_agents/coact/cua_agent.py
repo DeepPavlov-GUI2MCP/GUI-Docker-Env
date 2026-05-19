@@ -6,7 +6,7 @@ import re
 import time
 from html import unescape
 from html.parser import HTMLParser
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import openai
 import requests
@@ -15,6 +15,14 @@ from desktop_env.desktop_env import DesktopEnv
 from openai import OpenAI
 from mm_agents.env_loader import load_mm_agents_env
 from mm_agents.coact.autogen.oai.openai_utils import calculate_oai_model_cost
+from mm_agents.coact.computer_exec import (
+    action_step_cost as _action_step_cost,
+    actions_from_computer_call as _actions_from_computer_call,
+    cua_to_pyautogui as _cua_to_pyautogui,
+    execute_cua_actions_env,
+    item_to_dict as _item_to_dict,
+    save_step_screenshot as _save_step_screenshot,
+)
 
 load_mm_agents_env()
 
@@ -22,7 +30,7 @@ logger = logging.getLogger("desktopenv")
 
 DEFAULT_CUA_MODEL = "gpt-5.5"
 DEFAULT_GUI_PROTOCOL = "openai"
-SUPPORTED_GUI_PROTOCOLS = (DEFAULT_GUI_PROTOCOL, "vllm")
+SUPPORTED_GUI_PROTOCOLS = (DEFAULT_GUI_PROTOCOL, "vllm", "cli")
 DEFAULT_PROMPT_MODE = "default"
 
 BASE_PROMPT_TEMPLATE = """# Task
@@ -144,115 +152,6 @@ def validate_cua_model(cua_model: str) -> None:
         raise ValueError("Missing GUI model. Set `OPENAI_CUA_MODEL` or pass `--cua_model`.")
     if cua_model in LEGACY_CUA_MODELS:
         raise ValueError(f"Unsupported legacy GUI model `{cua_model}`.")
-
-
-def _normalize_key(key: str) -> str:
-    normalized = str(key).strip().lower().replace("arrow", "")
-    aliases = {
-        "ctrl": "ctrl",
-        "control": "ctrl",
-        "alt": "alt",
-        "option": "alt",
-        "shift": "shift",
-        "meta": "win",
-        "cmd": "win",
-        "command": "win",
-        "super": "win",
-        "windows": "win",
-        "return": "enter",
-        "esc": "escape",
-        "pgup": "pageup",
-        "pgdn": "pagedown",
-        "spacebar": "space",
-        "del": "delete",
-    }
-    return aliases.get(normalized, normalized)
-
-
-def _wrap_with_modifiers(command: str, keys: Optional[List[str]]) -> str:
-    if not keys:
-        return command
-    normalized_keys = [_normalize_key(key) for key in keys if str(key).strip()]
-    if not normalized_keys:
-        return command
-    keydowns = [f"pyautogui.keyDown('{key}')" for key in normalized_keys]
-    keyups = [f"pyautogui.keyUp('{key}')" for key in reversed(normalized_keys)]
-    return "; ".join(keydowns + [command] + keyups)
-
-
-def _cua_to_pyautogui(action) -> str:
-    def fld(key: str, default: Any = None) -> Any:
-        return action.get(key, default) if isinstance(action, dict) else getattr(action, key, default)
-
-    act_type = fld("type")
-    if not isinstance(act_type, str):
-        act_type = str(act_type).split(".")[-1]
-    act_type = act_type.lower()
-
-    if act_type in ["click", "double_click"]:
-        button = fld('button', 'left')
-        if button == 1 or button == 'left':
-            button = 'left'
-        elif button == 2 or button == 'middle':
-            button = 'middle'
-        elif button == 3 or button == 'right':
-            button = 'right'
-        elif button == 'wheel':
-            button = 'middle'
-
-        if act_type == "click":
-            return _wrap_with_modifiers(
-                f"pyautogui.click({fld('x')}, {fld('y')}, button='{button}')",
-                fld("keys"),
-            )
-        if act_type == "double_click":
-            return _wrap_with_modifiers(
-                f"pyautogui.doubleClick({fld('x')}, {fld('y')}, button='{button}')",
-                fld("keys"),
-            )
-        
-    if act_type == "scroll":
-        scroll_y = int(round(-fld("scroll_y", 0) / 100))
-        scroll_x = int(round(fld("scroll_x", 0) / 100))
-        commands: List[str] = []
-        if scroll_y:
-            commands.append(f"pyautogui.scroll({scroll_y}, x={fld('x', 0)}, y={fld('y', 0)})")
-        if scroll_x:
-            commands.append(f"pyautogui.hscroll({scroll_x}, x={fld('x', 0)}, y={fld('y', 0)})")
-        return _wrap_with_modifiers("; ".join(commands) if commands else "WAIT", fld("keys"))
-
-    if act_type == "drag":
-        path = fld('path', [{"x": 0, "y": 0}, {"x": 0, "y": 0}])
-        cmd = f"pyautogui.moveTo({path[0]['x']}, {path[0]['y']}, _pause=False); "
-        cmd += f"pyautogui.dragTo({path[-1]['x']}, {path[-1]['y']}, duration=0.5, button='left')"
-        return _wrap_with_modifiers(cmd, fld("keys"))
-
-    if act_type == 'move':
-        return _wrap_with_modifiers(f"pyautogui.moveTo({fld('x')}, {fld('y')})", fld("keys"))
-
-    if act_type == "keypress":
-        keys = [_normalize_key(key) for key in (fld("keys", []) or [fld("key")]) if key]
-        if len(keys) == 1:
-            return f"pyautogui.press('{keys[0].lower()}')"
-        else:
-            return f"pyautogui.hotkey({', '.join(repr(key) for key in keys)})"
-        
-    if act_type == "type":
-        text = str(fld("text", ""))
-        return "pyautogui.typewrite({:})".format(repr(text))
-    
-    if act_type == "wait":
-        return "WAIT"
-    
-    return "WAIT"  # fallback
-
-
-def _item_to_dict(item: Any) -> Dict[str, Any]:
-    if isinstance(item, dict):
-        return item
-    if hasattr(item, "model_dump"):
-        return item.model_dump(mode="json")
-    raise TypeError(f"Unsupported response item type: {type(item)!r}")
 
 
 def _sanitize_images(value: Any) -> Any:
@@ -477,20 +376,6 @@ def _execute_function_call(item: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[s
     return output_item, tool_event
 
 
-def _actions_from_computer_call(action_call: Dict[str, Any]) -> List[Dict[str, Any]]:
-    actions = action_call.get("actions")
-    if actions:
-        return [_item_to_dict(action) for action in actions]
-    action = action_call.get("action")
-    if action:
-        return [_item_to_dict(action)]
-    return []
-
-
-def _action_step_cost(action: Dict[str, Any]) -> int:
-    return 0 if action.get("type") == "screenshot" else 1
-
-
 def _capture_screenshot(env: DesktopEnv) -> bytes:
     screenshot = env.controller.get_screenshot()
     return screenshot["screenshot"] if isinstance(screenshot, dict) else screenshot
@@ -504,22 +389,11 @@ def _execute_computer_call(
     sleep_after_execution: float,
 ) -> Dict[str, Any]:
     actions = _actions_from_computer_call(action_call)
-    latest_screenshot: Optional[bytes] = None
-
-    for action in actions:
-        if action.get("type") == "screenshot":
-            latest_screenshot = _capture_screenshot(env)
-            continue
-        py_cmd = _cua_to_pyautogui(action)
-        obs, *_ = env.step(py_cmd, sleep_after_execution)
-        latest_screenshot = obs["screenshot"]
-
-    if latest_screenshot is None:
-        latest_screenshot = _capture_screenshot(env)
-
+    latest_screenshot = execute_cua_actions_env(
+        env, actions, sleep_after_execution=sleep_after_execution
+    )
+    _save_step_screenshot(save_path, action_index, latest_screenshot)
     screenshot_b64 = base64.b64encode(latest_screenshot).decode("utf-8")
-    with open(os.path.join(save_path, f"step_{action_index}.png"), "wb") as f:
-        f.write(latest_screenshot)
 
     output_item: Dict[str, Any] = {
         "type": "computer_call_output",
@@ -765,6 +639,88 @@ def _run_cua_vllm(
     return _sanitize_images(history_inputs), final_result, total_cost, raw_transcript, tool_events, step_count
 
 
+def _run_cua_cli(
+    env: DesktopEnv,
+    instruction: str,
+    max_steps: int,
+    save_path: str = "./",
+    cua_model: str = "gpt-5.4",
+    sleep_after_execution: float = 0.3,
+    client_password: str = "",
+    prompt_mode: str = DEFAULT_PROMPT_MODE,
+    task_source: Optional[str] = None,
+    cli_timeout_seconds: int = 300,
+    cli_extra_args: Optional[Sequence[str]] = None,
+) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]], int]:
+    from mm_agents.coact.cli_mcp_session import (
+        CliMcpSession,
+        build_cli_agent_prompt,
+        cli_final_assistant_text,
+        require_codex_cli,
+    )
+    from mm_agents.coact.computer_exec import action_step_cost, load_mcp_state, load_tool_events
+
+    del task_source
+    require_codex_cli()
+    os.makedirs(save_path, exist_ok=True)
+
+    agent_prompt = build_cli_agent_prompt(
+        instruction=instruction,
+        client_password=client_password,
+        mode_hints=_mode_hints(prompt_mode),
+    )
+
+    screenshot = _capture_screenshot(env)
+    screenshot_path = _save_step_screenshot(save_path, 1, screenshot)
+    history_inputs: List[Dict[str, Any]] = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "input_text", "text": agent_prompt},
+                {"type": "input_image", "image_url": "<image>", "detail": "original"},
+            ],
+        }
+    ]
+
+    session = CliMcpSession(
+        save_path=save_path,
+        model=cua_model,
+        http_server=env.controller.http_server,
+        max_steps=max_steps,
+        sleep_after_execution=sleep_after_execution,
+        timeout_seconds=cli_timeout_seconds,
+        extra_args=tuple(cli_extra_args or ()),
+    )
+    final_result, raw_transcript, tool_events = session.run(
+        prompt=agent_prompt,
+        initial_screenshot_path=screenshot_path,
+    )
+
+    state = load_mcp_state(save_path)
+    step_index = int(state.get("step_index", 1))
+    step_count = int(state.get("step_count", 0))
+    if not tool_events:
+        tool_events = load_tool_events(save_path)
+    if not step_count and tool_events:
+        step_count = sum(
+            sum(_action_step_cost(action) for action in event.get("actions", []))
+            for event in tool_events
+            if event.get("type") == "computer_call"
+        )
+
+    if "TERMINATE" in final_result:
+        step_index += 1
+        _save_step_screenshot(save_path, step_index, _capture_screenshot(env))
+
+    history_inputs.append(
+        {
+            "role": "assistant",
+            "content": [{"type": "output_text", "text": cli_final_assistant_text(raw_transcript)}],
+        }
+    )
+    return _sanitize_images(history_inputs), final_result, 0.0, raw_transcript, tool_events, step_count
+
+
 def run_cua(
     env: DesktopEnv,
     instruction: str,
@@ -783,9 +739,26 @@ def run_cua(
     task_source: Optional[str] = None,
     temperature: Optional[float] = None,
     top_p: Optional[float] = None,
+    cli_timeout_seconds: int = 300,
+    cli_extra_args: Optional[Sequence[str]] = None,
 ) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]], int]:
     if gui_protocol not in SUPPORTED_GUI_PROTOCOLS:
         raise ValueError(f"Unsupported GUI protocol `{gui_protocol}`. Expected one of {SUPPORTED_GUI_PROTOCOLS}.")
+    if gui_protocol == "cli":
+        del screen_width, screen_height, truncate_history_inputs, base_url, api_key, temperature, top_p
+        return _run_cua_cli(
+            env=env,
+            instruction=instruction,
+            max_steps=max_steps,
+            save_path=save_path,
+            cua_model=cua_model,
+            sleep_after_execution=sleep_after_execution,
+            client_password=client_password,
+            prompt_mode=prompt_mode,
+            task_source=task_source,
+            cli_timeout_seconds=cli_timeout_seconds,
+            cli_extra_args=cli_extra_args,
+        )
     if gui_protocol == "vllm":
         del screen_width, screen_height, truncate_history_inputs
         return _run_cua_vllm(

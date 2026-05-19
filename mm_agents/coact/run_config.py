@@ -12,7 +12,9 @@ SUPPORTED_MODES = (DEFAULT_MODE, "search-first", "inspect-source-first")
 DEFAULT_SCRIPT_MODE = "standard"
 SUPPORTED_SCRIPT_MODES = (DEFAULT_SCRIPT_MODE, "multi-rollout")
 DEFAULT_GUI_PROTOCOL = "openai"
-SUPPORTED_GUI_PROTOCOLS = (DEFAULT_GUI_PROTOCOL, "vllm")
+SUPPORTED_GUI_PROTOCOLS = (DEFAULT_GUI_PROTOCOL, "vllm", "cli")
+DEFAULT_CLI_PROVIDER = "codex"
+DEFAULT_CLI_TIMEOUT_SECONDS = 300
 
 
 @dataclass(frozen=True)
@@ -21,6 +23,9 @@ class BackendSettings:
     base_url: Optional[str] = None
     api_key: Optional[str] = None
     protocol: str = DEFAULT_GUI_PROTOCOL
+    cli_provider: str = DEFAULT_CLI_PROVIDER
+    cli_timeout_seconds: int = DEFAULT_CLI_TIMEOUT_SECONDS
+    cli_extra_args: Tuple[str, ...] = ()
 
     def as_llm_config_entry(self) -> Dict[str, Any]:
         entry: Dict[str, Any] = {
@@ -82,6 +87,8 @@ class ResolvedRunConfig:
     num_envs: int
     log_level: str
     multi_rollout: MultiRolloutSettings
+    no_orchestrator: bool = False
+    rollout_id: Optional[str] = None
 
     def as_metadata_args(self) -> Dict[str, Any]:
         payload = asdict(self)
@@ -147,8 +154,20 @@ def load_config_file(path: str) -> ResolvedRunConfig:
         num_envs=_get_optional_int(runtime, "num_envs", 1),
         log_level=_get_optional_str(runtime, "log_level", "INFO").upper(),
         multi_rollout=_parse_multi_rollout_settings(multi_rollout),
+        no_orchestrator=_get_optional_bool(runtime, "no_orchestrator", False),
+        rollout_id=_get_optional_str(runtime, "rollout_id"),
     )
+    validate_run_config(resolved)
     return resolved
+
+
+def validate_run_config(run_config: ResolvedRunConfig) -> None:
+    if run_config.gui.protocol == "cli":
+        from mm_agents.coact.cli_mcp_session import require_codex_cli
+
+        require_codex_cli()
+    if run_config.gui.protocol == "cli" and run_config.gui.cli_provider != "codex":
+        raise ValueError(f"Unsupported gui.cli_provider `{run_config.gui.cli_provider}`. Only `codex` is implemented.")
 
 
 def _parse_backend(root: Dict[str, Any], key: str, *, default_protocol: str = DEFAULT_GUI_PROTOCOL) -> BackendSettings:
@@ -159,11 +178,15 @@ def _parse_backend(root: Dict[str, Any], key: str, *, default_protocol: str = DE
         raise ValueError(
             f"Unsupported `{key}.protocol` value `{protocol}`. Expected one of {SUPPORTED_GUI_PROTOCOLS}."
         )
+    cli_extra_args = tuple(_get_str_list(backend, "cli_extra_args", default=()))
     return BackendSettings(
         model=model,
         base_url=_get_optional_str(backend, "base_url"),
         api_key=_get_optional_str(backend, "api_key"),
         protocol=protocol,
+        cli_provider=_get_optional_str(backend, "cli_provider", DEFAULT_CLI_PROVIDER) or DEFAULT_CLI_PROVIDER,
+        cli_timeout_seconds=_get_optional_int(backend, "cli_timeout_seconds", DEFAULT_CLI_TIMEOUT_SECONDS),
+        cli_extra_args=cli_extra_args,
     )
 
 
@@ -260,4 +283,18 @@ def _get_float_list(root: Dict[str, Any], key: str, *, default: Tuple[float, ...
         if isinstance(item, bool) or not isinstance(item, (int, float)):
             raise ValueError(f"`{key}` entries must be numbers.")
         result.append(float(item))
+    return result
+
+
+def _get_str_list(root: Dict[str, Any], key: str, *, default: Tuple[str, ...]) -> list[str]:
+    if key not in root or root.get(key) is None:
+        return list(default)
+    value = root.get(key)
+    if not isinstance(value, list):
+        raise ValueError(f"`{key}` must be a list of strings.")
+    result: list[str] = []
+    for item in value:
+        if not isinstance(item, str) or not item.strip():
+            raise ValueError(f"`{key}` entries must be non-empty strings.")
+        result.append(item.strip())
     return result

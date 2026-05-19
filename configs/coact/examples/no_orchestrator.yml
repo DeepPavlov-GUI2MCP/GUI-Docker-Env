@@ -1,0 +1,44 @@
+coact:
+  mode: default
+  enable_coding_agent: false
+  enable_web_search: false
+  script_mode: standard
+
+  gui:
+    protocol: openai
+    model: computer-use-preview
+    base_url: https://api.openai.com/v1
+    api_key: ""
+
+  orchestrator:
+    model: o3
+    base_url: https://api.openai.com/v1
+    api_key: ""
+
+  coding:
+    model: gpt-5.1-mini
+    base_url: https://api.openai.com/v1
+    api_key: ""
+
+  runtime:
+    no_orchestrator: true
+    provider_name: aws
+    path_to_vm: null
+    screen_width: 1920
+    screen_height: 1080
+    sleep_after_execution: 0.5
+    region: us-east-1
+    client_password: osworld-public-evaluation
+    cua_max_steps: 25
+    cut_off_steps: 200
+    result_dir: ./results_coact_no_orchestrator
+    num_envs: 1
+    log_level: INFO
+
+  tasks:
+    domain: thunderbird
+  # OSWorld-shaped task JSON (instruction may include the full step plan):
+  # task_id: synthetic_data/thunderbird/<uuid>/datasets/exponential_50_20/train/tasks/train_0001.json
+    task_id: null
+    test_all_meta_path: evaluation_examples/test_all.json
+    test_config_base_dir: evaluation_examples/examples

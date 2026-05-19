@@ -9,6 +9,7 @@ import shutil
 import sys
 import time
 import traceback
+from dataclasses import replace
 from functools import partial
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
@@ -18,6 +19,11 @@ from desktop_env.desktop_env import DesktopEnv
 from mm_agents.coact.autogen import LLMConfig
 from mm_agents.coact.cua_agent import DEFAULT_CUA_MODEL, run_cua, validate_cua_model
 from mm_agents.coact.operator_agent import OrchestratorAgent, OrchestratorUserProxyAgent
+from mm_agents.coact.synthetic_rollout_paths import (
+    make_rollout_id,
+    parse_synthetic_task_layout,
+    resolve_rollout_save_dir,
+)
 from mm_agents.coact.run_config import (
     DEFAULT_GUI_PROTOCOL,
     DEFAULT_MODE,
@@ -29,6 +35,7 @@ from mm_agents.coact.run_config import (
     MultiRolloutSettings,
     ResolvedRunConfig,
     load_config_file,
+    validate_run_config,
 )
 from mm_agents.env_loader import load_mm_agents_env
 
@@ -145,14 +152,26 @@ def _build_parser() -> argparse.ArgumentParser:
         "--task_id",
         type=str,
         default=None,
-        help="Run exactly one task. Accepts either a bare task id or a direct path to a task json file.",
+        help="Run exactly one task. Accepts a bare task id, a path to an OSWorld-shaped task JSON (domain/id from snapshot/id), or a repo-relative path such as synthetic_data/.../train_0001.json.",
     )
     parser.add_argument("--test_all_meta_path", type=str, default="evaluation_examples/test_all.json")
     parser.add_argument("--test_config_base_dir", type=str, default="evaluation_examples/examples")
 
     parser.add_argument("--result_dir", type=str, default="./results_coact")
+    parser.add_argument(
+        "--rollout-id",
+        type=str,
+        default=None,
+        help="Rollout folder name for synthetic dataset tasks (default: UTC timestamp).",
+    )
     parser.add_argument("--num_envs", type=int, default=1, help="Number of environments to run in parallel")
     parser.add_argument("--log_level", type=str, choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], default="INFO")
+    parser.add_argument(
+        "--no-orchestrator",
+        action="store_true",
+        help="Skip the orchestrator and pass the task instruction directly to the GUI agent (any gui.protocol).",
+    )
+    parser.add_argument("--gui-cli-timeout-seconds", type=int, default=300)
     return parser
 
 
@@ -338,7 +357,7 @@ def _resolve_run_config_from_args(args: argparse.Namespace) -> ResolvedRunConfig
         env_api_key=env_api_key,
         legacy_entry=_lookup_oai_entry(legacy_config_list, args.coding_model),
     )
-    gui = _resolve_args_backend(
+    gui_backend = _resolve_args_backend(
         model=args.gui_model,
         base_url=args.gui_base_url,
         api_key=args.gui_api_key,
@@ -346,8 +365,15 @@ def _resolve_run_config_from_args(args: argparse.Namespace) -> ResolvedRunConfig
         env_base_url=env_base_url,
         env_api_key=env_gui_api_key,
     )
+    gui = BackendSettings(
+        model=gui_backend.model,
+        base_url=gui_backend.base_url,
+        api_key=gui_backend.api_key,
+        protocol=gui_backend.protocol,
+        cli_timeout_seconds=args.gui_cli_timeout_seconds,
+    )
 
-    return ResolvedRunConfig(
+    resolved = ResolvedRunConfig(
         config_mode=False,
         config_path=None,
         script_mode=args.script_mode,
@@ -376,15 +402,30 @@ def _resolve_run_config_from_args(args: argparse.Namespace) -> ResolvedRunConfig
         num_envs=args.num_envs,
         log_level=args.log_level.upper(),
         multi_rollout=multi_rollout,
+        no_orchestrator=args.no_orchestrator,
+        rollout_id=args.rollout_id,
     )
+    validate_run_config(resolved)
+    return resolved
 
 
 def _resolve_task_path(test_config_base_dir: str, task_id: str, domain: str) -> tuple[str, str, str]:
     task_arg = Path(task_id)
+    if not task_arg.is_file() and not task_arg.is_absolute():
+        repo_relative = Path.cwd() / task_arg
+        if repo_relative.is_file():
+            task_arg = repo_relative
+
     if task_arg.is_file():
         cfg_path = task_arg.resolve()
-        resolved_task_id = cfg_path.stem
-        resolved_domain = domain if domain != "all" else cfg_path.parent.name or "custom"
+        task_config = _load_task_config(str(cfg_path))
+        resolved_task_id = str(task_config.get("id") or cfg_path.stem)
+        if domain != "all":
+            resolved_domain = domain
+        elif task_config.get("snapshot"):
+            resolved_domain = str(task_config["snapshot"])
+        else:
+            resolved_domain = cfg_path.parent.name or "custom"
         return resolved_domain, resolved_task_id, str(cfg_path)
 
     base_dir = Path(test_config_base_dir)
@@ -481,6 +522,8 @@ def _build_run_metadata(
             "enable_web_search": run_config.enable_web_search,
             "enable_coding_agent": run_config.enable_coding_agent,
             "gui_protocol": run_config.gui.protocol,
+            "no_orchestrator": run_config.no_orchestrator,
+            "gui_cli_provider": run_config.gui.cli_provider,
         },
         "multi_rollout": {
             "k_per_grid_point": run_config.multi_rollout.k_per_grid_point,
@@ -522,8 +565,23 @@ def _build_run_metadata(
     }
 
 
+def _resolve_history_save_dir(
+    run_config: ResolvedRunConfig,
+    domain: str,
+    ex_id: str,
+    cfg: str,
+) -> str:
+    return resolve_rollout_save_dir(
+        result_dir=run_config.result_dir,
+        domain=domain,
+        task_id=ex_id,
+        task_config_path=cfg,
+        rollout_id=run_config.rollout_id,
+    )
+
+
 def _build_task_metadata(domain: str, ex_id: str, cfg: str, run_config: ResolvedRunConfig) -> Dict[str, Any]:
-    return {
+    metadata: Dict[str, Any] = {
         "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "run_id": datetime_str,
         "domain": domain,
@@ -538,6 +596,17 @@ def _build_task_metadata(domain: str, ex_id: str, cfg: str, run_config: Resolved
             }
         ),
     }
+    layout = parse_synthetic_task_layout(cfg)
+    if layout:
+        metadata["dataset"] = {
+            "dataset_name": layout["dataset_name"],
+            "split": layout["split"],
+            "rollout_id": run_config.rollout_id,
+            "rollout_dir": _resolve_metadata_path(
+                _resolve_history_save_dir(run_config, domain, ex_id, cfg)
+            ),
+        }
+    return metadata
 
 
 def _resolve_research_tool_flags(run_config: ResolvedRunConfig) -> Tuple[bool, bool]:
@@ -552,8 +621,72 @@ def _multi_rollout_cua_max_steps(run_config: ResolvedRunConfig) -> int:
     return run_config.multi_rollout.cua_max_steps or run_config.cua_max_steps
 
 
-def _task_result_path(run_config: ResolvedRunConfig, domain: str, ex_id: str) -> str:
-    base_dir = os.path.join(run_config.result_dir, "coact", f"{domain}/{ex_id}")
+def _gui_run_kwargs(run_config: ResolvedRunConfig) -> Dict[str, Any]:
+    return {
+        "cli_timeout_seconds": run_config.gui.cli_timeout_seconds,
+        "cli_extra_args": list(run_config.gui.cli_extra_args),
+    }
+
+
+def _build_gui_instruction_with_plan(task_instruction: str, plan_text: str) -> str:
+    return (
+        f"{task_instruction}\n\n"
+        "# Execution plan\n"
+        f"{plan_text.strip()}\n\n"
+        "Follow the execution plan exactly. Do not ask the orchestrator for more help."
+    ).strip()
+
+
+def _build_gui_run_instruction(
+    task_config: Dict[str, Any],
+    run_config: ResolvedRunConfig,
+    *,
+    plan_text: Optional[str] = None,
+) -> str:
+    task_instruction = _build_task_instruction(task_config, run_config.mode)
+    if plan_text:
+        return _build_gui_instruction_with_plan(task_instruction, plan_text)
+    return task_instruction
+
+
+def _store_instruction_copy(history_save_dir: str, instruction: str, *, label: str = "instruction") -> str:
+    planning_dir = os.path.join(history_save_dir, "planning")
+    os.makedirs(planning_dir, exist_ok=True)
+    path = os.path.join(planning_dir, f"{label}.txt")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(instruction)
+    return path
+
+
+def _write_gui_rollout_artifacts(
+    save_path: str,
+    *,
+    history_inputs: List[Dict[str, Any]],
+    result: str,
+    cost: float,
+    raw_transcript: List[Dict[str, Any]],
+    tool_events: List[Dict[str, Any]],
+) -> None:
+    os.makedirs(save_path, exist_ok=True)
+    _write_json_file(os.path.join(save_path, "history_inputs.json"), {"messages": history_inputs})
+    _write_json_file(os.path.join(save_path, "responses.json"), {"responses": raw_transcript})
+    _write_json_file(os.path.join(save_path, "tool_events.json"), {"events": tool_events})
+    with open(os.path.join(save_path, "result.txt"), "w", encoding="utf-8") as f:
+        f.write(result)
+    with open(os.path.join(save_path, "cost.txt"), "w", encoding="utf-8") as f:
+        f.write(str(cost))
+
+
+def _task_result_path(
+    run_config: ResolvedRunConfig,
+    domain: str,
+    ex_id: str,
+    cfg: Optional[str] = None,
+) -> str:
+    if cfg and parse_synthetic_task_layout(cfg):
+        base_dir = _resolve_history_save_dir(run_config, domain, ex_id, cfg)
+    else:
+        base_dir = os.path.join(run_config.result_dir, "coact", f"{domain}/{ex_id}")
     if run_config.script_mode == "multi-rollout":
         return os.path.join(base_dir, "results_aggregated.json")
     return os.path.join(base_dir, "result.txt")
@@ -689,7 +822,7 @@ def _build_standard_process_context(
     orchestrator_llm_config = LLMConfig(config_list=[run_config.orchestrator.as_llm_config_entry()])
     coding_llm_config = LLMConfig(config_list=[run_config.coding.as_llm_config_entry()])
     enable_web_search_tool, enable_read_webpage_tool = _resolve_research_tool_flags(run_config)
-    history_save_dir = os.path.join(run_config.result_dir, "coact", f"{domain}/{ex_id}")
+    history_save_dir = _resolve_history_save_dir(run_config, domain, ex_id, cfg)
     os.makedirs(history_save_dir, exist_ok=True)
     task_metadata = _build_task_metadata(domain, ex_id, cfg, run_config)
     _write_json_file(os.path.join(history_save_dir, "metadata.json"), task_metadata)
@@ -710,6 +843,8 @@ def _build_standard_process_context(
 
 
 def process_task(task_info: Tuple[str, str, str], run_config: ResolvedRunConfig):
+    if run_config.no_orchestrator:
+        return process_task_direct_gui(task_info, run_config)
     (
         domain,
         ex_id,
@@ -771,6 +906,8 @@ def process_task(task_info: Tuple[str, str, str], run_config: ResolvedRunConfig)
                     orchestrator_backend_config=run_config.orchestrator.as_llm_config_entry(),
                     gui_client_kwargs=run_config.gui.as_openai_client_kwargs(),
                     gui_protocol=run_config.gui.protocol,
+                    gui_cli_timeout_seconds=run_config.gui.cli_timeout_seconds,
+                    gui_cli_extra_args=list(run_config.gui.cli_extra_args),
                     coding_llm_config=coding_llm_config,
                 )
 
@@ -896,6 +1033,8 @@ def _plan_task_once(
                 orchestrator_backend_config=run_config.orchestrator.as_llm_config_entry(),
                 gui_client_kwargs=run_config.gui.as_openai_client_kwargs(),
                 gui_protocol=run_config.gui.protocol,
+                gui_cli_timeout_seconds=run_config.gui.cli_timeout_seconds,
+                gui_cli_extra_args=list(run_config.gui.cli_extra_args),
                 coding_llm_config=coding_llm_config,
             )
 
@@ -932,13 +1071,13 @@ def _run_single_multi_rollout_attempt(
     *,
     run_config: ResolvedRunConfig,
     task_config: Dict[str, Any],
-    plan_text: str,
     domain: str,
     ex_id: str,
     attempt_dir: str,
     rollout_index: int,
     temperature: float,
     top_p: float,
+    plan_text: Optional[str] = None,
 ) -> Dict[str, Any]:
     os.makedirs(attempt_dir, exist_ok=True)
     env = None
@@ -948,12 +1087,7 @@ def _run_single_multi_rollout_attempt(
     step_count = 0
     tool_events: List[Dict[str, Any]] = []
 
-    instruction = (
-        f"{_build_task_instruction(task_config, run_config.mode)}\n\n"
-        "# Execution plan\n"
-        f"{plan_text.strip()}\n\n"
-        "Follow the execution plan exactly. Do not ask the orchestrator for more help."
-    ).strip()
+    instruction = _build_gui_run_instruction(task_config, run_config, plan_text=plan_text)
 
     try:
         env = _create_desktop_env(run_config)
@@ -976,15 +1110,17 @@ def _run_single_multi_rollout_attempt(
             task_source=str(task_config.get("source", "")).strip() or None,
             temperature=temperature,
             top_p=top_p,
+            **_gui_run_kwargs(run_config),
         )
 
-        _write_json_file(os.path.join(attempt_dir, "history_inputs.json"), {"messages": history_inputs})
-        _write_json_file(os.path.join(attempt_dir, "responses.json"), {"responses": raw_transcript})
-        _write_json_file(os.path.join(attempt_dir, "tool_events.json"), {"events": tool_events})
-        with open(os.path.join(attempt_dir, "result.txt"), "w", encoding="utf-8") as f:
-            f.write(result)
-        with open(os.path.join(attempt_dir, "cost.txt"), "w", encoding="utf-8") as f:
-            f.write(str(cost))
+        _write_gui_rollout_artifacts(
+            attempt_dir,
+            history_inputs=history_inputs,
+            result=result,
+            cost=cost,
+            raw_transcript=raw_transcript,
+            tool_events=tool_events,
+        )
 
         if step_count <= run_config.cut_off_steps:
             score = float(env.evaluate())
@@ -1015,7 +1151,137 @@ def _run_single_multi_rollout_attempt(
     return attempt_record
 
 
+def process_task_direct_gui(task_info: Tuple[str, str, str], run_config: ResolvedRunConfig):
+    domain, ex_id, cfg = task_info
+    history_save_dir = _resolve_history_save_dir(run_config, domain, ex_id, cfg)
+    os.makedirs(history_save_dir, exist_ok=True)
+    task_metadata = _build_task_metadata(domain, ex_id, cfg, run_config)
+    _write_json_file(os.path.join(history_save_dir, "metadata.json"), task_metadata)
+
+    retry = 0
+    while True:
+        try:
+            task_config = _load_task_config(cfg)
+            instruction = _build_gui_run_instruction(task_config, run_config)
+            _store_instruction_copy(history_save_dir, instruction)
+
+            if run_config.script_mode == "multi-rollout":
+                attempts: List[Dict[str, Any]] = []
+                per_configuration: List[Dict[str, Any]] = []
+                rollout_counter = 0
+                for temperature in run_config.multi_rollout.temperatures:
+                    for top_p in run_config.multi_rollout.top_ps:
+                        config_attempts: List[Dict[str, Any]] = []
+                        config_dir = os.path.join(history_save_dir, "multi_rollout", f"temp_{temperature}_top_p_{top_p}")
+                        for rollout_index in range(run_config.multi_rollout.k_per_grid_point):
+                            attempt_dir = os.path.join(config_dir, f"rollout_{rollout_index:03d}")
+                            attempt_record = _run_single_multi_rollout_attempt(
+                                run_config=run_config,
+                                task_config=task_config,
+                                domain=domain,
+                                ex_id=ex_id,
+                                attempt_dir=attempt_dir,
+                                rollout_index=rollout_counter,
+                                temperature=temperature,
+                                top_p=top_p,
+                            )
+                            rollout_counter += 1
+                            config_attempts.append(attempt_record)
+                            attempts.append(attempt_record)
+
+                        per_configuration.append(
+                            {
+                                "temperature": temperature,
+                                "top_p": top_p,
+                                "attempt_count": len(config_attempts),
+                                "pass_at_1": bool(config_attempts and config_attempts[0]["binary_result"]),
+                                "pass_at_k": any(attempt["binary_result"] for attempt in config_attempts),
+                                "unique_trajectory_count": len({attempt["trajectory_signature"] for attempt in config_attempts}),
+                                "attempts": config_attempts,
+                            }
+                        )
+
+                aggregated = {
+                    "domain": domain,
+                    "task_id": ex_id,
+                    "instruction_path": _resolve_metadata_path(os.path.join(history_save_dir, "planning", "instruction.txt")),
+                    "script_mode": run_config.script_mode,
+                    "no_orchestrator": run_config.no_orchestrator,
+                    "k_per_grid_point": run_config.multi_rollout.k_per_grid_point,
+                    "temperatures": list(run_config.multi_rollout.temperatures),
+                    "top_ps": list(run_config.multi_rollout.top_ps),
+                    "total_attempts": len(attempts),
+                    "pass_at_1": bool(attempts and attempts[0]["binary_result"]),
+                    "pass_at_k": any(attempt["binary_result"] for attempt in attempts),
+                    "unique_trajectory_count": len({attempt["trajectory_signature"] for attempt in attempts}),
+                    "successful_attempts": sum(attempt["binary_result"] for attempt in attempts),
+                }
+                _write_json_file(os.path.join(history_save_dir, "results_aggregated.json"), aggregated)
+                _write_json_file(
+                    os.path.join(history_save_dir, "results_per_configuration.json"),
+                    {"domain": domain, "task_id": ex_id, "script_mode": run_config.script_mode, "configurations": per_configuration},
+                )
+                return domain, float(aggregated["pass_at_k"])
+
+            env = None
+            score = 0.0
+            try:
+                env = _create_desktop_env(run_config)
+                env.reset(task_config=task_config)
+                time.sleep(60)
+                history_inputs, result, cost, raw_transcript, tool_events, step_count = run_cua(
+                    env=env,
+                    instruction=instruction,
+                    max_steps=run_config.cua_max_steps,
+                    save_path=history_save_dir,
+                    cua_model=run_config.gui.model,
+                    gui_protocol=run_config.gui.protocol,
+                    screen_width=run_config.screen_width,
+                    screen_height=run_config.screen_height,
+                    sleep_after_execution=run_config.sleep_after_execution,
+                    client_password=run_config.client_password,
+                    prompt_mode=run_config.mode,
+                    task_source=str(task_config.get("source", "")).strip() or None,
+                    **_gui_run_kwargs(run_config),
+                )
+                _write_gui_rollout_artifacts(
+                    history_save_dir,
+                    history_inputs=history_inputs,
+                    result=result,
+                    cost=cost,
+                    raw_transcript=raw_transcript,
+                    tool_events=tool_events,
+                )
+                if step_count <= run_config.cut_off_steps:
+                    score = float(env.evaluate())
+            finally:
+                if env is not None:
+                    env.close()
+
+            with open(os.path.join(history_save_dir, "result.txt"), "w", encoding="utf-8") as f:
+                f.write(str(score))
+            return domain, score
+        except Exception as e:
+            retry += 1
+            if retry < 3:
+                shutil.rmtree(history_save_dir)
+                os.makedirs(history_save_dir)
+                _write_json_file(os.path.join(history_save_dir, "metadata.json"), task_metadata)
+                print(f"Retry {retry} times, error: {str(e)}")
+                traceback.print_exc()
+                continue
+            print(f"Error processing direct-GUI task {domain}/{ex_id}")
+            traceback.print_exc()
+            with open(os.path.join(history_save_dir, "result.txt"), "w", encoding="utf-8") as f:
+                f.write("0.0")
+            with open(os.path.join(history_save_dir, "err_reason.txt"), "w", encoding="utf-8") as f:
+                f.write(f"Fatal error: {str(e)}")
+            return domain, 0.0
+
+
 def process_task_multi_rollout(task_info: Tuple[str, str, str], run_config: ResolvedRunConfig):
+    if run_config.no_orchestrator:
+        return process_task_direct_gui(task_info, run_config)
     (
         domain,
         ex_id,
@@ -1163,7 +1429,11 @@ if __name__ == "__main__":
     args = parser.parse_args(raw_argv)
     _reject_mixed_config_usage(parser, raw_argv, args)
     run_config = load_config_file(args.config) if args.config else _resolve_run_config_from_args(args)
-    validate_cua_model(run_config.gui.model)
+    if not run_config.rollout_id:
+        run_config = replace(run_config, rollout_id=make_rollout_id())
+    if run_config.gui.protocol == DEFAULT_GUI_PROTOCOL:
+        validate_cua_model(run_config.gui.model)
+    validate_run_config(run_config)
     _setup_logging(run_config.log_level)
 
     tasks: List[Tuple[str, str, str]] = []
@@ -1173,7 +1443,7 @@ if __name__ == "__main__":
         domain, ex_id, cfg = _resolve_task_path(run_config.test_config_base_dir, run_config.task_id, run_config.domain)
         selected_tasks.append((domain, ex_id, cfg))
         scores[domain] = []
-        result_path = _task_result_path(run_config, domain, ex_id)
+        result_path = _task_result_path(run_config, domain, ex_id, cfg)
         if os.path.exists(result_path):
             if run_config.script_mode == "multi-rollout":
                 with open(result_path, "r", encoding="utf-8") as f:
@@ -1196,7 +1466,7 @@ if __name__ == "__main__":
             for ex_id in test_all_meta[domain]:
                 cfg = os.path.join(run_config.test_config_base_dir, f"{domain}/{ex_id}.json")
                 selected_tasks.append((domain, ex_id, cfg))
-                score_path = _task_result_path(run_config, domain, ex_id)
+                score_path = _task_result_path(run_config, domain, ex_id, cfg)
                 if os.path.exists(score_path):
                     if run_config.script_mode == "multi-rollout":
                         with open(score_path, "r", encoding="utf-8") as f:
@@ -1219,7 +1489,8 @@ if __name__ == "__main__":
         for domain in test_all_meta:
             domain_scores = []
             for ex_id in test_all_meta[domain]:
-                score_file = _task_result_path(run_config, domain, ex_id)
+                summary_cfg = os.path.join(run_config.test_config_base_dir, f"{domain}/{ex_id}.json")
+                score_file = _task_result_path(run_config, domain, ex_id, summary_cfg)
                 if os.path.exists(score_file):
                     domain_scores.append(_read_existing_task_score(score_file, run_config.script_mode))
             if domain_scores:
@@ -1228,7 +1499,12 @@ if __name__ == "__main__":
     else:
         num_workers = max(1, min(cpu_count() // 2, run_config.num_envs))
         print(f"Processing {len(tasks)} tasks with {num_workers} workers...")
-        task_processor = process_task_multi_rollout if run_config.script_mode == "multi-rollout" else process_task
+        if run_config.no_orchestrator:
+            task_processor = process_task_direct_gui
+        elif run_config.script_mode == "multi-rollout":
+            task_processor = process_task_multi_rollout
+        else:
+            task_processor = process_task
         process_func = partial(task_processor, run_config=run_config)
         with Pool(processes=num_workers) as pool:
             results = pool.map(process_func, tasks)

@@ -212,7 +212,9 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         history_save_dir: str = "",
         llm_model: str = "o4-mini",
         gui_model: str = DEFAULT_CUA_MODEL,
-        gui_protocol: Literal["openai", "vllm"] = "openai",
+        gui_protocol: Literal["openai", "vllm", "cli"] = "openai",
+        gui_cli_timeout_seconds: int = 300,
+        gui_cli_extra_args: Optional[list[str]] = None,
         orchestrator_model: str = "o3",
         region: str = "us-east-1",
         client_password: str = "",
@@ -300,6 +302,8 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         self.orchestrator_client_kwargs = orchestrator_client_kwargs or {}
         self.orchestrator_backend_config = orchestrator_backend_config or {}
         self.gui_client_kwargs = gui_client_kwargs or {}
+        self.gui_cli_timeout_seconds = gui_cli_timeout_seconds
+        self.gui_cli_extra_args = list(gui_cli_extra_args or ())
         self.coding_llm_config = coding_llm_config or LLMConfig(api_type="openai", model=self.llm_model)
         self.web_search_client: OpenAI = _build_openai_client(
             api_key=self.orchestrator_backend_config.get("api_key"),
@@ -334,6 +338,8 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
                 client_password=self.client_password,
                 prompt_mode=self.prompt_mode,
                 task_source=self.task_source,
+                cli_timeout_seconds=self.gui_cli_timeout_seconds,
+                cli_extra_args=self.gui_cli_extra_args,
             )
             screenshot = self.env.controller.get_screenshot()
 
