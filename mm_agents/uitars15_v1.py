@@ -611,6 +611,35 @@ def trim_accessibility_tree(linearized_accessibility_tree, max_tokens):
 
 
 class UITARSAgent:
+    _MODEL_ALIASES = frozenset(
+        {
+            "ui_tars_1.5",
+            "UI-TARS-1.5",
+            "UI-TARS-1.5-7B",
+            "ByteDance-Seed/UI-TARS-1.5-7B",
+        }
+    )
+
+    def _resolve_model_name(self, model: str) -> str:
+        configured = (os.environ.get("OPENAI_MODEL") or os.environ.get("UITARS_OPENAI_MODEL") or "").strip()
+        if configured:
+            return configured
+        if model not in self._MODEL_ALIASES:
+            return model
+        try:
+            models = self.vlm.models.list()
+            if not models.data:
+                return model
+            available = {entry.id for entry in models.data}
+            if model in available:
+                return model
+            resolved = models.data[0].id
+            logger.info(f"Resolved UI-TARS model alias {model!r} -> {resolved!r}")
+            return resolved
+        except Exception as exc:
+            logger.warning(f"Could not resolve vLLM model id for {model!r}: {exc}")
+            return model
+
     def __init__(
         self,
         model: str,
@@ -676,6 +705,7 @@ class UITARSAgent:
         configured_api_key = kwargs.get("api_key")
         api_key = configured_api_key or os.environ.get("OPENAI_API_KEY") or os.environ.get("UITARS_OPENAI_API_KEY") or "empty"
         self.vlm = openai.OpenAI(api_key=api_key, base_url=baseurl_list[0])
+        self.model = self._resolve_model_name(self.model)
 
         self.thoughts = []
         self.actions = []
