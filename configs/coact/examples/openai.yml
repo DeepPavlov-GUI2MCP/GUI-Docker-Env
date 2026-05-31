@@ -13,6 +13,7 @@ coact:
     model: gpt-5.5
     base_url: https://api.openai.com/v1
     api_key: ""
+    openai_force_completions_api: true
 
   coding:
     model: gpt-5.1-mini

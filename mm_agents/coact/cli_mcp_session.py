@@ -310,6 +310,31 @@ def cli_final_assistant_text(raw_transcript: List[Dict[str, Any]]) -> str:
     return ""
 
 
+def _extract_usage_from_jsonl(json_events_path: Path) -> Optional[Dict[str, Any]]:
+    if not json_events_path.is_file():
+        return None
+    usage: Optional[Dict[str, Any]] = None
+    try:
+        for line in json_events_path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                payload = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(payload, dict):
+                candidate = payload.get("usage")
+                if isinstance(candidate, dict):
+                    usage = candidate
+                response = payload.get("response")
+                if isinstance(response, dict) and isinstance(response.get("usage"), dict):
+                    usage = response["usage"]
+    except OSError:
+        return None
+    return usage
+
+
 @dataclass
 class CliMcpSession:
     save_path: str
@@ -320,6 +345,7 @@ class CliMcpSession:
     timeout_seconds: int = 600
     extra_args: Sequence[str] = field(default_factory=list)
     _session_id: Optional[str] = None
+    last_usage: Optional[Dict[str, Any]] = field(default=None, init=False)
 
     def run(self, *, prompt: str, initial_screenshot_path: str) -> tuple[str, List[Dict[str, Any]], List[Dict[str, Any]]]:
         self.save_path = os.path.abspath(self.save_path)
@@ -405,6 +431,7 @@ class CliMcpSession:
                 raw_text=raw_text,
                 assistant_text=assistant_text,
             )
+            self.last_usage = _extract_usage_from_jsonl(json_events_path)
             return final_result, raw_transcript, tool_events
         finally:
             console_log.close()

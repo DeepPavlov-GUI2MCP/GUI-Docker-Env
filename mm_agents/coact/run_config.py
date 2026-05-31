@@ -6,6 +6,8 @@ from typing import Any, Dict, Optional, Tuple
 
 import yaml
 
+from mm_agents.coact.spending import resolve_default_credentials
+
 
 DEFAULT_MODE = "default"
 SUPPORTED_MODES = (DEFAULT_MODE, "search-first", "inspect-source-first")
@@ -89,6 +91,7 @@ class ResolvedRunConfig:
     multi_rollout: MultiRolloutSettings
     no_orchestrator: bool = False
     rollout_id: Optional[str] = None
+    openai_force_completions_api: bool = True
 
     def as_metadata_args(self) -> Dict[str, Any]:
         payload = asdict(self)
@@ -156,6 +159,11 @@ def load_config_file(path: str) -> ResolvedRunConfig:
         multi_rollout=_parse_multi_rollout_settings(multi_rollout),
         no_orchestrator=_get_optional_bool(runtime, "no_orchestrator", False),
         rollout_id=_get_optional_str(runtime, "rollout_id"),
+        openai_force_completions_api=_get_optional_bool(
+            _get_mapping(root, "gui"),
+            "openai_force_completions_api",
+            True,
+        ),
     )
     validate_run_config(resolved)
     return resolved
@@ -170,6 +178,11 @@ def validate_run_config(run_config: ResolvedRunConfig) -> None:
         raise ValueError(f"Unsupported gui.cli_provider `{run_config.gui.cli_provider}`. Only `codex` is implemented.")
 
 
+def _resolve_env_backend_credentials() -> Tuple[Optional[str], Optional[str]]:
+    creds = resolve_default_credentials()
+    return creds["base_url"], creds["api_key"]
+
+
 def _parse_backend(root: Dict[str, Any], key: str, *, default_protocol: str = DEFAULT_GUI_PROTOCOL) -> BackendSettings:
     backend = _get_mapping(root, key)
     model = _get_required_str(backend, "model", context=key)
@@ -178,11 +191,12 @@ def _parse_backend(root: Dict[str, Any], key: str, *, default_protocol: str = DE
         raise ValueError(
             f"Unsupported `{key}.protocol` value `{protocol}`. Expected one of {SUPPORTED_GUI_PROTOCOLS}."
         )
+    env_base_url, env_api_key = _resolve_env_backend_credentials()
     cli_extra_args = tuple(_get_str_list(backend, "cli_extra_args", default=()))
     return BackendSettings(
         model=model,
-        base_url=_get_optional_str(backend, "base_url"),
-        api_key=_get_optional_str(backend, "api_key"),
+        base_url=_get_optional_str(backend, "base_url") or env_base_url,
+        api_key=_get_optional_str(backend, "api_key") or env_api_key,
         protocol=protocol,
         cli_provider=_get_optional_str(backend, "cli_provider", DEFAULT_CLI_PROVIDER) or DEFAULT_CLI_PROVIDER,
         cli_timeout_seconds=_get_optional_int(backend, "cli_timeout_seconds", DEFAULT_CLI_TIMEOUT_SECONDS),

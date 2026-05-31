@@ -18,6 +18,14 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 from desktop_env.desktop_env import DesktopEnv
 from mm_agents.coact.autogen import LLMConfig
 from mm_agents.coact.cua_agent import DEFAULT_CUA_MODEL, run_cua, validate_cua_model
+from mm_agents.coact.spending import (
+    SpendingSession,
+    aggregate_spending_payloads,
+    install_autogen_spending_hook,
+    merge_spending_into_metadata,
+    read_spending_from_metadata,
+    resolve_default_credentials,
+)
 from mm_agents.coact.operator_agent import OrchestratorAgent, OrchestratorUserProxyAgent
 from mm_agents.coact.synthetic_rollout_paths import (
     make_rollout_id,
@@ -172,6 +180,12 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Skip the orchestrator and pass the task instruction directly to the GUI agent (any gui.protocol).",
     )
     parser.add_argument("--gui-cli-timeout-seconds", type=int, default=300)
+    parser.add_argument(
+        "--openai-force-completions-api",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="When gui.protocol is openai, use chat.completions with a computer function tool instead of /responses.",
+    )
     return parser
 
 
@@ -329,8 +343,9 @@ def _resolve_args_backend(
 
 def _resolve_run_config_from_args(args: argparse.Namespace) -> ResolvedRunConfig:
     legacy_config_list = _load_oai_config_list(args.oai_config_path) if args.oai_config_path else []
-    env_base_url = os.environ.get("OPENAI_BASE_URL")
-    env_api_key = os.environ.get("OPENAI_API_KEY")
+    creds = resolve_default_credentials()
+    env_base_url = creds["base_url"]
+    env_api_key = creds["api_key"]
     env_gui_api_key = os.environ.get("OPENAI_API_KEY_CUA") or env_api_key
     multi_rollout = MultiRolloutSettings(
         k_per_grid_point=args.multi_rollout_k_per_grid_point,
@@ -404,6 +419,7 @@ def _resolve_run_config_from_args(args: argparse.Namespace) -> ResolvedRunConfig
         multi_rollout=multi_rollout,
         no_orchestrator=args.no_orchestrator,
         rollout_id=args.rollout_id,
+        openai_force_completions_api=args.openai_force_completions_api,
     )
     validate_run_config(resolved)
     return resolved
@@ -524,6 +540,7 @@ def _build_run_metadata(
             "gui_protocol": run_config.gui.protocol,
             "no_orchestrator": run_config.no_orchestrator,
             "gui_cli_provider": run_config.gui.cli_provider,
+            "openai_force_completions_api": run_config.openai_force_completions_api,
         },
         "multi_rollout": {
             "k_per_grid_point": run_config.multi_rollout.k_per_grid_point,
@@ -625,6 +642,7 @@ def _gui_run_kwargs(run_config: ResolvedRunConfig) -> Dict[str, Any]:
     return {
         "cli_timeout_seconds": run_config.gui.cli_timeout_seconds,
         "cli_extra_args": list(run_config.gui.cli_extra_args),
+        "openai_force_completions_api": run_config.openai_force_completions_api,
     }
 
 
@@ -658,12 +676,146 @@ def _store_instruction_copy(history_save_dir: str, instruction: str, *, label: s
     return path
 
 
+def _finalize_metadata_json(
+    path: str | Path,
+    base_metadata: Dict[str, Any],
+    *,
+    session: Optional[SpendingSession] = None,
+    spending: Optional[Dict[str, Any]] = None,
+    log_label: Optional[str] = None,
+) -> None:
+    if spending is None:
+        if session is None:
+            raise ValueError("Either session or spending must be provided")
+        spending = session.to_spending_payload()
+        session.log_total(label=log_label or Path(path).stem)
+    payload = merge_spending_into_metadata(base_metadata, spending)
+    _write_json_file(path, payload)
+
+
+def _finalize_task_spending_from_attempts(
+    history_save_dir: str,
+    task_metadata: Dict[str, Any],
+    attempts: Sequence[Dict[str, Any]],
+    *,
+    planning_session: Optional[SpendingSession] = None,
+) -> None:
+    children: List[Tuple[Dict[str, Any], Dict[str, Any]]] = []
+    if planning_session is not None and planning_session.steps:
+        children.append(({"phase": "planning"}, planning_session.to_spending_payload()))
+    for attempt in attempts:
+        attempt_dir = attempt.get("attempt_dir")
+        if not attempt_dir:
+            continue
+        spending = read_spending_from_metadata(Path(attempt_dir) / "metadata.json")
+        if spending is None:
+            continue
+        children.append(
+            (
+                {
+                    "attempt_index": attempt.get("rollout_index"),
+                    "rollout_index": attempt.get("rollout_index"),
+                    "temperature": attempt.get("temperature"),
+                    "top_p": attempt.get("top_p"),
+                },
+                spending,
+            )
+        )
+    if not children:
+        return
+    attempt_children = [child for child in children if child[0].get("phase") != "planning"]
+    group_key = "spending_by_attempt" if len(attempt_children) > 1 else None
+    task_spending = aggregate_spending_payloads(
+        children,
+        group_totals_key=group_key,
+        annotate_step=lambda meta, step: {
+            **step,
+            **({k: v for k, v in meta.items() if k != "phase"}),
+        },
+    )
+    logger.info(
+        "Spending task total tokens=%s cost=$%.6f across %s spending sources",
+        task_spending["spending_total"]["num_tokens"],
+        task_spending["spending_total"]["cost"],
+        len(children),
+    )
+    _finalize_metadata_json(
+        os.path.join(history_save_dir, "metadata.json"),
+        task_metadata,
+        spending=task_spending,
+        log_label="task",
+    )
+
+
+def _finalize_run_spending(
+    run_config: ResolvedRunConfig,
+    run_metadata: Dict[str, Any],
+    selected_tasks: Sequence[Tuple[str, str, str]],
+    metadata_dir: Path,
+    run_id: str,
+) -> None:
+    task_children: List[Tuple[Dict[str, Any], Dict[str, Any]]] = []
+    missing_spending: List[Dict[str, Any]] = []
+    for task_index, (domain, ex_id, cfg) in enumerate(selected_tasks):
+        task_dir = _resolve_history_save_dir(run_config, domain, ex_id, cfg)
+        spending = read_spending_from_metadata(Path(task_dir) / "metadata.json")
+        if spending is None:
+            missing_spending.append(
+                {
+                    "task_index": task_index,
+                    "domain": domain,
+                    "task_id": ex_id,
+                    "task_dir": task_dir,
+                }
+            )
+            continue
+        task_children.append(
+            (
+                {"task_index": task_index, "domain": domain, "task_id": ex_id, "task_dir": task_dir},
+                spending,
+            )
+        )
+
+    payload = dict(run_metadata)
+    if task_children:
+        run_spending = aggregate_spending_payloads(
+            task_children,
+            group_totals_key="spending_by_task",
+            annotate_step=lambda meta, step: {
+                **step,
+                "domain": meta["domain"],
+                "task_id": meta["task_id"],
+                "task_index": meta["task_index"],
+            },
+        )
+        run_spending["tasks_included"] = len(task_children)
+        run_spending["tasks_missing_spending"] = missing_spending
+        payload = merge_spending_into_metadata(payload, run_spending)
+        logger.info(
+            "Spending run total tokens=%s cost=$%.6f across %s tasks",
+            run_spending["spending_total"]["num_tokens"],
+            run_spending["spending_total"]["cost"],
+            len(task_children),
+        )
+    else:
+        payload["spending"] = {
+            "spending_per_step": [],
+            "spending_by_model": [],
+            "spending_by_role": [],
+            "spending_total": {"num_tokens": 0, "cost": 0.0},
+            "tasks_included": 0,
+            "tasks_missing_spending": missing_spending
+            or [{"domain": domain, "task_id": ex_id} for domain, ex_id, _ in selected_tasks],
+        }
+    _write_json_file(metadata_dir / f"run_metadata_{run_id}.json", payload)
+    _write_json_file(metadata_dir / "run_metadata_latest.json", payload)
+
+
 def _write_gui_rollout_artifacts(
     save_path: str,
     *,
     history_inputs: List[Dict[str, Any]],
     result: str,
-    cost: float,
     raw_transcript: List[Dict[str, Any]],
     tool_events: List[Dict[str, Any]],
 ) -> None:
@@ -673,8 +825,6 @@ def _write_gui_rollout_artifacts(
     _write_json_file(os.path.join(save_path, "tool_events.json"), {"events": tool_events})
     with open(os.path.join(save_path, "result.txt"), "w", encoding="utf-8") as f:
         f.write(result)
-    with open(os.path.join(save_path, "cost.txt"), "w", encoding="utf-8") as f:
-        f.write(str(cost))
 
 
 def _task_result_path(
@@ -862,6 +1012,7 @@ def process_task(task_info: Tuple[str, str, str], run_config: ResolvedRunConfig)
     orchestrator_proxy = None
 
     while True:
+        spending_session = SpendingSession()
         try:
             with orchestrator_llm_config:
                 orchestrator = OrchestratorAgent(
@@ -876,6 +1027,12 @@ def process_task(task_info: Tuple[str, str, str], run_config: ResolvedRunConfig)
                     enable_gui_agent_tool=True,
                     enable_web_search_tool=enable_web_search_tool,
                     enable_read_webpage_tool=enable_read_webpage_tool,
+                )
+                install_autogen_spending_hook(
+                    orchestrator,
+                    spending_session,
+                    role="orchestrator",
+                    base_url=run_config.orchestrator.base_url,
                 )
                 orchestrator_proxy = OrchestratorUserProxyAgent(
                     name="orchestrator_proxy",
@@ -909,6 +1066,8 @@ def process_task(task_info: Tuple[str, str, str], run_config: ResolvedRunConfig)
                     gui_cli_timeout_seconds=run_config.gui.cli_timeout_seconds,
                     gui_cli_extra_args=list(run_config.gui.cli_extra_args),
                     coding_llm_config=coding_llm_config,
+                    spending_session=spending_session,
+                    openai_force_completions_api=run_config.openai_force_completions_api,
                 )
 
             orchestrator_proxy.reset(task_config=task_config)
@@ -948,6 +1107,12 @@ def process_task(task_info: Tuple[str, str, str], run_config: ResolvedRunConfig)
 
             with open(os.path.join(history_save_dir, "result.txt"), "w", encoding="utf-8") as f:
                 f.write(str(score))
+            _finalize_metadata_json(
+                os.path.join(history_save_dir, "metadata.json"),
+                task_metadata,
+                session=spending_session,
+                log_label="task",
+            )
             break
 
         except Exception as e:
@@ -967,6 +1132,12 @@ def process_task(task_info: Tuple[str, str, str], run_config: ResolvedRunConfig)
                 f.write(str(score))
             with open(os.path.join(history_save_dir, "err_reason.txt"), "w", encoding="utf-8") as f:
                 f.write(f"Fatal error: {str(e)}")
+            _finalize_metadata_json(
+                os.path.join(history_save_dir, "metadata.json"),
+                task_metadata,
+                session=spending_session,
+                log_label="task",
+            )
         finally:
             if orchestrator_proxy is not None and orchestrator_proxy.env is not None:
                 orchestrator_proxy.env.close()
@@ -984,10 +1155,14 @@ def _plan_task_once(
     coding_llm_config: LLMConfig,
     enable_web_search_tool: bool,
     enable_read_webpage_tool: bool,
+    spending_session: Optional[SpendingSession] = None,
 ) -> str:
     planning_dir = os.path.join(history_save_dir, "planning")
     os.makedirs(planning_dir, exist_ok=True)
     orchestrator_proxy = None
+    if spending_session is None:
+        spending_session = SpendingSession()
+    session = spending_session
 
     try:
         with orchestrator_llm_config:
@@ -1003,6 +1178,12 @@ def _plan_task_once(
                 enable_gui_agent_tool=False,
                 enable_web_search_tool=enable_web_search_tool,
                 enable_read_webpage_tool=enable_read_webpage_tool,
+            )
+            install_autogen_spending_hook(
+                orchestrator,
+                session,
+                role="orchestrator",
+                base_url=run_config.orchestrator.base_url,
             )
             orchestrator_proxy = OrchestratorUserProxyAgent(
                 name="orchestrator_proxy",
@@ -1036,6 +1217,8 @@ def _plan_task_once(
                 gui_cli_timeout_seconds=run_config.gui.cli_timeout_seconds,
                 gui_cli_extra_args=list(run_config.gui.cli_extra_args),
                 coding_llm_config=coding_llm_config,
+                spending_session=session,
+                openai_force_completions_api=run_config.openai_force_completions_api,
             )
 
         orchestrator_proxy.reset(task_config=task_config)
@@ -1088,11 +1271,12 @@ def _run_single_multi_rollout_attempt(
     tool_events: List[Dict[str, Any]] = []
 
     instruction = _build_gui_run_instruction(task_config, run_config, plan_text=plan_text)
+    spending_session = SpendingSession()
 
     try:
         env = _create_desktop_env(run_config)
         env.reset(task_config=task_config)
-        history_inputs, result, cost, raw_transcript, tool_events, step_count = run_cua(
+        history_inputs, result, raw_transcript, tool_events, step_count = run_cua(
             env=env,
             instruction=instruction,
             max_steps=_multi_rollout_cua_max_steps(run_config),
@@ -1110,6 +1294,7 @@ def _run_single_multi_rollout_attempt(
             task_source=str(task_config.get("source", "")).strip() or None,
             temperature=temperature,
             top_p=top_p,
+            spending_session=spending_session,
             **_gui_run_kwargs(run_config),
         )
 
@@ -1117,7 +1302,6 @@ def _run_single_multi_rollout_attempt(
             attempt_dir,
             history_inputs=history_inputs,
             result=result,
-            cost=cost,
             raw_transcript=raw_transcript,
             tool_events=tool_events,
         )
@@ -1147,7 +1331,12 @@ def _run_single_multi_rollout_attempt(
         "elapsed_time_seconds": elapsed_time_seconds,
         "trajectory_signature": _trajectory_signature(tool_events),
     }
-    _write_json_file(os.path.join(attempt_dir, "metadata.json"), attempt_record)
+    _finalize_metadata_json(
+        os.path.join(attempt_dir, "metadata.json"),
+        attempt_record,
+        session=spending_session,
+        log_label="attempt",
+    )
     return attempt_record
 
 
@@ -1159,6 +1348,7 @@ def process_task_direct_gui(task_info: Tuple[str, str, str], run_config: Resolve
     _write_json_file(os.path.join(history_save_dir, "metadata.json"), task_metadata)
 
     retry = 0
+    spending_session: Optional[SpendingSession] = None
     while True:
         try:
             task_config = _load_task_config(cfg)
@@ -1221,34 +1411,38 @@ def process_task_direct_gui(task_info: Tuple[str, str, str], run_config: Resolve
                     os.path.join(history_save_dir, "results_per_configuration.json"),
                     {"domain": domain, "task_id": ex_id, "script_mode": run_config.script_mode, "configurations": per_configuration},
                 )
+                _finalize_task_spending_from_attempts(history_save_dir, task_metadata, attempts)
                 return domain, float(aggregated["pass_at_k"])
 
             env = None
             score = 0.0
+            spending_session = SpendingSession()
             try:
                 env = _create_desktop_env(run_config)
                 env.reset(task_config=task_config)
                 time.sleep(60)
-                history_inputs, result, cost, raw_transcript, tool_events, step_count = run_cua(
+                history_inputs, result, raw_transcript, tool_events, step_count = run_cua(
                     env=env,
                     instruction=instruction,
                     max_steps=run_config.cua_max_steps,
                     save_path=history_save_dir,
                     cua_model=run_config.gui.model,
                     gui_protocol=run_config.gui.protocol,
+                    base_url=run_config.gui.base_url,
+                    api_key=run_config.gui.api_key,
                     screen_width=run_config.screen_width,
                     screen_height=run_config.screen_height,
                     sleep_after_execution=run_config.sleep_after_execution,
                     client_password=run_config.client_password,
                     prompt_mode=run_config.mode,
                     task_source=str(task_config.get("source", "")).strip() or None,
+                    spending_session=spending_session,
                     **_gui_run_kwargs(run_config),
                 )
                 _write_gui_rollout_artifacts(
                     history_save_dir,
                     history_inputs=history_inputs,
                     result=result,
-                    cost=cost,
                     raw_transcript=raw_transcript,
                     tool_events=tool_events,
                 )
@@ -1260,6 +1454,12 @@ def process_task_direct_gui(task_info: Tuple[str, str, str], run_config: Resolve
 
             with open(os.path.join(history_save_dir, "result.txt"), "w", encoding="utf-8") as f:
                 f.write(str(score))
+            _finalize_metadata_json(
+                os.path.join(history_save_dir, "metadata.json"),
+                task_metadata,
+                session=spending_session,
+                log_label="task",
+            )
             return domain, score
         except Exception as e:
             retry += 1
@@ -1276,6 +1476,13 @@ def process_task_direct_gui(task_info: Tuple[str, str, str], run_config: Resolve
                 f.write("0.0")
             with open(os.path.join(history_save_dir, "err_reason.txt"), "w", encoding="utf-8") as f:
                 f.write(f"Fatal error: {str(e)}")
+            if spending_session is not None:
+                _finalize_metadata_json(
+                    os.path.join(history_save_dir, "metadata.json"),
+                    task_metadata,
+                    session=spending_session,
+                    log_label="task",
+                )
             return domain, 0.0
 
 
@@ -1299,6 +1506,7 @@ def process_task_multi_rollout(task_info: Tuple[str, str, str], run_config: Reso
     retry = 0
     while True:
         try:
+            planning_session = SpendingSession()
             plan_text = _plan_task_once(
                 run_config=run_config,
                 task_config=task_config,
@@ -1308,6 +1516,7 @@ def process_task_multi_rollout(task_info: Tuple[str, str, str], run_config: Reso
                 coding_llm_config=coding_llm_config,
                 enable_web_search_tool=enable_web_search_tool,
                 enable_read_webpage_tool=enable_read_webpage_tool,
+                spending_session=planning_session,
             )
             if plan_text == "INFEASIBLE":
                 aggregated = {
@@ -1383,7 +1592,13 @@ def process_task_multi_rollout(task_info: Tuple[str, str, str], run_config: Reso
 
             _write_json_file(os.path.join(history_save_dir, "results_aggregated.json"), aggregated)
             _write_json_file(os.path.join(history_save_dir, "results_per_configuration.json"), per_configuration_payload)
-            _write_json_file(os.path.join(history_save_dir, "metadata.json"), task_metadata | {"plan_path": aggregated["plan_path"]})
+            task_metadata_with_plan = task_metadata | {"plan_path": aggregated["plan_path"]}
+            _finalize_task_spending_from_attempts(
+                history_save_dir,
+                task_metadata_with_plan,
+                attempts,
+                planning_session=planning_session,
+            )
             return domain, float(aggregated["pass_at_k"])
         except Exception as e:
             retry += 1
@@ -1517,3 +1732,5 @@ if __name__ == "__main__":
             if scores[domain]:
                 avg_score = sum(scores[domain]) / len(scores[domain])
                 print(f"{domain}: {len(scores[domain])} tasks, average score: {avg_score:.2f}")
+
+    _finalize_run_spending(run_config, run_metadata, selected_tasks, metadata_dir, datetime_str)

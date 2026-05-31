@@ -32,6 +32,7 @@ def load_mm_agents_env() -> None:
     for key in (
         "OPENAI_BASE_URL",
         "OPENAI_API_BASE",
+        "OPENROUTER_BASE_URL",
         "UITARS_OPENAI_BASE_URL",
         "UITARS_OPENAI_BASE_URLS",
         "AZURE_OPENAI_API_BASE",

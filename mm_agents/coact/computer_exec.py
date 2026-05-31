@@ -3,7 +3,9 @@ from __future__ import annotations
 import json
 import os
 import time
-from typing import Any, Dict, List, Optional, Union
+import uuid
+from dataclasses import dataclass
+from typing import Any, Callable, Dict, List, Optional, Union
 
 import requests
 
@@ -252,3 +254,129 @@ def load_tool_events(save_path: str) -> List[Dict[str, Any]]:
     with open(path, encoding="utf-8") as f:
         payload = json.load(f)
     return list(payload.get("events", []))
+
+
+COMPUTER_ACTION_SCHEMA: Dict[str, Any] = {
+    "type": "object",
+    "properties": {
+        "type": {
+            "type": "string",
+            "description": "Action type: click, double_click, scroll, type, keypress, drag, move, wait, screenshot.",
+        },
+        "x": {"type": "number"},
+        "y": {"type": "number"},
+        "button": {"type": "string"},
+        "text": {"type": "string"},
+        "keys": {"type": "array", "items": {"type": "string"}},
+        "scroll_x": {"type": "number"},
+        "scroll_y": {"type": "number"},
+        "path": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {"x": {"type": "number"}, "y": {"type": "number"}},
+            },
+        },
+    },
+    "required": ["type"],
+}
+
+
+def build_computer_function_tool() -> Dict[str, Any]:
+    return {
+        "type": "function",
+        "function": {
+            "name": "computer",
+            "description": (
+                "Interact with the desktop using OpenAI computer-use style actions. "
+                "Provide one or more actions in `actions`, or a single `action`. "
+                "After each call, inspect the returned screenshot before continuing."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "actions": {
+                        "type": "array",
+                        "description": "Ordered list of CUA actions to execute in one batch.",
+                        "items": COMPUTER_ACTION_SCHEMA,
+                    },
+                    "action": {
+                        **COMPUTER_ACTION_SCHEMA,
+                        "description": "Single CUA action (alternative to actions array).",
+                    },
+                },
+            },
+        },
+    }
+
+
+@dataclass
+class ComputerToolCallResult:
+    summary: str
+    screenshot: Optional[bytes] = None
+    tool_event: Optional[Dict[str, Any]] = None
+    step_state: Optional[Dict[str, Any]] = None
+    error: bool = False
+
+
+def execute_computer_tool_call(
+    payload: Dict[str, Any],
+    *,
+    save_path: str,
+    step_state: Dict[str, Any],
+    max_steps: int,
+    sleep_after_execution: float = 0.3,
+    execute_actions: Callable[[List[Dict[str, Any]]], bytes],
+    call_id: Optional[str] = None,
+) -> ComputerToolCallResult:
+    parsed_actions = actions_from_computer_call(payload)
+    if not parsed_actions:
+        return ComputerToolCallResult(
+            summary="Error: provide a non-empty actions array.",
+            error=True,
+        )
+
+    step_count = int(step_state.get("step_count", 0))
+    step_index = int(step_state.get("step_index", 1))
+    batch_cost = sum(action_step_cost(action) for action in parsed_actions)
+    if step_count + batch_cost > max_steps:
+        return ComputerToolCallResult(
+            summary=(
+                f"Step budget exhausted ({step_count}/{max_steps}). "
+                "Reply with IDK if you cannot finish."
+            ),
+            error=True,
+        )
+
+    try:
+        screenshot = execute_actions(parsed_actions)
+    except Exception as exc:
+        return ComputerToolCallResult(
+            summary=f"Error executing actions: {exc}",
+            error=True,
+        )
+
+    step_count += batch_cost
+    step_index += 1
+    save_step_screenshot(save_path, step_index, screenshot)
+    resolved_call_id = call_id or str(uuid.uuid4())
+    tool_event = {
+        "type": "computer_call",
+        "call_id": resolved_call_id,
+        "step_index": step_index,
+        "actions": parsed_actions,
+    }
+    append_tool_event(save_path, tool_event)
+    new_state = {"step_index": step_index, "step_count": step_count}
+    save_mcp_state(save_path, new_state)
+    remaining = max_steps - step_count
+    summary = (
+        f"Executed {len(parsed_actions)} action(s). step_index={step_index} "
+        f"step_count={step_count}/{max_steps} remaining={remaining}."
+    )
+    return ComputerToolCallResult(
+        summary=summary,
+        screenshot=screenshot,
+        tool_event=tool_event,
+        step_state=new_state,
+    )

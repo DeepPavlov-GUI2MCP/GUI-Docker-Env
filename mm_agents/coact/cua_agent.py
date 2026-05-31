@@ -14,13 +14,17 @@ import trafilatura
 from desktop_env.desktop_env import DesktopEnv
 from openai import OpenAI
 from mm_agents.env_loader import load_mm_agents_env
-from mm_agents.coact.autogen.oai.openai_utils import calculate_oai_model_cost
+from mm_agents.coact.spending import SpendingSession
 from mm_agents.coact.computer_exec import (
     action_step_cost as _action_step_cost,
     actions_from_computer_call as _actions_from_computer_call,
+    build_computer_function_tool,
     cua_to_pyautogui as _cua_to_pyautogui,
+    execute_computer_tool_call,
     execute_cua_actions_env,
     item_to_dict as _item_to_dict,
+    load_mcp_state,
+    save_mcp_state,
     save_step_screenshot as _save_step_screenshot,
 )
 
@@ -194,14 +198,23 @@ def _response_to_transcript_entry(response: Any) -> Dict[str, Any]:
     )
 
 
-def _estimate_cost(cua_model: str, response: Any) -> float:
-    if not response or not getattr(response, "usage", None):
-        return 0.0
+def _record_cua_response_spending(
+    spending_session: Optional[SpendingSession],
+    *,
+    response: Any,
+    cua_model: str,
+    base_url: Optional[str],
+    role: str = "gui",
+) -> None:
+    if spending_session is None or response is None:
+        return
     response_model = getattr(response, "model", None) or cua_model
-    input_tokens = getattr(response.usage, "input_tokens", 0)
-    output_tokens = getattr(response.usage, "output_tokens", 0)
-    cost = calculate_oai_model_cost(response_model, input_tokens, output_tokens)
-    return 0.0 if cost is None else cost
+    spending_session.record(
+        usage=getattr(response, "usage", None),
+        model=str(response_model),
+        role=role,
+        base_url=base_url,
+    )
 
 
 def _build_openai_client(api_key: Optional[str] = None, base_url: Optional[str] = None) -> OpenAI:
@@ -416,10 +429,12 @@ def _execute_computer_call(
     return output_item
 
 
-def call_openai_cua(client: OpenAI,
-                    response_input: list,
-                    cua_model: str,
-                    previous_response_id: Optional[str] = None) -> Tuple[Any, float]:
+def call_openai_cua(
+    client: OpenAI,
+    response_input: list,
+    cua_model: str,
+    previous_response_id: Optional[str] = None,
+) -> Any:
     retry = 0
     response = None
     last_error: Optional[Exception] = None
@@ -451,7 +466,254 @@ def call_openai_cua(client: OpenAI,
             raise RuntimeError(f"OpenAI Responses call failed after {retry} attempts: {last_error}") from last_error
         raise RuntimeError("OpenAI Responses call failed without returning a response.")
 
-    return response, _estimate_cost(cua_model=cua_model, response=response)
+    return response
+
+
+def _completion_token_kwargs(model: str, max_output_tokens: int = 2048) -> Dict[str, Any]:
+    normalized = (model or "").lower()
+    if normalized.startswith("gpt-5") or normalized.startswith("o3") or normalized.startswith("o4"):
+        return {"max_completion_tokens": max_output_tokens}
+    return {"max_tokens": max_output_tokens}
+
+
+def _chat_message_to_dict(message: Any) -> Dict[str, Any]:
+    if hasattr(message, "model_dump"):
+        return message.model_dump(mode="json")
+    if isinstance(message, dict):
+        return message
+    raise TypeError(f"Unsupported chat message type: {type(message)!r}")
+
+
+def _extract_chat_assistant_text(message: Dict[str, Any]) -> str:
+    content = message.get("content")
+    if isinstance(content, str):
+        return content.strip()
+    if not isinstance(content, list):
+        return ""
+    parts: List[str] = []
+    for item in content:
+        if isinstance(item, dict) and item.get("type") == "text" and item.get("text"):
+            parts.append(str(item["text"]).strip())
+    return "\n".join(part for part in parts if part).strip()
+
+
+def _call_chat_completions(
+    client: OpenAI,
+    *,
+    model: str,
+    messages: List[Dict[str, Any]],
+    tools: Optional[List[Dict[str, Any]]] = None,
+) -> Any:
+    retry = 0
+    response = None
+    last_error: Optional[Exception] = None
+    token_kwargs = _completion_token_kwargs(model)
+    while retry < 3:
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                messages=messages,
+                tools=tools,
+                tool_choice="auto" if tools else None,
+                **token_kwargs,
+            )
+            break
+        except (
+            openai.APIConnectionError,
+            openai.APITimeoutError,
+            openai.BadRequestError,
+            openai.InternalServerError,
+            openai.RateLimitError,
+        ) as exc:
+            retry += 1
+            last_error = exc
+            logger.error(f"Error in chat.completions.create: {exc}")
+            time.sleep(0.5)
+    if response is None:
+        if last_error is not None:
+            raise RuntimeError(
+                f"OpenAI Chat Completions call failed after {retry} attempts: {last_error}"
+            ) from last_error
+        raise RuntimeError("OpenAI Chat Completions call failed without returning a response.")
+    return response
+
+
+def _run_cua_openai_completions(
+    env: DesktopEnv,
+    instruction: str,
+    max_steps: int,
+    save_path: str = "./",
+    cua_model: str = DEFAULT_CUA_MODEL,
+    base_url: Optional[str] = None,
+    api_key: Optional[str] = None,
+    sleep_after_execution: float = 0.3,
+    client_password: str = "",
+    prompt_mode: str = DEFAULT_PROMPT_MODE,
+    task_source: Optional[str] = None,
+    spending_session: Optional[SpendingSession] = None,
+) -> Tuple[List[Dict[str, Any]], str, List[Dict[str, Any]], List[Dict[str, Any]], int]:
+    client = _build_openai_client(api_key=api_key, base_url=base_url)
+    validate_cua_model(cua_model)
+    os.makedirs(save_path, exist_ok=True)
+    save_mcp_state(save_path, {"step_index": 1, "step_count": 0})
+
+    logger.info(f"Instruction: {instruction}")
+    prompt_text = _build_prompt(
+        instruction=instruction,
+        client_password=client_password,
+        prompt_mode=prompt_mode,
+        task_source=task_source,
+    )
+    obs = _capture_screenshot(env)
+    screenshot_b64 = base64.b64encode(obs).decode("utf-8")
+    with open(os.path.join(save_path, "initial_screenshot.png"), "wb") as f:
+        f.write(obs)
+
+    messages: List[Dict[str, Any]] = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": prompt_text},
+                {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{screenshot_b64}"}},
+            ],
+        }
+    ]
+    history_inputs: List[Dict[str, Any]] = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "input_text", "text": prompt_text},
+                {"type": "input_image", "image_url": "<image>", "detail": "original"},
+            ],
+        }
+    ]
+    raw_transcript: List[Dict[str, Any]] = []
+    tool_events: List[Dict[str, Any]] = []
+    step_state = load_mcp_state(save_path)
+    step_count = int(step_state.get("step_count", 0))
+    final_result = ""
+    tools = [build_computer_function_tool()]
+
+    for turn_index in range(max(max_steps * MAX_RESPONSE_MULTIPLIER, 1)):
+        response = _call_chat_completions(client, model=cua_model, messages=messages, tools=tools)
+        _record_cua_response_spending(
+            spending_session,
+            response=response,
+            cua_model=cua_model,
+            base_url=base_url,
+        )
+        choice = response.choices[0]
+        assistant_message = _chat_message_to_dict(choice.message)
+        raw_transcript.append(
+            {
+                "protocol": "openai_completions",
+                "turn_index": turn_index + 1,
+                "message": _sanitize_images(assistant_message),
+                "usage": getattr(response, "usage", None)
+                and (
+                    response.usage.model_dump(mode="json")
+                    if hasattr(response.usage, "model_dump")
+                    else response.usage
+                ),
+            }
+        )
+        messages.append(assistant_message)
+        history_inputs.append(
+            {
+                "role": "assistant",
+                "content": [{"type": "output_text", "text": _extract_chat_assistant_text(assistant_message)}],
+            }
+        )
+
+        assistant_text = _extract_chat_assistant_text(assistant_message)
+        if assistant_text and ("TERMINATE" in assistant_text or "IDK" in assistant_text):
+            final_result = assistant_text
+            break
+
+        tool_calls = assistant_message.get("tool_calls") or []
+        if not tool_calls:
+            if assistant_text:
+                follow_up = {"role": "user", "content": [{"type": "text", "text": DEFAULT_REPLY}]}
+                messages.append(follow_up)
+                history_inputs.append(
+                    {"role": "user", "content": [{"type": "input_text", "text": DEFAULT_REPLY}]}
+                )
+                continue
+            final_result = "IDK The GUI loop stopped before producing a terminal answer."
+            break
+
+        for tool_call in tool_calls:
+            function = tool_call.get("function") or {}
+            if function.get("name") != "computer":
+                continue
+            try:
+                payload = json.loads(function.get("arguments") or "{}")
+            except json.JSONDecodeError:
+                payload = {}
+
+            result = execute_computer_tool_call(
+                payload,
+                save_path=save_path,
+                step_state=step_state,
+                max_steps=max_steps,
+                sleep_after_execution=sleep_after_execution,
+                execute_actions=lambda parsed: execute_cua_actions_env(
+                    env,
+                    parsed,
+                    sleep_after_execution=sleep_after_execution,
+                ),
+                call_id=tool_call.get("id"),
+            )
+            if result.step_state is not None:
+                step_state = result.step_state
+                step_count = int(step_state.get("step_count", step_count))
+            if result.tool_event is not None:
+                tool_events.append(result.tool_event)
+
+            if result.error or result.screenshot is None:
+                tool_message = {
+                    "role": "tool",
+                    "tool_call_id": tool_call.get("id"),
+                    "content": result.summary,
+                }
+                messages.append(tool_message)
+                history_inputs.append(
+                    {
+                        "role": "tool",
+                        "content": [{"type": "tool_result", "text": result.summary}],
+                    }
+                )
+                if "Step budget exhausted" in result.summary:
+                    final_result = "IDK Step budget exhausted before the GUI task was completed."
+                continue
+
+            screenshot_b64 = base64.b64encode(result.screenshot).decode("utf-8")
+            tool_message = {
+                "role": "tool",
+                "tool_call_id": tool_call.get("id"),
+                "content": [
+                    {"type": "text", "text": result.summary},
+                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{screenshot_b64}"}},
+                ],
+            }
+            messages.append(tool_message)
+            history_inputs.append(
+                {
+                    "role": "tool",
+                    "content": [
+                        {"type": "tool_result", "text": result.summary},
+                        {"type": "input_image", "image_url": "<image>", "detail": "original"},
+                    ],
+                }
+            )
+
+        if final_result:
+            break
+
+    if not final_result:
+        final_result = "IDK The GUI loop stopped before producing a terminal answer."
+
+    return _sanitize_images(history_inputs), final_result, raw_transcript, tool_events, step_count
 
 
 def _build_vllm_runtime_conf(
@@ -521,7 +783,8 @@ def _run_cua_vllm(
     task_source: Optional[str] = None,
     temperature: float = 0.0,
     top_p: float = 0.95,
-) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]], int]:
+    spending_session: Optional[SpendingSession] = None,
+) -> Tuple[List[Dict[str, Any]], str, List[Dict[str, Any]], List[Dict[str, Any]], int]:
     from mm_agents.uitars15_v1 import UITARSAgent
 
     vllm_instruction = _build_vllm_instruction(
@@ -560,13 +823,19 @@ def _run_cua_vllm(
     ]
     raw_transcript: List[Dict[str, Any]] = []
     tool_events: List[Dict[str, Any]] = []
-    total_cost = 0.0
     final_result = ""
     step_count = 0
     action_index = 0
 
     while step_count < max_steps:
         prediction, actions = agent.predict(vllm_instruction, obs)
+        if spending_session is not None:
+            spending_session.record(
+                usage=getattr(agent, "last_usage", None),
+                model=cua_model,
+                role="gui",
+                base_url=base_url,
+            )
         raw_transcript.append(
             {
                 "protocol": "vllm",
@@ -636,7 +905,7 @@ def _run_cua_vllm(
     if not final_result:
         final_result = "IDK Step budget exhausted before the GUI task was completed."
 
-    return _sanitize_images(history_inputs), final_result, total_cost, raw_transcript, tool_events, step_count
+    return _sanitize_images(history_inputs), final_result, raw_transcript, tool_events, step_count
 
 
 def _run_cua_cli(
@@ -651,7 +920,8 @@ def _run_cua_cli(
     task_source: Optional[str] = None,
     cli_timeout_seconds: int = 300,
     cli_extra_args: Optional[Sequence[str]] = None,
-) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]], int]:
+    spending_session: Optional[SpendingSession] = None,
+) -> Tuple[List[Dict[str, Any]], str, List[Dict[str, Any]], List[Dict[str, Any]], int]:
     from mm_agents.coact.cli_mcp_session import (
         CliMcpSession,
         build_cli_agent_prompt,
@@ -695,6 +965,12 @@ def _run_cua_cli(
         prompt=agent_prompt,
         initial_screenshot_path=screenshot_path,
     )
+    if spending_session is not None:
+        spending_session.record(
+            usage=getattr(session, "last_usage", None),
+            model=cua_model,
+            role="gui",
+        )
 
     state = load_mcp_state(save_path)
     step_index = int(state.get("step_index", 1))
@@ -718,7 +994,7 @@ def _run_cua_cli(
             "content": [{"type": "output_text", "text": cli_final_assistant_text(raw_transcript)}],
         }
     )
-    return _sanitize_images(history_inputs), final_result, 0.0, raw_transcript, tool_events, step_count
+    return _sanitize_images(history_inputs), final_result, raw_transcript, tool_events, step_count
 
 
 def run_cua(
@@ -741,7 +1017,9 @@ def run_cua(
     top_p: Optional[float] = None,
     cli_timeout_seconds: int = 300,
     cli_extra_args: Optional[Sequence[str]] = None,
-) -> Tuple[List[Dict[str, Any]], str, float, List[Dict[str, Any]], List[Dict[str, Any]], int]:
+    spending_session: Optional[SpendingSession] = None,
+    openai_force_completions_api: bool = True,
+) -> Tuple[List[Dict[str, Any]], str, List[Dict[str, Any]], List[Dict[str, Any]], int]:
     if gui_protocol not in SUPPORTED_GUI_PROTOCOLS:
         raise ValueError(f"Unsupported GUI protocol `{gui_protocol}`. Expected one of {SUPPORTED_GUI_PROTOCOLS}.")
     if gui_protocol == "cli":
@@ -758,6 +1036,7 @@ def run_cua(
             task_source=task_source,
             cli_timeout_seconds=cli_timeout_seconds,
             cli_extra_args=cli_extra_args,
+            spending_session=spending_session,
         )
     if gui_protocol == "vllm":
         del screen_width, screen_height, truncate_history_inputs
@@ -775,6 +1054,23 @@ def run_cua(
             task_source=task_source,
             temperature=0.0 if temperature is None else temperature,
             top_p=0.95 if top_p is None else top_p,
+            spending_session=spending_session,
+        )
+
+    if openai_force_completions_api:
+        return _run_cua_openai_completions(
+            env=env,
+            instruction=instruction,
+            max_steps=max_steps,
+            save_path=save_path,
+            cua_model=cua_model,
+            base_url=base_url,
+            api_key=api_key,
+            sleep_after_execution=sleep_after_execution,
+            client_password=client_password,
+            prompt_mode=prompt_mode,
+            task_source=task_source,
+            spending_session=spending_session,
         )
 
     client = _build_openai_client(api_key=api_key, base_url=base_url)
@@ -802,13 +1098,17 @@ def run_cua(
         ],
     }]
 
-    response, cost = call_openai_cua(
+    response = call_openai_cua(
         client,
         history_inputs,
         cua_model=cua_model,
     )
-    total_cost = cost
-    logger.info(f"Cost: ${cost:.6f} | Total Cost: ${total_cost:.6f}")
+    _record_cua_response_spending(
+        spending_session,
+        response=response,
+        cua_model=cua_model,
+        base_url=base_url,
+    )
     step_count = 0
     response_count = 0
     action_index = 0
@@ -903,19 +1203,22 @@ def run_cua(
             history_inputs.append(_sanitize_images(follow_up_message))
             follow_up_inputs.append(follow_up_message)
 
-        response, cost = call_openai_cua(
+        response = call_openai_cua(
             client,
             response_input=follow_up_inputs,
             cua_model=cua_model,
             previous_response_id=response.id,
         )
-        total_cost += cost
+        _record_cua_response_spending(
+            spending_session,
+            response=response,
+            cua_model=cua_model,
+            base_url=base_url,
+        )
         raw_transcript.append(_response_to_transcript_entry(response))
-        logger.info(f"Cost: ${cost:.6f} | Total Cost: ${total_cost:.6f}")
 
     if not final_result:
         final_result = "IDK The GUI loop stopped before producing a terminal answer."
 
-    logger.info(f"Total cost for the task: ${total_cost:.4f}")
-    return _sanitize_images(history_inputs), final_result, total_cost, raw_transcript, tool_events, step_count
+    return _sanitize_images(history_inputs), final_result, raw_transcript, tool_events, step_count
 

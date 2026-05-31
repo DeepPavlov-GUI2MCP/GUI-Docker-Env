@@ -742,7 +742,7 @@ class UITARSAgent:
         self.observations = []
         self.history_images = []
         self.history_responses = []
-        
+        self.last_usage = None
 
     def predict(
         self, instruction: str, obs: Dict, last_action_after_obs: Dict = None
@@ -925,6 +925,7 @@ class UITARSAgent:
                     temperature=temperature,
                     top_p=self.top_p
                 )
+                self.last_usage = getattr(response, "usage", None)
                 print("*" * 20)
                 print("Response:")
                 print(response.choices[0].message.content)

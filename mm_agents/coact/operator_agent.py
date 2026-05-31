@@ -25,6 +25,7 @@ from .cua_agent import (
     validate_cua_model,
 )
 from .coding_agent import TerminalProxyAgent, CODER_SYSTEM_MESSAGE
+from .spending import SpendingSession, install_autogen_spending_hook
 
 
 class OrchestratorAgent(MultimodalConversableAgent):
@@ -228,6 +229,8 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         orchestrator_backend_config: Optional[Dict[str, Any]] = None,
         gui_client_kwargs: Optional[Dict[str, Any]] = None,
         coding_llm_config: Optional[LLMConfig] = None,
+        spending_session: Optional[SpendingSession] = None,
+        openai_force_completions_api: bool = True,
     ):
         description = (
             description if description is not None else self.DEFAULT_USER_PROXY_AGENT_DESCRIPTIONS[human_input_mode]
@@ -310,6 +313,9 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
             base_url=self.orchestrator_backend_config.get("base_url"),
         )
         self.web_search_model = self.orchestrator_model
+        self.spending_session = spending_session
+        self.openai_force_completions_api = openai_force_completions_api
+        self.orchestrator_base_url = self.orchestrator_backend_config.get("base_url")
 
     def reset(self, task_config: dict[str, Any]):
         obs = self.env.reset(task_config=task_config)
@@ -322,7 +328,7 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
         if not os.path.exists(cua_path):
             os.makedirs(cua_path)
         try:
-            history_inputs, result, cost, raw_transcript, tool_events, _step_count = run_cua(
+            history_inputs, result, raw_transcript, tool_events, _step_count = run_cua(
                 self.env,
                 task,
                 save_path=cua_path,
@@ -340,6 +346,8 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
                 task_source=self.task_source,
                 cli_timeout_seconds=self.gui_cli_timeout_seconds,
                 cli_extra_args=self.gui_cli_extra_args,
+                spending_session=self.spending_session,
+                openai_force_completions_api=self.openai_force_completions_api,
             )
             screenshot = self.env.controller.get_screenshot()
 
@@ -351,8 +359,6 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
                 json.dump(tool_events, f)
             with open(os.path.join(cua_path, "result.txt"), "w") as f:
                 f.write(result)
-            with open(os.path.join(cua_path, "cost.txt"), "w") as f:
-                f.write(str(cost))
             self.cua_call_count += 1
 
         except Exception as e:
@@ -396,6 +402,14 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
             )
         except Exception as exc:
             return f"# Web search error: {type(exc).__name__}: {exc}"
+
+        if self.spending_session is not None:
+            self.spending_session.record(
+                usage=getattr(response, "usage", None),
+                model=self.web_search_model,
+                role="web_search",
+                base_url=self.orchestrator_base_url,
+            )
 
         response_dump = response.model_dump(mode="json") if hasattr(response, "model_dump") else {}
         response_text = getattr(response, "output_text", "").strip()
@@ -463,6 +477,13 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
                 llm_config=self.coding_llm_config,
                 system_message=CODER_SYSTEM_MESSAGE.format(CLIENT_PASSWORD=self.client_password),
             )
+            if self.spending_session is not None:
+                install_autogen_spending_hook(
+                    coding_agent,
+                    self.spending_session,
+                    role="coding",
+                    base_url=self.orchestrator_base_url,
+                )
             code_interpreter = TerminalProxyAgent(
                 name="code_interpreter",
                 human_input_mode="NEVER",
@@ -505,6 +526,13 @@ class OrchestratorUserProxyAgent(MultimodalConversableAgent):
                 llm_config=self.coding_llm_config,
                 system_message=self.CONVERSATION_REVIEW_PROMPT,
             )
+            if self.spending_session is not None:
+                install_autogen_spending_hook(
+                    summarizer,
+                    self.spending_session,
+                    role="coding",
+                    base_url=self.orchestrator_base_url,
+                )
             summarized_history = summarizer.generate_oai_reply(
                 messages=[
                     {
