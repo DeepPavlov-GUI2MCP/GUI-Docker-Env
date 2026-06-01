@@ -1,9 +1,12 @@
 import ctypes
+import io
 import os
 import platform
 import shlex
+import shutil
 import json
 import subprocess, signal
+import tempfile
 import time
 from pathlib import Path
 from typing import Any, Optional, Sequence
@@ -71,6 +74,46 @@ TIMEOUT = 1800  # seconds
 logger = app.logger
 recording_process = None  # fixme: this is a temporary solution for recording, need to be changed to support multiple-process
 recording_path = "/tmp/recording.mp4"
+
+
+def _load_verified_image(path: str) -> Image.Image:
+    with Image.open(path) as image:
+        image.load()
+        return image.convert("RGBA")
+
+
+def _capture_linux_screen() -> Image.Image:
+    errors: list[str] = []
+    for attempt in range(5):
+        try:
+            screenshot = pyautogui.screenshot()
+            screenshot.load()
+            return screenshot.convert("RGBA")
+        except Exception as exc:
+            errors.append(f"pyautogui attempt {attempt + 1}: {exc}")
+            time.sleep(0.2 * (attempt + 1))
+
+    commands: list[list[str]] = []
+    if shutil.which("gnome-screenshot"):
+        commands.append(["gnome-screenshot", "-f"])
+    if shutil.which("scrot"):
+        commands.append(["scrot"])
+
+    for command in commands:
+        fd, tmp_path = tempfile.mkstemp(suffix=".png")
+        os.close(fd)
+        try:
+            subprocess.run([*command, tmp_path], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=10)
+            return _load_verified_image(tmp_path)
+        except Exception as exc:
+            errors.append(f"{command[0]} fallback: {exc}")
+        finally:
+            try:
+                os.unlink(tmp_path)
+            except FileNotFoundError:
+                pass
+
+    raise RuntimeError("Failed to capture Linux screenshot: " + "; ".join(errors))
 
 
 @app.route('/setup/execute', methods=['POST'])
@@ -264,73 +307,90 @@ def launch_app():
 def capture_screen_with_cursor():
     # fixme: when running on virtual machines, the cursor is not captured, don't know why
 
-    file_path = os.path.join(os.path.dirname(__file__), "screenshots", "screenshot.png")
+    screenshot_dir = os.path.join(os.path.dirname(__file__), "screenshots")
     user_platform = platform.system()
 
     # Ensure the screenshots directory exists
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    os.makedirs(screenshot_dir, exist_ok=True)
+    fd, file_path = tempfile.mkstemp(suffix=".png", dir=screenshot_dir)
+    os.close(fd)
 
     # fixme: This is a temporary fix for the cursor not being captured on Windows and Linux
-    if user_platform == "Windows":
-        def get_cursor():
-            hcursor = win32gui.GetCursorInfo()[1]
-            hdc = win32ui.CreateDCFromHandle(win32gui.GetDC(0))
-            hbmp = win32ui.CreateBitmap()
-            hbmp.CreateCompatibleBitmap(hdc, 36, 36)
-            hdc = hdc.CreateCompatibleDC()
-            hdc.SelectObject(hbmp)
-            hdc.DrawIcon((0,0), hcursor)
+    try:
+        if user_platform == "Windows":
+            def get_cursor():
+                hcursor = win32gui.GetCursorInfo()[1]
+                hdc = win32ui.CreateDCFromHandle(win32gui.GetDC(0))
+                hbmp = win32ui.CreateBitmap()
+                hbmp.CreateCompatibleBitmap(hdc, 36, 36)
+                hdc = hdc.CreateCompatibleDC()
+                hdc.SelectObject(hbmp)
+                hdc.DrawIcon((0,0), hcursor)
 
-            bmpinfo = hbmp.GetInfo()
-            bmpstr = hbmp.GetBitmapBits(True)
-            cursor = Image.frombuffer('RGB', (bmpinfo['bmWidth'], bmpinfo['bmHeight']), bmpstr, 'raw', 'BGRX', 0, 1).convert("RGBA")
+                bmpinfo = hbmp.GetInfo()
+                bmpstr = hbmp.GetBitmapBits(True)
+                cursor = Image.frombuffer('RGB', (bmpinfo['bmWidth'], bmpinfo['bmHeight']), bmpstr, 'raw', 'BGRX', 0, 1).convert("RGBA")
 
-            win32gui.DestroyIcon(hcursor)
-            win32gui.DeleteObject(hbmp.GetHandle())
-            hdc.DeleteDC()
+                win32gui.DestroyIcon(hcursor)
+                win32gui.DeleteObject(hbmp.GetHandle())
+                hdc.DeleteDC()
 
-            pixdata = cursor.load()
+                pixdata = cursor.load()
 
-            width, height = cursor.size
-            for y in range(height):
-                for x in range(width):
-                    if pixdata[x, y] == (0, 0, 0, 255):
-                        pixdata[x, y] = (0, 0, 0, 0)
+                width, height = cursor.size
+                for y in range(height):
+                    for x in range(width):
+                        if pixdata[x, y] == (0, 0, 0, 255):
+                            pixdata[x, y] = (0, 0, 0, 0)
 
-            hotspot = win32gui.GetIconInfo(hcursor)[1:3]
+                hotspot = win32gui.GetIconInfo(hcursor)[1:3]
 
-            return (cursor, hotspot)
+                return (cursor, hotspot)
 
-        ratio = ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100
+            ratio = ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100
 
-        img = ImageGrab.grab(bbox=None, include_layered_windows=True)
+            img = ImageGrab.grab(bbox=None, include_layered_windows=True)
 
+            try:
+                cursor, (hotspotx, hotspoty) = get_cursor()
+
+                pos_win = win32gui.GetCursorPos()
+                pos = (round(pos_win[0]*ratio - hotspotx), round(pos_win[1]*ratio - hotspoty))
+
+                img.paste(cursor, pos, cursor)
+            except Exception as e:
+                logger.warning(f"Failed to capture cursor on Windows, screenshot will not have a cursor. Error: {e}")
+
+            img.save(file_path)
+        elif user_platform == "Linux":
+            screenshot = _capture_linux_screen()
+            try:
+                cursor_obj = Xcursor()
+                imgarray = cursor_obj.getCursorImageArrayFast()
+                cursor_img = Image.fromarray(imgarray)
+                cursor_x, cursor_y = pyautogui.position()
+                screenshot.paste(cursor_img, (cursor_x, cursor_y), cursor_img)
+            except Exception as e:
+                logger.warning(f"Failed to capture cursor on Linux, screenshot will not have a cursor. Error: {e}")
+            screenshot.save(file_path)
+        elif user_platform == "Darwin":  # (Mac OS)
+            # Use the screencapture utility to capture the screen with the cursor
+            subprocess.run(["screencapture", "-C", file_path], check=True, timeout=10)
+        else:
+            logger.warning(f"The platform you're using ({user_platform}) is not currently supported")
+
+        _load_verified_image(file_path)
+        with open(file_path, "rb") as screenshot_file:
+            screenshot_bytes = screenshot_file.read()
+        return send_file(io.BytesIO(screenshot_bytes), mimetype='image/png')
+    except Exception as e:
+        logger.exception(f"Failed to capture screenshot: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+    finally:
         try:
-            cursor, (hotspotx, hotspoty) = get_cursor()
-
-            pos_win = win32gui.GetCursorPos()
-            pos = (round(pos_win[0]*ratio - hotspotx), round(pos_win[1]*ratio - hotspoty))
-
-            img.paste(cursor, pos, cursor)
-        except Exception as e:
-            logger.warning(f"Failed to capture cursor on Windows, screenshot will not have a cursor. Error: {e}")
-
-        img.save(file_path)
-    elif user_platform == "Linux":
-        cursor_obj = Xcursor()
-        imgarray = cursor_obj.getCursorImageArrayFast()
-        cursor_img = Image.fromarray(imgarray)
-        screenshot = pyautogui.screenshot()
-        cursor_x, cursor_y = pyautogui.position()
-        screenshot.paste(cursor_img, (cursor_x, cursor_y), cursor_img)
-        screenshot.save(file_path)
-    elif user_platform == "Darwin":  # (Mac OS)
-        # Use the screencapture utility to capture the screen with the cursor
-        subprocess.run(["screencapture", "-C", file_path])
-    else:
-        logger.warning(f"The platform you're using ({user_platform}) is not currently supported")
-
-    return send_file(file_path, mimetype='image/png')
+            os.unlink(file_path)
+        except FileNotFoundError:
+            pass
 
 
 def _has_active_terminal(desktop: Accessible) -> bool:

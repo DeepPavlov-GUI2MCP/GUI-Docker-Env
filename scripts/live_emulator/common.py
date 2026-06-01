@@ -424,9 +424,20 @@ def execute_step_action(server_port: int, action: dict[str, Any], *, timeout: in
     raise LiveEmulatorError(f"Unsupported action type: {action_type}")
 
 
-def fetch_screenshot(server_port: int) -> bytes:
-    response = _request("GET", f"http://localhost:{server_port}/screenshot", timeout=20, stream=True)
-    return response.content
+def fetch_screenshot(server_port: int, *, attempts: int = 5, delay: float = 0.5) -> bytes:
+    last_error: Exception | None = None
+    for attempt in range(attempts):
+        try:
+            response = _request("GET", f"http://localhost:{server_port}/screenshot", timeout=20, stream=True)
+            content = response.content
+            if content.startswith(b"\x89PNG\r\n\x1a\n"):
+                return content
+            raise LiveEmulatorError(f"Screenshot response was not a PNG: {content[:80]!r}")
+        except Exception as exc:
+            last_error = exc
+            if attempt + 1 < attempts:
+                time.sleep(delay * (attempt + 1))
+    raise LiveEmulatorError(f"Failed to fetch screenshot after {attempts} attempts: {last_error}") from last_error
 
 
 def fetch_accessibility_tree(server_port: int) -> str:
