@@ -1,4 +1,4 @@
-"""Run OSWorld evaluations with a Holo-specific action parser."""
+"""Run OSWorld evaluations with HoloAgent (native Thought/Action parsing)."""
 
 import argparse
 import datetime
@@ -7,9 +7,8 @@ import logging
 import os
 import shutil
 import sys
-from pathlib import Path
-from typing import Any, Dict, List, Optional
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Any, Dict, List, Optional
 
 import requests
 
@@ -20,7 +19,6 @@ load_mm_agents_env()
 from mm_agents.holo_agent import HoloAgent
 import lib_run_single
 from desktop_env.desktop_env import DesktopEnv
-
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -74,7 +72,7 @@ def ping(base_url: str) -> bool:
 
 
 def config() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run Holo end-to-end evaluation on OSWorld")
+    parser = argparse.ArgumentParser(description="Run Holo3 end-to-end evaluation on OSWorld")
 
     parser.add_argument(
         "--base-url",
@@ -115,6 +113,26 @@ def config() -> argparse.Namespace:
     parser.add_argument("--test_config_base_dir", "--test-config-base-dir", type=str, default="evaluation_examples")
 
     parser.add_argument("--model", type=str, default="Hcompany/Holo3-35B-A3B")
+    parser.add_argument(
+        "--openai-base-url",
+        "--openai-base-urls",
+        type=str,
+        default=os.environ.get("HOLO_OPENAI_BASE_URL")
+        or os.environ.get("OPENAI_BASE_URL")
+        or "",
+        help="vLLM/OpenAI base URL(s), comma-separated",
+    )
+    parser.add_argument(
+        "--openai-api-key",
+        type=str,
+        default=os.environ.get("HOLO_OPENAI_API_KEY") or os.environ.get("OPENAI_API_KEY") or "empty",
+    )
+    parser.add_argument(
+        "--openai-model",
+        type=str,
+        default=os.environ.get("HOLO_OPENAI_MODEL") or os.environ.get("OPENAI_MODEL") or "",
+        help="Override model id sent to the API (default: --model)",
+    )
     parser.add_argument("--input_swap", "--input-swap", action="store_true", help="Use copy/paste typing")
     parser.add_argument("--language", type=str, default="English")
     parser.add_argument("--max_pixels", "--max-pixels", type=float, default=16384 * 28 * 28)
@@ -122,6 +140,7 @@ def config() -> argparse.Namespace:
     parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--top_p", "--top-p", type=float, default=0.9)
     parser.add_argument("--history_n", "--history-n", type=int, default=2)
+    parser.add_argument("--max_thought_chars", "--max-thought-chars", type=int, default=400)
     parser.add_argument("--callusr_tolerance", "--callusr-tolerance", type=int, default=3)
     parser.add_argument("--max_tokens", "--max-tokens", type=int, default=1024)
 
@@ -164,6 +183,14 @@ def run_one_example(args: argparse.Namespace, domain: str, example_id: str) -> D
     logger.info(f"[Example ID]: {example_id}")
     logger.info(f"[Instruction]: {instruction}")
 
+    agent_kwargs: Dict[str, Any] = {}
+    if args.openai_base_url:
+        agent_kwargs["base_url"] = args.openai_base_url
+    if args.openai_api_key:
+        agent_kwargs["api_key"] = args.openai_api_key
+    if args.openai_model:
+        agent_kwargs["api_model"] = args.openai_model
+
     agent = HoloAgent(
         model=args.model,
         action_space=args.action_space,
@@ -173,6 +200,7 @@ def run_one_example(args: argparse.Namespace, domain: str, example_id: str) -> D
             "input_swap": args.input_swap,
             "language": args.language,
             "history_n": args.history_n,
+            "max_thought_chars": args.max_thought_chars,
             "max_pixels": args.max_pixels,
             "min_pixels": args.min_pixels,
             "callusr_tolerance": args.callusr_tolerance,
@@ -180,6 +208,7 @@ def run_one_example(args: argparse.Namespace, domain: str, example_id: str) -> D
             "top_p": args.top_p,
             "max_tokens": args.max_tokens,
         },
+        **agent_kwargs,
     )
 
     env = None
@@ -252,7 +281,13 @@ def test(args: argparse.Namespace, test_all_meta: Dict[str, List[str]]) -> None:
     print(f"[info] Completed. success={len(successes)} failed={len(failures)}")
 
 
-def get_unfinished(action_space: str, use_model: str, observation_type: str, result_dir: str, total_file_json: Dict[str, List[str]]) -> Dict[str, List[str]]:
+def get_unfinished(
+    action_space: str,
+    use_model: str,
+    observation_type: str,
+    result_dir: str,
+    total_file_json: Dict[str, List[str]],
+) -> Dict[str, List[str]]:
     target_dir = os.path.join(result_dir, action_space, observation_type, use_model)
     if not os.path.exists(target_dir):
         return total_file_json
@@ -284,7 +319,13 @@ def get_unfinished(action_space: str, use_model: str, observation_type: str, res
     return total_file_json
 
 
-def get_result(action_space: str, use_model: str, observation_type: str, result_dir: str, total_file_json: Dict[str, List[str]]) -> Optional[List[float]]:
+def get_result(
+    action_space: str,
+    use_model: str,
+    observation_type: str,
+    result_dir: str,
+    total_file_json: Dict[str, List[str]],
+) -> Optional[List[float]]:
     target_dir = os.path.join(result_dir, action_space, observation_type, use_model)
     if not os.path.exists(target_dir):
         print("New experiment, no result yet.")
