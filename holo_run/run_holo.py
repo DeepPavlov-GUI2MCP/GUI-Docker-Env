@@ -1,4 +1,4 @@
-"""Run OSWorld evaluations with HoloAgent (native Thought/Action parsing)."""
+"""Run OSWorld evaluations with HoloAgent (Holo3 agent-loop structured JSON)."""
 
 import argparse
 import datetime
@@ -137,11 +137,9 @@ def config() -> argparse.Namespace:
     parser.add_argument("--language", type=str, default="English")
     parser.add_argument("--max_pixels", "--max-pixels", type=float, default=16384 * 28 * 28)
     parser.add_argument("--min_pixels", "--min-pixels", type=float, default=100 * 28 * 28)
-    parser.add_argument("--temperature", type=float, default=0.2)
+    parser.add_argument("--temperature", type=float, default=0.8)
     parser.add_argument("--top_p", "--top-p", type=float, default=0.9)
-    parser.add_argument("--history_n", "--history-n", type=int, default=2)
-    parser.add_argument("--max_thought_chars", "--max-thought-chars", type=int, default=400)
-    parser.add_argument("--callusr_tolerance", "--callusr-tolerance", type=int, default=3)
+    parser.add_argument("--history_n", "--history-n", type=int, default=3)
     parser.add_argument("--max_tokens", "--max-tokens", type=int, default=1024)
 
     parser.add_argument("--domain", type=str, default="all")
@@ -158,11 +156,16 @@ def config() -> argparse.Namespace:
         action="store_true",
         help="Re-run all tasks in the meta file and clear existing result dirs",
     )
+    parser.add_argument(
+        "--stop-on-client-error",
+        action="store_true",
+        help="Run tasks sequentially and stop after the first client-error trajectory",
+    )
     return parser.parse_args()
 
 
-def run_one_example(args: argparse.Namespace, domain: str, example_id: str) -> Dict[str, Any]:
-    example_result_dir = os.path.join(
+def _example_result_dir(args: argparse.Namespace, domain: str, example_id: str) -> str:
+    return os.path.join(
         args.result_dir,
         args.action_space,
         args.observation_type,
@@ -170,6 +173,29 @@ def run_one_example(args: argparse.Namespace, domain: str, example_id: str) -> D
         domain,
         example_id,
     )
+
+
+def _has_client_error(example_result_dir: str) -> bool:
+    traj_path = os.path.join(example_result_dir, "traj.jsonl")
+    if not os.path.isfile(traj_path):
+        return False
+    with open(traj_path, "r", encoding="utf-8") as file_obj:
+        for line in file_obj:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            response = str(record.get("response", "")).lower()
+            if record.get("action") == "DONE" and "client error" in response:
+                return True
+    return False
+
+
+def run_one_example(args: argparse.Namespace, domain: str, example_id: str) -> Dict[str, Any]:
+    example_result_dir = _example_result_dir(args, domain, example_id)
     if args.overwrite and os.path.isdir(example_result_dir):
         shutil.rmtree(example_result_dir)
     os.makedirs(example_result_dir, exist_ok=True)
@@ -200,10 +226,8 @@ def run_one_example(args: argparse.Namespace, domain: str, example_id: str) -> D
             "input_swap": args.input_swap,
             "language": args.language,
             "history_n": args.history_n,
-            "max_thought_chars": args.max_thought_chars,
             "max_pixels": args.max_pixels,
             "min_pixels": args.min_pixels,
-            "callusr_tolerance": args.callusr_tolerance,
             "temperature": args.temperature,
             "top_p": args.top_p,
             "max_tokens": args.max_tokens,
@@ -260,25 +284,56 @@ def test(args: argparse.Namespace, test_all_meta: Dict[str, List[str]]) -> None:
 
     successes: List[str] = []
     failures: List[str] = []
+    stopped_on_client_error = False
+
+    if args.stop_on_client_error and args.max_workers != 1:
+        print("[info] --stop-on-client-error requires sequential execution; forcing max_workers=1")
+        args.max_workers = 1
 
     print(f"[info] Dispatching {len(tasks)} tasks with max_workers={args.max_workers}")
-    with ThreadPoolExecutor(max_workers=max(1, args.max_workers)) as pool:
-        futures = {pool.submit(run_one_example, args, task["domain"], task["example_id"]): task for task in tasks}
-        for future in as_completed(futures):
+    if args.stop_on_client_error:
+        for index, task in enumerate(tasks, 1):
+            domain = task["domain"]
+            example_id = task["example_id"]
+            print(f"[info] RUN_START {index}/{len(tasks)} {domain}/{example_id}")
             try:
-                result = future.result()
+                result = run_one_example(args, domain, example_id)
             except Exception as exc:
                 logger.warning(f"runner exception: {exc}")
                 continue
             task_id = result.get("task_id")
+            example_result_dir = _example_result_dir(args, domain, example_id)
             if result.get("status") == "success":
                 successes.append(task_id)
                 print(f"[info] {task_id}: success")
             else:
                 failures.append(task_id)
                 print(f"[info] {task_id}: failed")
+            if _has_client_error(example_result_dir):
+                print(f"[info] FIRST_CLIENT_ERROR {domain}/{example_id} {example_result_dir}")
+                stopped_on_client_error = True
+                break
+    else:
+        with ThreadPoolExecutor(max_workers=max(1, args.max_workers)) as pool:
+            futures = {pool.submit(run_one_example, args, task["domain"], task["example_id"]): task for task in tasks}
+            for future in as_completed(futures):
+                try:
+                    result = future.result()
+                except Exception as exc:
+                    logger.warning(f"runner exception: {exc}")
+                    continue
+                task_id = result.get("task_id")
+                if result.get("status") == "success":
+                    successes.append(task_id)
+                    print(f"[info] {task_id}: success")
+                else:
+                    failures.append(task_id)
+                    print(f"[info] {task_id}: failed")
 
-    print(f"[info] Completed. success={len(successes)} failed={len(failures)}")
+    if stopped_on_client_error:
+        print(f"[info] Stopped on first client error. success={len(successes)} failed={len(failures)}")
+    else:
+        print(f"[info] Completed. success={len(successes)} failed={len(failures)}")
 
 
 def get_unfinished(

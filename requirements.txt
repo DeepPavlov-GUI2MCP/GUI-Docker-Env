@@ -41,6 +41,7 @@ pydrive
 fastdtw
 odfpy
 openai
+pydantic>=2.10
 func-timeout
 beautifulsoup4
 dashscope
