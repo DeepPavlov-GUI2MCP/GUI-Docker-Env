@@ -194,7 +194,12 @@ def _has_client_error(example_result_dir: str) -> bool:
     return False
 
 
-def run_one_example(args: argparse.Namespace, domain: str, example_id: str) -> Dict[str, Any]:
+def run_one_example(
+    args: argparse.Namespace,
+    domain: str,
+    example_id: str,
+    worker_index: int = 0,
+) -> Dict[str, Any]:
     example_result_dir = _example_result_dir(args, domain, example_id)
     if args.overwrite and os.path.isdir(example_result_dir):
         shutil.rmtree(example_result_dir)
@@ -209,7 +214,7 @@ def run_one_example(args: argparse.Namespace, domain: str, example_id: str) -> D
     logger.info(f"[Example ID]: {example_id}")
     logger.info(f"[Instruction]: {instruction}")
 
-    agent_kwargs: Dict[str, Any] = {}
+    agent_kwargs: Dict[str, Any] = {"base_url_index": worker_index}
     if args.openai_base_url:
         agent_kwargs["base_url"] = args.openai_base_url
     if args.openai_api_key:
@@ -297,7 +302,7 @@ def test(args: argparse.Namespace, test_all_meta: Dict[str, List[str]]) -> None:
             example_id = task["example_id"]
             print(f"[info] RUN_START {index}/{len(tasks)} {domain}/{example_id}")
             try:
-                result = run_one_example(args, domain, example_id)
+                result = run_one_example(args, domain, example_id, index - 1)
             except Exception as exc:
                 logger.warning(f"runner exception: {exc}")
                 continue
@@ -315,7 +320,10 @@ def test(args: argparse.Namespace, test_all_meta: Dict[str, List[str]]) -> None:
                 break
     else:
         with ThreadPoolExecutor(max_workers=max(1, args.max_workers)) as pool:
-            futures = {pool.submit(run_one_example, args, task["domain"], task["example_id"]): task for task in tasks}
+            futures = {
+                pool.submit(run_one_example, args, task["domain"], task["example_id"], index): task
+                for index, task in enumerate(tasks)
+            }
             for future in as_completed(futures):
                 try:
                     result = future.result()

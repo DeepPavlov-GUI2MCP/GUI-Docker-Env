@@ -1,0 +1,107 @@
+{
+  "id": "003a1974-095c-5b8d-9be6-4f8c496e0f99",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Turn on formatting marks using the Formatting Marks toggle.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/short_paragraph.docx",
+            "path": "/home/user/Desktop/synthetic_writer_003a1974095c5b8d9be64f8c496e0f99.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_003a1974095c5b8d9be64f8c496e0f99.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_003a1974095c5b8d9be64f8c496e0f99.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "bc2a95014408bc56",
+    "task_type": "cursor_format_toggle",
+    "task_index": 0,
+    "expected_outcome": "Non-printing characters such as paragraph marks and spaces become visible in the document view.",
+    "preconditions": {
+      "description": "The document contains several lines of text with paragraph breaks, and formatting marks are currently hidden.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Multiple lines with spaces and paragraph breaks"
+        },
+        {
+          "key": "formatting_marks",
+          "value": "Off"
+        },
+        {
+          "key": "selection_state",
+          "value": "No text selected"
+        }
+      ]
+    },
+    "fixture": "short_paragraph.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_003a1974095c5b8d9be64f8c496e0f99.docx",
+    "window_name": "synthetic_writer_003a1974095c5b8d9be64f8c496e0f99.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_003a1974095c5b8d9be64f8c496e0f99.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

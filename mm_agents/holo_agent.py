@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import logging
 import os
-import random
 from typing import Any, Dict, List, Optional
 
 import openai
@@ -85,12 +84,20 @@ class HoloAgent:
                 if not url.endswith("/v1"):
                     url = f"{url}/v1"
                 baseurl_list.append(url)
-            random.shuffle(baseurl_list)
         if not baseurl_list:
             baseurl_list = ["http://127.0.0.1:8010/v1"]
 
         api_key = kwargs.get("api_key") or _ev("HOLO_OPENAI_API_KEY", "OPENAI_API_KEY") or "empty"
-        self.vlm = openai.OpenAI(api_key=api_key, base_url=baseurl_list[0])
+        base_url_index = int(kwargs.get("base_url_index", 0))
+        selected_base_url = baseurl_list[base_url_index % len(baseurl_list)]
+        self.vlm = openai.OpenAI(api_key=api_key, base_url=selected_base_url)
+        self._base_url = selected_base_url
+        logger.info(
+            "Holo OpenAI base_url=%s (index=%d of %d)",
+            selected_base_url,
+            base_url_index % len(baseurl_list),
+            len(baseurl_list),
+        )
         self._api_model_override = (kwargs.get("api_model") or "").strip()
 
         self.messages: List[Dict[str, Any]] = []

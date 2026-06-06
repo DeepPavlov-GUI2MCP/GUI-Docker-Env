@@ -472,9 +472,49 @@ class SetupController:
     def _sleep_setup(self, seconds: float):
         time.sleep(seconds)
 
-    def _act_setup(self, action_seq: List[Union[Dict[str, Any], str]]):
-        # TODO
-        raise NotImplementedError()
+    def _a11y_preflight_setup(
+        self,
+        steps: List[Dict[str, Any]],
+        timeout_seconds: float = 20.0,
+        screenshot_on_failure: bool = False,
+        **_: Any,
+    ):
+        from desktop_env.controllers.a11y_preflight import A11yPreflightExecutor
+
+        if not isinstance(steps, list) or not steps:
+            raise ValueError("a11y_preflight requires a non-empty steps list")
+
+        executor = A11yPreflightExecutor(
+            self.http_server,
+            cache_dir=self.cache_dir,
+        )
+        executor.run(
+            steps=steps,
+            timeout_seconds=timeout_seconds,
+            screenshot_on_failure=screenshot_on_failure,
+        )
+
+    def _act_setup(
+        self,
+        action_seq: Optional[List[Union[Dict[str, Any], str]]] = None,
+        steps: Optional[List[Dict[str, Any]]] = None,
+        timeout_seconds: float = 20.0,
+        screenshot_on_failure: bool = False,
+        **kwargs: Any,
+    ):
+        payload_steps = steps
+        if payload_steps is None and action_seq:
+            if all(isinstance(item, dict) and "op" in item for item in action_seq):
+                payload_steps = action_seq  # type: ignore[assignment]
+        if payload_steps is None:
+            payload_steps = kwargs.get("steps")
+        if not isinstance(payload_steps, list) or not payload_steps:
+            raise NotImplementedError("act setup requires op-based steps or a11y_preflight payload")
+        self._a11y_preflight_setup(
+            steps=payload_steps,
+            timeout_seconds=timeout_seconds,
+            screenshot_on_failure=screenshot_on_failure,
+        )
 
     def _replay_setup(self, trajectory: str):
         """

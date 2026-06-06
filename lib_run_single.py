@@ -5,7 +5,55 @@ import os
 import time
 from wrapt_timeout_decorator import *
 
+from desktop_env.controllers.a11y_preflight import A11yPreflightExecutor
+
+from lib_eval_artifacts import (
+    example_for_reset_with_deferred_preflight,
+    record_eval_step,
+)
+
 logger = logging.getLogger("desktopenv.experiment")
+
+
+def _run_deferred_a11y_preflight(
+    env,
+    example_result_dir: str,
+    preflight_params: dict,
+    *,
+    artifact_step: int,
+) -> int:
+    executor = A11yPreflightExecutor(
+        env.setup_controller.http_server,
+        cache_dir=env.cache_dir,
+    )
+
+    def on_preflight_step(step_index: int, step: dict) -> None:
+        nonlocal artifact_step
+        obs = env._get_obs()
+        artifact_step += 1
+        timestamp = datetime.datetime.now().strftime("%Y%m%d@%H%M%S")
+        record_eval_step(
+            example_result_dir,
+            artifact_step,
+            timestamp,
+            obs,
+            env,
+            action={
+                "phase": "a11y_preflight",
+                "preflight_step_index": step_index,
+                "op": step.get("op"),
+                "selector": step.get("selector"),
+            },
+        )
+        logger.info("Preflight artifact step %d: op=%s", artifact_step, step.get("op"))
+
+    executor.run(
+        steps=preflight_params["steps"],
+        timeout_seconds=preflight_params.get("timeout_seconds", 20.0),
+        screenshot_on_failure=preflight_params.get("screenshot_on_failure", False),
+        on_step_complete=on_preflight_step,
+    )
+    return artifact_step
 
 
 def run_single_example(agent, env, example, max_steps, instruction, args, example_result_dir, scores):
@@ -15,10 +63,31 @@ def run_single_example(agent, env, example, max_steps, instruction, args, exampl
     except Exception as e:
         agent.reset()
 
-    env.reset(task_config=example)
-    
+    reset_example, preflight_params = example_for_reset_with_deferred_preflight(example)
+    env.reset(task_config=reset_example)
+
     time.sleep(60) # Wait for the environment to be ready
-    obs = env._get_obs() # Get the initial observation
+    obs = env._get_obs()
+    initial_timestamp = datetime.datetime.now().strftime("%Y%m%d@%H%M%S")
+    record_eval_step(
+        example_result_dir,
+        1,
+        initial_timestamp,
+        obs,
+        env,
+        action=None,
+    )
+    artifact_step = 1
+
+    if preflight_params is not None:
+        artifact_step = _run_deferred_a11y_preflight(
+            env,
+            example_result_dir,
+            preflight_params,
+            artifact_step=artifact_step,
+        )
+        obs = env._get_obs()
+
     done = False
     step_idx = 0
     # env.controller.start_recording()
@@ -30,27 +99,23 @@ def run_single_example(agent, env, example, max_steps, instruction, args, exampl
         for action in actions:
             # Capture the timestamp before executing the action
             action_timestamp = datetime.datetime.now().strftime("%Y%m%d@%H%M%S")
-            logger.info("Step %d: %s", step_idx + 1, action)
             obs, reward, done, info = env.step(action, args.sleep_after_execution)
-
+            artifact_step += 1
+            logger.info("Step %d: %s", artifact_step, action)
             logger.info("Reward: %.2f", reward)
             logger.info("Done: %s", done)
-            # Save screenshot and trajectory information
-            with open(os.path.join(example_result_dir, f"step_{step_idx + 1}_{action_timestamp}.png"),
-                      "wb") as _f:
-                _f.write(obs['screenshot'])
-            with open(os.path.join(example_result_dir, "traj.jsonl"), "a") as f:
-                f.write(json.dumps({
-                    "step_num": step_idx + 1,
-                    "action_timestamp": action_timestamp,
-                    "action": action,
-                    "response": response,
-                    "reward": reward,
-                    "done": done,
-                    "info": info,
-                    "screenshot_file": f"step_{step_idx + 1}_{action_timestamp}.png"
-                }))
-                f.write("\n")
+            record_eval_step(
+                example_result_dir,
+                artifact_step,
+                action_timestamp,
+                obs,
+                env,
+                action=action,
+                response=response,
+                reward=reward,
+                done=done,
+                info=info,
+            )
             if done:
                 logger.info("The episode is done.")
                 break
