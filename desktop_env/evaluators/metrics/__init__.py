@@ -158,3 +158,8 @@ from .vscode import (
 
 def infeasible():
     pass
+
+
+def always_zero(*_args, **_kwargs) -> float:
+    """Placeholder metric for synthetic converted tasks that are not yet verified."""
+    return 0.0

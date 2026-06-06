@@ -440,6 +440,8 @@ class DesktopEnv(gym.Env):
                 return 1
             else:
                 return 0
+        if self.evaluator['func'] == "always_zero":
+            return 0
         else:
             if len(self.action_history) > 0 and self.action_history[-1] == "FAIL":
                 return 0
