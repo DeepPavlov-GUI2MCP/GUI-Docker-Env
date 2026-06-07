@@ -7,11 +7,10 @@ import json
 import logging
 import os
 import shutil
-import signal
 import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 import requests
 
@@ -29,6 +28,8 @@ logger.setLevel(logging.DEBUG)
 _emulator_start_semaphore = threading.Semaphore(
     max(1, int(os.environ.get("OSWORLD_START_CONCURRENCY", "4")))
 )
+
+FAILED_MARKER = "failed.txt"
 
 datetime_str: str = datetime.datetime.now().strftime("%Y%m%d@%H%M%S")
 
@@ -68,14 +69,20 @@ logger = logging.getLogger("desktopenv.experiment")
 
 
 def ping(base_url: str) -> bool:
-    url = f"{base_url.rstrip('/')}/ping"
-    try:
-        response = requests.get(url, timeout=10)
-        print(f"[info] ping: {response.status_code} {getattr(response, 'text', '')[:200]}")
-        return response.ok
-    except Exception as exc:
-        print(f"[error] ping failed: {exc}")
+    urls = [u.strip() for u in base_url.split(",") if u.strip()]
+    if not urls:
         return False
+    ok = True
+    for base in urls:
+        url = f"{base.rstrip('/')}/ping"
+        try:
+            response = requests.get(url, timeout=10)
+            print(f"[info] ping {base}: {response.status_code} {getattr(response, 'text', '')[:200]}")
+            ok = ok and response.ok
+        except Exception as exc:
+            print(f"[error] ping failed for {base}: {exc}")
+            ok = False
+    return ok
 
 
 def config() -> argparse.Namespace:
@@ -170,6 +177,11 @@ def config() -> argparse.Namespace:
         help="Re-run all tasks in the meta file and clear existing result dirs",
     )
     parser.add_argument(
+        "--retry-failed",
+        action="store_true",
+        help="Re-run only tasks marked with failed.txt in the result dir",
+    )
+    parser.add_argument(
         "--stop-on-client-error",
         action="store_true",
         help="Run tasks sequentially and stop after the first client-error trajectory",
@@ -186,6 +198,34 @@ def _example_result_dir(args: argparse.Namespace, domain: str, example_id: str) 
         domain,
         example_id,
     )
+
+
+def _has_failed_marker(example_result_dir: str) -> bool:
+    return os.path.isfile(os.path.join(example_result_dir, FAILED_MARKER))
+
+
+def _mark_task_failed(example_result_dir: str, message: str) -> None:
+    os.makedirs(example_result_dir, exist_ok=True)
+    with open(os.path.join(example_result_dir, FAILED_MARKER), "w", encoding="utf-8") as file_obj:
+        file_obj.write(message.rstrip() + "\n")
+
+
+def _record_task_failure(
+    example_result_dir: str,
+    domain: str,
+    example_id: str,
+    exc: BaseException,
+) -> None:
+    os.makedirs(example_result_dir, exist_ok=True)
+    if isinstance(exc, TaskTimeoutError):
+        stack_path = os.path.join(example_result_dir, "timeout_stack.txt")
+        with open(stack_path, "w", encoding="utf-8") as stack_file:
+            faulthandler.dump_traceback(file=stack_file, all_threads=True)
+    logger.error(f"Exception in {domain}/{example_id}: {exc}")
+    with open(os.path.join(example_result_dir, "traj.jsonl"), "a", encoding="utf-8") as file_obj:
+        file_obj.write(json.dumps({"Error": f"Exception in {domain}/{example_id}: {str(exc)}"}))
+        file_obj.write("\n")
+    _mark_task_failed(example_result_dir, str(exc))
 
 
 def _has_client_error(example_result_dir: str) -> bool:
@@ -211,35 +251,27 @@ class TaskTimeoutError(TimeoutError):
     pass
 
 
-class task_timeout:
-    def __init__(self, seconds: int, label: str) -> None:
-        self.seconds = int(seconds or 0)
-        self.label = label
-        self.previous_handler = None
+def run_with_task_timeout(seconds: int, label: str, func: Callable[[], Any]) -> Any:
+    timeout_seconds = int(seconds or 0)
+    if timeout_seconds <= 0:
+        return func()
 
-    def __enter__(self):
-        if self.seconds <= 0:
-            return self
-        if threading.current_thread() is not threading.main_thread():
-            logger.warning(
-                "Task timeout disabled for %s because signal timers only work in the main thread",
-                self.label,
-            )
-            self.seconds = 0
-            return self
-        self.previous_handler = signal.getsignal(signal.SIGALRM)
-        signal.signal(signal.SIGALRM, self._handle_timeout)
-        signal.setitimer(signal.ITIMER_REAL, self.seconds)
-        return self
+    holder: Dict[str, Any] = {"exc": None, "value": None}
 
-    def __exit__(self, exc_type, exc, tb):
-        if self.seconds > 0:
-            signal.setitimer(signal.ITIMER_REAL, 0)
-            signal.signal(signal.SIGALRM, self.previous_handler)
-        return False
+    def target() -> None:
+        try:
+            holder["value"] = func()
+        except BaseException as exc:
+            holder["exc"] = exc
 
-    def _handle_timeout(self, signum, frame):
-        raise TaskTimeoutError(f"task timed out after {self.seconds}s: {self.label}")
+    thread = threading.Thread(target=target, name=f"task-timeout-{label}", daemon=True)
+    thread.start()
+    thread.join(timeout_seconds)
+    if thread.is_alive():
+        raise TaskTimeoutError(f"task timed out after {timeout_seconds}s: {label}")
+    if holder["exc"] is not None:
+        raise holder["exc"]
+    return holder["value"]
 
 
 def run_one_example(
@@ -251,45 +283,49 @@ def run_one_example(
     example_result_dir = _example_result_dir(args, domain, example_id)
     if args.overwrite and os.path.isdir(example_result_dir):
         shutil.rmtree(example_result_dir)
+    elif getattr(args, "retry_failed", False) and _has_failed_marker(example_result_dir):
+        shutil.rmtree(example_result_dir)
     os.makedirs(example_result_dir, exist_ok=True)
 
-    config_file = os.path.join(args.test_config_base_dir, f"examples/{domain}/{example_id}.json")
-    with open(config_file, "r", encoding="utf-8") as file_obj:
-        example = json.load(file_obj)
-
-    instruction = example.get("instruction", "")
-    logger.info(f"[Domain]: {domain}")
-    logger.info(f"[Example ID]: {example_id}")
-    logger.info(f"[Instruction]: {instruction}")
-
-    agent_kwargs: Dict[str, Any] = {"base_url_index": worker_index}
-    if args.openai_base_url:
-        agent_kwargs["base_url"] = args.openai_base_url
-    if args.openai_api_key:
-        agent_kwargs["api_key"] = args.openai_api_key
-    if args.openai_model:
-        agent_kwargs["api_model"] = args.openai_model
-
-    agent = HoloAgent(
-        model=args.model,
-        action_space=args.action_space,
-        observation_type=args.observation_type,
-        max_trajectory_length=args.max_trajectory_length,
-        runtime_conf={
-            "input_swap": args.input_swap,
-            "language": args.language,
-            "history_n": args.history_n,
-            "max_pixels": args.max_pixels,
-            "min_pixels": args.min_pixels,
-            "temperature": args.temperature,
-            "top_p": args.top_p,
-            "max_tokens": args.max_tokens,
-        },
-        **agent_kwargs,
-    )
-
     env = None
+    task_id = example_id
     try:
+        config_file = os.path.join(args.test_config_base_dir, f"examples/{domain}/{example_id}.json")
+        with open(config_file, "r", encoding="utf-8") as file_obj:
+            example = json.load(file_obj)
+
+        task_id = example.get("id", example_id)
+        instruction = example.get("instruction", "")
+        logger.info(f"[Domain]: {domain}")
+        logger.info(f"[Example ID]: {example_id}")
+        logger.info(f"[Instruction]: {instruction}")
+
+        agent_kwargs: Dict[str, Any] = {"base_url_index": worker_index}
+        if args.openai_base_url:
+            agent_kwargs["base_url"] = args.openai_base_url
+        if args.openai_api_key:
+            agent_kwargs["api_key"] = args.openai_api_key
+        if args.openai_model:
+            agent_kwargs["api_model"] = args.openai_model
+
+        agent = HoloAgent(
+            model=args.model,
+            action_space=args.action_space,
+            observation_type=args.observation_type,
+            max_trajectory_length=args.max_trajectory_length,
+            runtime_conf={
+                "input_swap": args.input_swap,
+                "language": args.language,
+                "history_n": args.history_n,
+                "max_pixels": args.max_pixels,
+                "min_pixels": args.min_pixels,
+                "temperature": args.temperature,
+                "top_p": args.top_p,
+                "max_tokens": args.max_tokens,
+            },
+            **agent_kwargs,
+        )
+
         timeout_label = f"{domain}/{example_id}"
         with _emulator_start_semaphore:
             env = DesktopEnv(
@@ -299,36 +335,34 @@ def run_one_example(
                 enable_proxy=args.enable_proxy,
             )
         scores_local: List[float] = []
-        try:
-            with task_timeout(args.task_timeout_seconds, timeout_label):
-                lib_run_single.run_single_example(
-                    agent,
-                    env,
-                    example,
-                    args.max_steps,
-                    instruction,
-                    args,
-                    example_result_dir,
-                    scores_local,
-                )
-            status = "success"
-        except Exception as exc:
-            if isinstance(exc, TaskTimeoutError):
-                stack_path = os.path.join(example_result_dir, "timeout_stack.txt")
-                with open(stack_path, "w", encoding="utf-8") as stack_file:
-                    faulthandler.dump_traceback(file=stack_file, all_threads=True)
-            logger.error(f"Exception in {domain}/{example_id}: {exc}")
-            with open(os.path.join(example_result_dir, "traj.jsonl"), "a", encoding="utf-8") as file_obj:
-                file_obj.write(json.dumps({"Error": f"Exception in {domain}/{example_id}: {str(exc)}"}))
-                file_obj.write("\n")
-            status = "failed"
-        return {"task_id": example.get("id", example_id), "status": status}
+
+        def run_eval() -> None:
+            lib_run_single.run_single_example(
+                agent,
+                env,
+                example,
+                args.max_steps,
+                instruction,
+                args,
+                example_result_dir,
+                scores_local,
+            )
+
+        run_with_task_timeout(args.task_timeout_seconds, timeout_label, run_eval)
+        if _has_failed_marker(example_result_dir):
+            os.remove(os.path.join(example_result_dir, FAILED_MARKER))
+        status = "success"
+    except Exception as exc:
+        _record_task_failure(example_result_dir, domain, example_id, exc)
+        status = "failed"
     finally:
         try:
             if env:
                 env.close()
         except Exception as exc:
             logger.warning(f"env.close() error: {exc}")
+
+    return {"task_id": task_id, "status": status}
 
 
 def test(args: argparse.Namespace, test_all_meta: Dict[str, List[str]]) -> None:
@@ -359,6 +393,9 @@ def test(args: argparse.Namespace, test_all_meta: Dict[str, List[str]]) -> None:
             try:
                 result = run_one_example(args, domain, example_id, index - 1)
             except Exception as exc:
+                example_result_dir = _example_result_dir(args, domain, example_id)
+                _record_task_failure(example_result_dir, domain, example_id, exc)
+                failures.append(example_id)
                 logger.warning(f"runner exception: {exc}")
                 continue
             task_id = result.get("task_id")
@@ -380,9 +417,16 @@ def test(args: argparse.Namespace, test_all_meta: Dict[str, List[str]]) -> None:
                 for index, task in enumerate(tasks)
             }
             for future in as_completed(futures):
+                task = futures[future]
+                domain = task["domain"]
+                example_id = task["example_id"]
                 try:
                     result = future.result()
                 except Exception as exc:
+                    example_result_dir = _example_result_dir(args, domain, example_id)
+                    _record_task_failure(example_result_dir, domain, example_id, exc)
+                    failures.append(example_id)
+                    print(f"[info] {example_id}: failed")
                     logger.warning(f"runner exception: {exc}")
                     continue
                 task_id = result.get("task_id")
@@ -422,11 +466,12 @@ def get_unfinished(
             example_path = os.path.join(domain_path, example_id)
             if not os.path.isdir(example_path):
                 continue
-            if "result.txt" not in os.listdir(example_path):
-                for file_name in os.listdir(example_path):
-                    os.remove(os.path.join(example_path, file_name))
-            else:
+            listing = os.listdir(example_path)
+            if "result.txt" in listing or FAILED_MARKER in listing:
                 finished[domain].append(example_id)
+            else:
+                for file_name in listing:
+                    os.remove(os.path.join(example_path, file_name))
 
     if not finished:
         return total_file_json
@@ -435,6 +480,26 @@ def get_unfinished(
         if domain in total_file_json:
             total_file_json[domain] = [task_id for task_id in total_file_json[domain] if task_id not in examples]
     return total_file_json
+
+
+def get_retry_failed(
+    action_space: str,
+    use_model: str,
+    observation_type: str,
+    result_dir: str,
+    total_file_json: Dict[str, List[str]],
+) -> Dict[str, List[str]]:
+    target_dir = os.path.join(result_dir, action_space, observation_type, use_model)
+    retry: Dict[str, List[str]] = {}
+    for domain, example_ids in total_file_json.items():
+        selected: List[str] = []
+        for example_id in example_ids:
+            example_path = os.path.join(target_dir, domain, example_id)
+            if os.path.isdir(example_path) and _has_failed_marker(example_path):
+                selected.append(example_id)
+        if selected:
+            retry[domain] = selected
+    return retry
 
 
 def get_result(
@@ -487,6 +552,17 @@ if __name__ == "__main__":
 
     if args.overwrite:
         test_file_list = {key: list(value) for key, value in test_all_meta.items()}
+    elif args.retry_failed:
+        test_file_list = get_retry_failed(
+            args.action_space,
+            args.model,
+            args.observation_type,
+            args.result_dir,
+            test_all_meta,
+        )
+        if not any(test_file_list.values()):
+            logger.info("No failed tasks to retry.")
+            sys.exit(0)
     else:
         test_file_list = get_unfinished(
             args.action_space,

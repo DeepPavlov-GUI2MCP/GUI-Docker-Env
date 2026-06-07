@@ -134,7 +134,7 @@
             }
           }
         ],
-        "timeout_seconds": 30,
+        "timeout_seconds": 60,
         "screenshot_on_failure": true
       }
     }
