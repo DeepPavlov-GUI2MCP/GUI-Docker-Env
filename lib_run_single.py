@@ -2,7 +2,9 @@ import datetime
 import json
 import logging
 import os
+import re
 import time
+from typing import Any, Dict, List, Optional
 from wrapt_timeout_decorator import *
 
 from desktop_env.controllers.a11y_preflight import A11yPreflightExecutor
@@ -13,6 +15,89 @@ from lib_eval_artifacts import (
 )
 
 logger = logging.getLogger("desktopenv.experiment")
+
+DEFAULT_SETTLE_TIMEOUT_SECONDS = float(os.environ.get("OSWORLD_SETTLE_TIMEOUT_SECONDS", "45"))
+DEFAULT_SETTLE_POLL_INTERVAL_SECONDS = float(os.environ.get("OSWORLD_SETTLE_POLL_INTERVAL_SECONDS", "0.5"))
+DEFAULT_SETTLE_STABLE_POLLS = int(os.environ.get("OSWORLD_SETTLE_STABLE_POLLS", "2"))
+MIN_A11Y_TREE_CHARS = 1000
+GENERIC_A11Y_TREE_CHARS = 5000
+
+
+def _settle_needles_from_example(example: Dict[str, Any]) -> List[str]:
+    needles: List[str] = []
+
+    def add(value: Any) -> None:
+        if isinstance(value, str) and value and value not in needles:
+            needles.append(value)
+
+    for block in example.get("config") or []:
+        if not isinstance(block, dict):
+            continue
+        if block.get("type") == "activate_window":
+            add((block.get("parameters") or {}).get("window_name"))
+        if block.get("type") == "open":
+            path = (block.get("parameters") or {}).get("path")
+            if isinstance(path, str) and path.endswith(".docx"):
+                add(f"{os.path.basename(path)} - LibreOffice Writer")
+
+    evaluator = example.get("evaluator") or {}
+    for block in evaluator.get("postconfig") or []:
+        if isinstance(block, dict) and block.get("type") == "activate_window":
+            add((block.get("parameters") or {}).get("window_name"))
+
+    provenance = example.get("provenance") or {}
+    add(provenance.get("window_name"))
+
+    snapshot = str(example.get("snapshot") or "").lower()
+    if "writer" in snapshot:
+        add("LibreOffice Writer")
+
+    return needles
+
+
+def _a11y_tree_ready(tree: Optional[str], needles: List[str], example: Dict[str, Any]) -> bool:
+    if not tree or len(tree) < MIN_A11Y_TREE_CHARS:
+        return False
+    if "writer" in str(example.get("snapshot") or "").lower():
+        if re.search(r"\.docx - LibreOffice Writer", tree):
+            return True
+    if not needles:
+        return len(tree) >= GENERIC_A11Y_TREE_CHARS
+    return any(needle in tree for needle in needles)
+
+
+def wait_for_post_reset_settle(
+    env,
+    example: Dict[str, Any],
+    *,
+    timeout_seconds: float = DEFAULT_SETTLE_TIMEOUT_SECONDS,
+    poll_interval: float = DEFAULT_SETTLE_POLL_INTERVAL_SECONDS,
+    stable_polls: int = DEFAULT_SETTLE_STABLE_POLLS,
+) -> float:
+    needles = _settle_needles_from_example(example)
+    logger.info(
+        "Post-reset settle polling starting (timeout=%.0fs, needles=%s)",
+        timeout_seconds,
+        needles[:4] if needles else ["<generic>"],
+    )
+    started_at = time.monotonic()
+    deadline = started_at + max(0.0, float(timeout_seconds))
+    stable = 0
+    while time.monotonic() < deadline:
+        obs = env._get_obs()
+        tree = obs.get("accessibility_tree") if isinstance(obs, dict) else None
+        if _a11y_tree_ready(tree, needles, example):
+            stable += 1
+            if stable >= max(1, stable_polls):
+                elapsed = time.monotonic() - started_at
+                logger.info("Post-reset settle ready after %.1fs", elapsed)
+                return elapsed
+        else:
+            stable = 0
+        time.sleep(max(0.1, poll_interval))
+    elapsed = time.monotonic() - started_at
+    logger.warning("Post-reset settle timed out after %.1fs", elapsed)
+    return elapsed
 
 
 def _record_desktop_host(env, example_result_dir: str) -> None:
@@ -82,9 +167,9 @@ def run_single_example(agent, env, example, max_steps, instruction, args, exampl
     _record_desktop_host(env, example_result_dir)
     logger.info("Task reset finished")
 
-    logger.info("Initial environment settle sleep starting")
-    time.sleep(60) # Wait for the environment to be ready
-    logger.info("Initial environment settle sleep finished")
+    logger.info("Initial environment settle wait starting")
+    wait_for_post_reset_settle(env, example)
+    logger.info("Initial environment settle wait finished")
     logger.info("Initial observation capture starting")
     obs = env._get_obs()
     logger.info(
