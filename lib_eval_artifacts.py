@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import time
 from typing import Any, Dict, List, Optional, Tuple
 
 logger = logging.getLogger("desktopenv.experiment")
@@ -22,9 +23,18 @@ def resolve_a11y_tree(obs: Optional[Dict[str, Any]], env: Any = None) -> Optiona
     if isinstance(obs, dict):
         tree = obs.get("accessibility_tree")
     if tree:
+        logger.info("Using accessibility tree from observation (%d chars)", len(tree))
         return tree
     if env is not None and getattr(env, "controller", None) is not None:
-        return env.controller.get_accessibility_tree()
+        logger.info("Observation has no accessibility tree; fetching from controller")
+        started_at = time.monotonic()
+        tree = env.controller.get_accessibility_tree()
+        logger.info(
+            "Controller accessibility tree fetch finished in %.2fs (available=%s)",
+            time.monotonic() - started_at,
+            bool(tree),
+        )
+        return tree
     return None
 
 
@@ -34,8 +44,10 @@ def save_a11y_xml(example_result_dir: str, filename: str, tree: Optional[str]) -
         return None
     os.makedirs(example_result_dir, exist_ok=True)
     path = os.path.join(example_result_dir, filename)
+    logger.info("Writing a11y dump %s (%d chars)", filename, len(tree))
     with open(path, "w", encoding="utf-8") as handle:
         handle.write(tree)
+    logger.info("Wrote a11y dump %s", filename)
     return filename
 
 
@@ -46,8 +58,10 @@ def save_step_screenshot(example_result_dir: str, step_num: int, action_timestam
         return None
     filename = step_screenshot_filename(step_num, action_timestamp)
     path = os.path.join(example_result_dir, filename)
+    logger.info("Writing screenshot %s (%d bytes)", filename, len(screenshot))
     with open(path, "wb") as handle:
         handle.write(screenshot)
+    logger.info("Wrote screenshot %s", filename)
     return filename
 
 
@@ -75,8 +89,10 @@ def record_eval_step(
     done: bool = False,
     info: Optional[Dict[str, Any]] = None,
 ) -> Tuple[Optional[str], Optional[str]]:
+    logger.info("Recording eval step %d started", step_num)
     screenshot_file = save_step_screenshot(example_result_dir, step_num, action_timestamp, obs)
     a11y_file = save_step_a11y_dump(example_result_dir, step_num, action_timestamp, obs, env)
+    logger.info("Writing trajectory row for step %d", step_num)
     with open(os.path.join(example_result_dir, "traj.jsonl"), "a", encoding="utf-8") as handle:
         handle.write(json.dumps({
             "step_num": step_num,
@@ -90,6 +106,7 @@ def record_eval_step(
             "a11y_file": a11y_file,
         }))
         handle.write("\n")
+    logger.info("Recording eval step %d finished", step_num)
     return screenshot_file, a11y_file
 
 

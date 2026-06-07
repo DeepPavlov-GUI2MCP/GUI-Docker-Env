@@ -72,9 +72,15 @@ class PythonController:
         Gets the accessibility tree from the server. None -> no accessibility tree or unexpected error.
         """
 
-        for _ in range(self.retry_times):
+        for attempt_idx in range(self.retry_times):
             try:
-                response: requests.Response = requests.get(self.http_server + "/accessibility")
+                logger.info(
+                    "Requesting accessibility tree from %s (attempt %d/%d)",
+                    self.http_server,
+                    attempt_idx + 1,
+                    self.retry_times,
+                )
+                response: requests.Response = requests.get(self.http_server + "/accessibility", timeout=30)
                 if response.status_code == 200:
                     logger.info("Got accessibility tree successfully")
                     return response.json()["AT"]
@@ -94,9 +100,9 @@ class PythonController:
         Gets the terminal output from the server. None -> no terminal output or unexpected error.
         """
 
-        for _ in range(self.retry_times):
+        for attempt_idx in range(self.retry_times):
             try:
-                response = requests.get(self.http_server + "/terminal")
+                response = requests.get(self.http_server + "/terminal", timeout=10)
                 if response.status_code == 200:
                     logger.info("Got terminal output successfully")
                     return response.json()["output"]

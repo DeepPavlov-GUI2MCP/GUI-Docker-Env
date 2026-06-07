@@ -2,11 +2,14 @@
 
 import argparse
 import datetime
+import faulthandler
 import json
 import logging
 import os
 import shutil
+import signal
 import sys
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any, Dict, List, Optional
 
@@ -141,6 +144,12 @@ def config() -> argparse.Namespace:
     parser.add_argument("--top_p", "--top-p", type=float, default=0.9)
     parser.add_argument("--history_n", "--history-n", type=int, default=3)
     parser.add_argument("--max_tokens", "--max-tokens", type=int, default=1024)
+    parser.add_argument(
+        "--task-timeout-seconds",
+        type=int,
+        default=0,
+        help="Abort one task after this many seconds (0 disables).",
+    )
 
     parser.add_argument("--domain", type=str, default="all")
     parser.add_argument(
@@ -194,6 +203,41 @@ def _has_client_error(example_result_dir: str) -> bool:
     return False
 
 
+class TaskTimeoutError(TimeoutError):
+    pass
+
+
+class task_timeout:
+    def __init__(self, seconds: int, label: str) -> None:
+        self.seconds = int(seconds or 0)
+        self.label = label
+        self.previous_handler = None
+
+    def __enter__(self):
+        if self.seconds <= 0:
+            return self
+        if threading.current_thread() is not threading.main_thread():
+            logger.warning(
+                "Task timeout disabled for %s because signal timers only work in the main thread",
+                self.label,
+            )
+            self.seconds = 0
+            return self
+        self.previous_handler = signal.getsignal(signal.SIGALRM)
+        signal.signal(signal.SIGALRM, self._handle_timeout)
+        signal.setitimer(signal.ITIMER_REAL, self.seconds)
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        if self.seconds > 0:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+            signal.signal(signal.SIGALRM, self.previous_handler)
+        return False
+
+    def _handle_timeout(self, signum, frame):
+        raise TaskTimeoutError(f"task timed out after {self.seconds}s: {self.label}")
+
+
 def run_one_example(
     args: argparse.Namespace,
     domain: str,
@@ -242,6 +286,7 @@ def run_one_example(
 
     env = None
     try:
+        timeout_label = f"{domain}/{example_id}"
         env = DesktopEnv(
             action_space="pyautogui",
             provider_name="docker_server",
@@ -250,18 +295,23 @@ def run_one_example(
         )
         scores_local: List[float] = []
         try:
-            lib_run_single.run_single_example(
-                agent,
-                env,
-                example,
-                args.max_steps,
-                instruction,
-                args,
-                example_result_dir,
-                scores_local,
-            )
+            with task_timeout(args.task_timeout_seconds, timeout_label):
+                lib_run_single.run_single_example(
+                    agent,
+                    env,
+                    example,
+                    args.max_steps,
+                    instruction,
+                    args,
+                    example_result_dir,
+                    scores_local,
+                )
             status = "success"
         except Exception as exc:
+            if isinstance(exc, TaskTimeoutError):
+                stack_path = os.path.join(example_result_dir, "timeout_stack.txt")
+                with open(stack_path, "w", encoding="utf-8") as stack_file:
+                    faulthandler.dump_traceback(file=stack_file, all_threads=True)
             logger.error(f"Exception in {domain}/{example_id}: {exc}")
             with open(os.path.join(example_result_dir, "traj.jsonl"), "a", encoding="utf-8") as file_obj:
                 file_obj.write(json.dumps({"Error": f"Exception in {domain}/{example_id}: {str(exc)}"}))

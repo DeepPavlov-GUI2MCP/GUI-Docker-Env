@@ -64,11 +64,22 @@ def run_single_example(agent, env, example, max_steps, instruction, args, exampl
         agent.reset()
 
     reset_example, preflight_params = example_for_reset_with_deferred_preflight(example)
+    logger.info("Task reset starting")
     env.reset(task_config=reset_example)
+    logger.info("Task reset finished")
 
+    logger.info("Initial environment settle sleep starting")
     time.sleep(60) # Wait for the environment to be ready
+    logger.info("Initial environment settle sleep finished")
+    logger.info("Initial observation capture starting")
     obs = env._get_obs()
+    logger.info(
+        "Initial observation capture finished (screenshot=%s, a11y=%s)",
+        bool(obs.get("screenshot")),
+        bool(obs.get("accessibility_tree")),
+    )
     initial_timestamp = datetime.datetime.now().strftime("%Y%m%d@%H%M%S")
+    logger.info("Initial artifact recording starting")
     record_eval_step(
         example_result_dir,
         1,
@@ -77,29 +88,42 @@ def run_single_example(agent, env, example, max_steps, instruction, args, exampl
         env,
         action=None,
     )
+    logger.info("Initial artifact recording finished")
     artifact_step = 1
 
     if preflight_params is not None:
+        logger.info("Deferred a11y preflight starting (%d steps)", len(preflight_params.get("steps", [])))
         artifact_step = _run_deferred_a11y_preflight(
             env,
             example_result_dir,
             preflight_params,
             artifact_step=artifact_step,
         )
+        logger.info("Deferred a11y preflight finished at artifact step %d", artifact_step)
+        logger.info("Post-preflight observation capture starting")
         obs = env._get_obs()
+        logger.info(
+            "Post-preflight observation capture finished (screenshot=%s, a11y=%s)",
+            bool(obs.get("screenshot")),
+            bool(obs.get("accessibility_tree")),
+        )
 
     done = False
     step_idx = 0
     # env.controller.start_recording()
     while not done and step_idx < max_steps:
+        logger.info("Agent predict starting at loop step %d", step_idx + 1)
         response, actions = agent.predict(
             instruction,
             obs
         )
+        logger.info("Agent predict finished at loop step %d with %d action(s)", step_idx + 1, len(actions))
         for action in actions:
             # Capture the timestamp before executing the action
             action_timestamp = datetime.datetime.now().strftime("%Y%m%d@%H%M%S")
+            logger.info("Environment step starting for artifact step %d", artifact_step + 1)
             obs, reward, done, info = env.step(action, args.sleep_after_execution)
+            logger.info("Environment step finished for artifact step %d", artifact_step + 1)
             artifact_step += 1
             logger.info("Step %d: %s", artifact_step, action)
             logger.info("Reward: %.2f", reward)
