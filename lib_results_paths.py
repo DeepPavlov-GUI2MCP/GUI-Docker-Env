@@ -4,6 +4,7 @@ from pathlib import Path
 
 RESULTS_ROOT_NAME = "results"
 IMAGES_ZIP_NAME = "images.zip"
+RUN_ZIP_NAME = "run.zip"
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg"}
 
 

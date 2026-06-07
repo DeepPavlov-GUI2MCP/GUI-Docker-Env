@@ -7,11 +7,15 @@ from pathlib import Path
 
 from huggingface_hub import HfApi
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from lib_results_paths import RUN_ZIP_NAME  # noqa: E402
+
 
 DEFAULT_REPO_ID = "tony-pitchblack/dart-gui.GUI-Docker-Env.results"
 DEFAULT_RESULTS_GLOB = "GUI-Docker-Env/results/results*"
 GITATTRIBUTES_SOURCE = Path(__file__).resolve().parents[1] / "results" / ".gitattributes"
 DEFAULT_IGNORE_PATTERNS = ["**/*.png", "**/*.jpg", "**/*.jpeg"]
+ARCHIVED_ALLOW_PATTERNS = [RUN_ZIP_NAME]
 WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -148,13 +152,23 @@ def upload_gitattributes(api: HfApi, args: argparse.Namespace) -> None:
     )
 
 
-def upload_folders(args: argparse.Namespace, folders: list[Path]) -> int:
-    api = HfApi()
-    failures = 0
-    allow_patterns = args.include or None
+def upload_patterns_for_folder(folder: Path, args: argparse.Namespace) -> tuple[list[str] | None, list[str] | None]:
+    if args.include:
+        ignore_patterns = list(DEFAULT_IGNORE_PATTERNS)
+        if args.exclude:
+            ignore_patterns.extend(args.exclude)
+        return args.include, ignore_patterns
+    if (folder / RUN_ZIP_NAME).is_file():
+        return ARCHIVED_ALLOW_PATTERNS, None
     ignore_patterns = list(DEFAULT_IGNORE_PATTERNS)
     if args.exclude:
         ignore_patterns.extend(args.exclude)
+    return None, ignore_patterns
+
+
+def upload_folders(args: argparse.Namespace, folders: list[Path]) -> int:
+    api = HfApi()
+    failures = 0
 
     if not args.dry_run:
         try:
@@ -166,9 +180,11 @@ def upload_folders(args: argparse.Namespace, folders: list[Path]) -> int:
     for folder in folders:
         repo_path = relative_repo_path(folder)
         commit_message = args.commit_message or f"Upload {repo_path}"
+        allow_patterns, ignore_patterns = upload_patterns_for_folder(folder, args)
 
         if args.dry_run:
-            print(f"DRY RUN {repo_path}")
+            mode = RUN_ZIP_NAME if allow_patterns == ARCHIVED_ALLOW_PATTERNS else "loose"
+            print(f"DRY RUN {repo_path} ({mode})")
             continue
 
         try:

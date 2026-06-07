@@ -543,6 +543,7 @@ def get_result(
 if __name__ == "__main__":
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     args = config()
+    args.result_dir = normalize_result_dir(args.result_dir)
     os.environ["OSWORLD_TOKEN"] = args.token
     os.environ["OSWORLD_BASE_URL"] = args.base_url
 

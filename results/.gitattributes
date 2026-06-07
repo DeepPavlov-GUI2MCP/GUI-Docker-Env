@@ -1,4 +1,4 @@
-# Screenshots are archived in per-run images.zip files.
+# Screenshots and trajectory artifacts live in per-run run.zip on the Hub.
 # Do not commit loose PNG/JPG files to the Hub dataset.
 *.png export-ignore
 *.jpg export-ignore
