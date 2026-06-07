@@ -8,7 +8,7 @@ from pathlib import Path
 from huggingface_hub import HfApi
 
 
-DEFAULT_REPO_ID = "tony-pitchblack/dart-gui-eval-rollouts"
+DEFAULT_REPO_ID = "tony-pitchblack/dart-gui.GUI-Docker-Env"
 DEFAULT_RESULTS_GLOB = "GUI-Docker-Env/results*"
 WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 
@@ -94,7 +94,11 @@ def list_result_folders() -> list[Path]:
 
 
 def relative_repo_path(folder: Path) -> str:
-    return folder.relative_to(WORKSPACE_ROOT).as_posix()
+    repo_path = folder.relative_to(WORKSPACE_ROOT).as_posix()
+    prefix = "GUI-Docker-Env/"
+    if repo_path.startswith(prefix):
+        return repo_path[len(prefix) :]
+    return repo_path
 
 
 def collect_folders(args: argparse.Namespace) -> tuple[list[Path], list[str]]:
