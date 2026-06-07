@@ -15,6 +15,19 @@ from lib_eval_artifacts import (
 logger = logging.getLogger("desktopenv.experiment")
 
 
+def _record_desktop_host(env, example_result_dir: str) -> None:
+    provider = getattr(env, "provider", None)
+    if provider is None:
+        return
+    server_ip = getattr(provider, "remote_docker_server_ip", None)
+    server_port = getattr(provider, "remote_docker_server_port", None)
+    if not server_ip or not server_port:
+        return
+    host_path = os.path.join(example_result_dir, "host.txt")
+    with open(host_path, "w", encoding="utf-8") as file_obj:
+        file_obj.write(f"{server_ip}:{server_port}\n")
+
+
 def _run_deferred_a11y_preflight(
     env,
     example_result_dir: str,
@@ -66,6 +79,7 @@ def run_single_example(agent, env, example, max_steps, instruction, args, exampl
     reset_example, preflight_params = example_for_reset_with_deferred_preflight(example)
     logger.info("Task reset starting")
     env.reset(task_config=reset_example)
+    _record_desktop_host(env, example_result_dir)
     logger.info("Task reset finished")
 
     logger.info("Initial environment settle sleep starting")
