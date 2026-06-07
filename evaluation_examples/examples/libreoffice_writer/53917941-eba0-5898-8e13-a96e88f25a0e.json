@@ -1,0 +1,107 @@
+{
+  "id": "53917941-eba0-5898-8e13-a96e88f25a0e",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Highlight the selected phrase with the Character Highlighting Color button.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/highlighted_text__sample_recruitment_phone_script.odt",
+            "path": "/home/user/Desktop/synthetic_writer_53917941eba058988e13a96e88f25a0e.odt"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_53917941eba058988e13a96e88f25a0e.odt"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_53917941eba058988e13a96e88f25a0e.odt - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "cc71148a841f4d55",
+    "task_type": "selection_transform",
+    "task_index": 1,
+    "expected_outcome": "The selected phrase is highlighted with the active highlighting color.",
+    "preconditions": {
+      "description": "A short phrase within a paragraph is selected and is not already highlighted.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Paragraph containing a 2-4 word selected phrase"
+        },
+        {
+          "key": "selection_state",
+          "value": "Phrase selected"
+        },
+        {
+          "key": "current_highlight",
+          "value": "No existing highlight on selection"
+        }
+      ]
+    },
+    "fixture": "highlighted_text__sample_recruitment_phone_script.odt",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_53917941eba058988e13a96e88f25a0e.odt",
+    "window_name": "synthetic_writer_53917941eba058988e13a96e88f25a0e.odt - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_53917941eba058988e13a96e88f25a0e.odt - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "6ed5a452-5f0e-535d-87ca-072e2bea06d4",
+  "task_id": "6ed5a452-5f0e-535d-87ca-072e2bea06d4",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use the Field button to insert a page count field into the current document.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "593074c8035800ee",
+    "task_type": "insert_at_cursor",
+    "task_index": 7,
+    "expected_outcome": "A page count field appears in the body area.",
+    "preconditions": {
+      "description": "The document is empty and the cursor is active in the text area.",
+      "extras": [
+        {
+          "key": "field_target",
+          "value": "Page count"
+        },
+        {
+          "key": "document_state",
+          "value": "No existing text"
+        }
+      ]
+    }
+  }
+}

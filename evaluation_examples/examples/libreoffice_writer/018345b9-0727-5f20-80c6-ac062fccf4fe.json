@@ -1,0 +1,36 @@
+{
+  "id": "018345b9-0727-5f20-80c6-ac062fccf4fe",
+  "task_id": "018345b9-0727-5f20-80c6-ac062fccf4fe",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a medium-sized table for notes, using the Table button.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "e42a806420f3e1b7",
+    "task_type": "insert_at_cursor",
+    "task_index": 6,
+    "expected_outcome": "A table is inserted into the document at the current insertion point.",
+    "preconditions": {
+      "description": "The body of the document is editable and currently empty.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "empty document"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

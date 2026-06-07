@@ -1,0 +1,107 @@
+{
+  "id": "e05588a2-b86b-529f-a696-3ce78f35dacd",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a comment at the current insertion point.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/short_paragraph__dublin_zoo_intro.docx",
+            "path": "/home/user/Desktop/synthetic_writer_e05588a2b86b529fa6963ce78f35dacd.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_e05588a2b86b529fa6963ce78f35dacd.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_e05588a2b86b529fa6963ce78f35dacd.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "873741bc22e18be9",
+    "task_type": "review_commenting",
+    "task_index": 0,
+    "expected_outcome": "A new comment is created and attached at the current cursor location, opening comment entry UI.",
+    "preconditions": {
+      "description": "The document contains text, no modal dialog is open, and no text is selected.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "One paragraph of report text"
+        },
+        {
+          "key": "selection_state",
+          "value": "No selection"
+        },
+        {
+          "key": "dialog_state",
+          "value": "No modal dialog open"
+        }
+      ]
+    },
+    "fixture": "short_paragraph__dublin_zoo_intro.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_e05588a2b86b529fa6963ce78f35dacd.docx",
+    "window_name": "synthetic_writer_e05588a2b86b529fa6963ce78f35dacd.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_e05588a2b86b529fa6963ce78f35dacd.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

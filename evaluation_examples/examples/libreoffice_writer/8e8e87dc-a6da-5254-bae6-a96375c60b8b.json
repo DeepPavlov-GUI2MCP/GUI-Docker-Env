@@ -1,0 +1,36 @@
+{
+  "id": "8e8e87dc-a6da-5254-bae6-a96375c60b8b",
+  "task_id": "8e8e87dc-a6da-5254-bae6-a96375c60b8b",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Change the highlight color of the selected phrase to green.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "cc71148a841f4d55",
+    "task_type": "selection_transform",
+    "task_index": 1,
+    "expected_outcome": "The selected phrase is highlighted with a green character background color.",
+    "preconditions": {
+      "description": "A phrase is currently selected in the Writer document.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "contiguous text"
+        },
+        {
+          "key": "existing_highlight",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

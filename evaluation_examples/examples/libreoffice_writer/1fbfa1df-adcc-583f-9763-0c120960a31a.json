@@ -1,0 +1,107 @@
+{
+  "id": "1fbfa1df-adcc-583f-9763-0c120960a31a",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a text box into the document using the Text Box button.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_1fbfa1dfadcc583f97630c120960a31a.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_1fbfa1dfadcc583f97630c120960a31a.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_1fbfa1dfadcc583f97630c120960a31a.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "d7fbf65f004a5243",
+    "task_type": "insert_at_cursor",
+    "task_index": 0,
+    "expected_outcome": "A new text box object is inserted into the document and becomes visible.",
+    "preconditions": {
+      "description": "The document is open with enough empty page space to place a drawing object.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Blank page or minimal text"
+        },
+        {
+          "key": "selection_state",
+          "value": "No text selected"
+        },
+        {
+          "key": "existing_objects",
+          "value": "No text box present"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_1fbfa1dfadcc583f97630c120960a31a.docx",
+    "window_name": "synthetic_writer_1fbfa1dfadcc583f97630c120960a31a.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_1fbfa1dfadcc583f97630c120960a31a.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

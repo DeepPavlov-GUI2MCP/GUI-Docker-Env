@@ -9,7 +9,7 @@
       "parameters": {
         "files": [
           {
-            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list.docx",
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list__ccch9003_tutorial_guidelines.docx",
             "path": "/home/user/Desktop/synthetic_writer_81643082be415d2faeac7f2941a3ad79.docx"
           }
         ]
@@ -148,7 +148,7 @@
   },
   "synthetic": {
     "source": "gui_distillation.microaction_tasks",
-    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/014013af658a/20260606T221358Z",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/014013af658a/20260606T221358Z",
     "macro_state_id": "014013af658a",
     "micro_action_id": "ab274e8486f9049f",
     "task_type": "dialog_open",
@@ -171,7 +171,7 @@
         }
       ]
     },
-    "fixture": "bulleted_list.docx",
+    "fixture": "bulleted_list__ccch9003_tutorial_guidelines.docx",
     "vm_document_path": "/home/user/Desktop/synthetic_writer_81643082be415d2faeac7f2941a3ad79.docx",
     "window_name": "synthetic_writer_81643082be415d2faeac7f2941a3ad79.docx - LibreOffice Writer",
     "macrostate_setup": {

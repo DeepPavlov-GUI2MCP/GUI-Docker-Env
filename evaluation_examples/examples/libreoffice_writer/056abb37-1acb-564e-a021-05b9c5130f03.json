@@ -9,7 +9,7 @@
       "parameters": {
         "files": [
           {
-            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/short_paragraph.docx",
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/short_paragraph__dublin_zoo_intro.docx",
             "path": "/home/user/Desktop/synthetic_writer_056abb371acb564ea02105b9c5130f03.docx"
           }
         ]
@@ -63,7 +63,7 @@
   },
   "synthetic": {
     "source": "gui_distillation.microaction_tasks",
-    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
     "macro_state_id": "36427b830db2",
     "micro_action_id": "840cc918ba7d67e7",
     "task_type": "document_analysis",
@@ -86,7 +86,7 @@
         }
       ]
     },
-    "fixture": "short_paragraph.docx",
+    "fixture": "short_paragraph__dublin_zoo_intro.docx",
     "vm_document_path": "/home/user/Desktop/synthetic_writer_056abb371acb564ea02105b9c5130f03.docx",
     "window_name": "synthetic_writer_056abb371acb564ea02105b9c5130f03.docx - LibreOffice Writer",
     "macrostate_setup": {

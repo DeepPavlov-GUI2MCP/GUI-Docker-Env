@@ -1,0 +1,103 @@
+{
+  "id": "6a840340-5169-598f-91d0-19b2c7f4754d",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check whether Paste can be used from the visible toolbar without attempting to activate it.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_6a8403405169598f91d019b2c7f4754d.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_6a8403405169598f91d019b2c7f4754d.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_6a8403405169598f91d019b2c7f4754d.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "92242585e52a5771",
+    "task_type": "availability_check",
+    "task_index": 1,
+    "expected_outcome": "The agent confirms the Paste button is disabled and leaves the document unchanged.",
+    "preconditions": {
+      "description": "The document window is in its initial blank state and the Paste toolbar control is greyed out.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "empty document"
+        },
+        {
+          "key": "verification_target",
+          "value": "Paste toolbar button"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_6a8403405169598f91d019b2c7f4754d.docx",
+    "window_name": "synthetic_writer_6a8403405169598f91d019b2c7f4754d.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_6a8403405169598f91d019b2c7f4754d.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

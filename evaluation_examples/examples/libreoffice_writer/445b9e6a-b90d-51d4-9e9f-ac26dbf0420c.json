@@ -1,0 +1,36 @@
+{
+  "id": "445b9e6a-b90d-51d4-9e9f-ac26dbf0420c",
+  "task_id": "445b9e6a-b90d-51d4-9e9f-ac26dbf0420c",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Place an image into the document using the image toolbar button so the page gains a picture element.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5398a209dce824da",
+    "task_type": "insert_at_cursor",
+    "task_index": 4,
+    "expected_outcome": "A picture is inserted into the current document page.",
+    "preconditions": {
+      "description": "LibreOffice Writer shows a blank document with no text or objects.",
+      "extras": [
+        {
+          "key": "ui_state",
+          "value": "Image button available on toolbar"
+        },
+        {
+          "key": "document_state",
+          "value": "Empty page"
+        }
+      ]
+    }
+  }
+}

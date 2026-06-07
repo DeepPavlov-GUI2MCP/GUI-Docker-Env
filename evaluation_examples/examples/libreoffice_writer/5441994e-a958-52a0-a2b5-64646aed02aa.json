@@ -1,0 +1,36 @@
+{
+  "id": "5441994e-a958-52a0-a2b5-64646aed02aa",
+  "task_id": "5441994e-a958-52a0-a2b5-64646aed02aa",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Change the color of the selected heading text to dark green.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "604a561290a440d7",
+    "task_type": "selection_transform",
+    "task_index": 2,
+    "expected_outcome": "The selected heading becomes dark green without altering surrounding text.",
+    "preconditions": {
+      "description": "The document contains a heading and it is selected.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "Heading line selected"
+        },
+        {
+          "key": "existing_formatting",
+          "value": "Heading uses default font color"
+        }
+      ]
+    }
+  }
+}

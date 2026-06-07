@@ -1,0 +1,103 @@
+{
+  "id": "a4733dc1-c5bd-56f8-ac02-ace8d5d1f743",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Click Unordered List to start a bulleted list for upcoming lines.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list__ccch9003_tutorial_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_a4733dc1c5bd56f8ac02ace8d5d1f743.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_a4733dc1c5bd56f8ac02ace8d5d1f743.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_a4733dc1c5bd56f8ac02ace8d5d1f743.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "51ced5784ca04890",
+    "task_type": "cursor_format_toggle",
+    "task_index": 0,
+    "expected_outcome": "Bulleted list mode is enabled for the current paragraph so new input will appear as list items.",
+    "preconditions": {
+      "description": "The insertion point is in an empty paragraph with no text selected, and list mode is currently off.",
+      "extras": [
+        {
+          "key": "selection_state",
+          "value": "No selection"
+        },
+        {
+          "key": "list_state",
+          "value": "Not currently in an unordered list"
+        }
+      ]
+    },
+    "fixture": "bulleted_list__ccch9003_tutorial_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_a4733dc1c5bd56f8ac02ace8d5d1f743.docx",
+    "window_name": "synthetic_writer_a4733dc1c5bd56f8ac02ace8d5d1f743.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_a4733dc1c5bd56f8ac02ace8d5d1f743.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

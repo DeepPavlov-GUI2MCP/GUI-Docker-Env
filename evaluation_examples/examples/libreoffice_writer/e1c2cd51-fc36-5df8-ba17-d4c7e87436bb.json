@@ -1,0 +1,94 @@
+{
+  "id": "e1c2cd51-fc36-5df8-ba17-d4c7e87436bb",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Turn italic on.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_e1c2cd51fc365df8ba17d4c7e87436bb.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_e1c2cd51fc365df8ba17d4c7e87436bb.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_e1c2cd51fc365df8ba17d4c7e87436bb.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-test/36427b830db2/20260606T999999Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "070b4298960c7e57",
+    "task_type": "cursor_format_toggle",
+    "task_index": 0,
+    "expected_outcome": "Text is italic.",
+    "preconditions": {
+      "description": "blank doc",
+      "extras": []
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_e1c2cd51fc365df8ba17d4c7e87436bb.docx",
+    "window_name": "synthetic_writer_e1c2cd51fc365df8ba17d4c7e87436bb.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_e1c2cd51fc365df8ba17d4c7e87436bb.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

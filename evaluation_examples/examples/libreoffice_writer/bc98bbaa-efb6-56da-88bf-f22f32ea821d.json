@@ -1,0 +1,147 @@
+{
+  "id": "bc98bbaa-efb6-56da-88bf-f22f32ea821d",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check whether Caption... can be activated from the Insert menu, without attempting to use it.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_bc98bbaaefb656da88bff22f32ea821d.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_bc98bbaaefb656da88bff22f32ea821d.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_bc98bbaaefb656da88bff22f32ea821d.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Insert"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:1586a91a7495c7bb",
+              "role": "menu",
+              "name": "Insert",
+              "recorded_bbox": [
+                185,
+                50,
+                53,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Insert",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/f7a7a6e1ff4f/20260606T225304Z",
+    "macro_state_id": "f7a7a6e1ff4f",
+    "micro_action_id": "435951b3dd094d8b",
+    "task_type": "availability_check",
+    "task_index": 1,
+    "expected_outcome": "It is verified that Caption... is not available for activation.",
+    "preconditions": {
+      "description": "A Writer document is active with the Insert menu expanded and Caption... shown greyed out.",
+      "extras": [
+        {
+          "key": "visibility",
+          "value": "visible"
+        },
+        {
+          "key": "appearance",
+          "value": "greyed out"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_bc98bbaaefb656da88bff22f32ea821d.docx",
+    "window_name": "synthetic_writer_bc98bbaaefb656da88bff22f32ea821d.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "f7a7a6e1ff4f",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:1586a91a7495c7bb",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Insert",
+          "bbox": [
+            185,
+            50,
+            53,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Insert"
+      },
+      "window_name": "synthetic_writer_bc98bbaaefb656da88bff22f32ea821d.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    }
+  }
+}

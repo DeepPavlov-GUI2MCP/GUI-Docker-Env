@@ -1,0 +1,36 @@
+{
+  "id": "cd110fbd-43bc-5123-aa05-c5cccfa5be0f",
+  "task_id": "cd110fbd-43bc-5123-aa05-c5cccfa5be0f",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Place a user-defined field into the document via the Field command.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "593074c8035800ee",
+    "task_type": "insert_at_cursor",
+    "task_index": 6,
+    "expected_outcome": "The custom field is added at the insertion point.",
+    "preconditions": {
+      "description": "A blank untitled document is ready for editing.",
+      "extras": [
+        {
+          "key": "field_target",
+          "value": "User-defined field"
+        },
+        {
+          "key": "selection",
+          "value": "No object selected"
+        }
+      ]
+    }
+  }
+}

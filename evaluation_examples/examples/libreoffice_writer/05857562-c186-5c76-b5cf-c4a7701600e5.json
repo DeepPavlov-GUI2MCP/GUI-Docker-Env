@@ -1,0 +1,36 @@
+{
+  "id": "05857562-c186-5c76-b5cf-c4a7701600e5",
+  "task_id": "05857562-c186-5c76-b5cf-c4a7701600e5",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Apply center alignment to the selected line of text.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "b348558447d37705",
+    "task_type": "paragraph_layout",
+    "task_index": 1,
+    "expected_outcome": "The selected line is displayed centered between the margins.",
+    "preconditions": {
+      "description": "The document contains a line of body text selected for formatting.",
+      "extras": [
+        {
+          "key": "existing_alignment",
+          "value": "left or justified"
+        },
+        {
+          "key": "document_contents",
+          "value": "text present"
+        }
+      ]
+    }
+  }
+}

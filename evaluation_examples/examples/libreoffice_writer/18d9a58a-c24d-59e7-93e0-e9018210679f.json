@@ -1,0 +1,36 @@
+{
+  "id": "18d9a58a-c24d-59e7-93e0-e9018210679f",
+  "task_id": "18d9a58a-c24d-59e7-93e0-e9018210679f",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Turn on the Right alignment button and then type a short sentence.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5efd2b6e31938559",
+    "task_type": "paragraph_layout",
+    "task_index": 1,
+    "expected_outcome": "The typed sentence appears right-aligned in the current paragraph.",
+    "preconditions": {
+      "description": "A blank Writer document is ready for input and the alignment toolbar is available.",
+      "extras": [
+        {
+          "key": "typing_state",
+          "value": "Ready to enter text"
+        },
+        {
+          "key": "current_alignment",
+          "value": "Not right aligned"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "id": "fd935010-d99e-5d10-9b97-c482d6a84cd3",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use Decrease Indent for the selected example paragraph.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_fd935010d99e5d109b97c482d6a84cd3.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_fd935010d99e5d109b97c482d6a84cd3.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_fd935010d99e5d109b97c482d6a84cd3.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Format"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:09346a8f4b7dda04",
+              "role": "menu",
+              "name": "Format",
+              "recorded_bbox": [
+                238,
+                50,
+                62,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Spacing"
+            },
+            "meta": {
+              "edge_id": "32f76b8b1d9d:6219b4a1a50f3c9c",
+              "role": "menu",
+              "name": "Spacing",
+              "recorded_bbox": [
+                238,
+                100,
+                268,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Spacing",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/d967cc28908e/20260606T225303Z",
+    "macro_state_id": "d967cc28908e",
+    "micro_action_id": "05951645921ab904",
+    "task_type": "paragraph_layout",
+    "task_index": 9,
+    "expected_outcome": "The example paragraph's left indent decreases by one menu action increment.",
+    "preconditions": {
+      "description": "A paragraph containing an example sentence is selected and has left indentation already applied.",
+      "extras": [
+        {
+          "key": "selection_scope",
+          "value": "single example paragraph"
+        },
+        {
+          "key": "initial_indent_state",
+          "value": "already indented"
+        },
+        {
+          "key": "text_structure",
+          "value": "not inside table"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_fd935010d99e5d109b97c482d6a84cd3.docx",
+    "window_name": "synthetic_writer_fd935010d99e5d109b97c482d6a84cd3.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "d967cc28908e",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:09346a8f4b7dda04",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Format",
+          "bbox": [
+            238,
+            50,
+            62,
+            25
+          ]
+        },
+        {
+          "edge_id": "32f76b8b1d9d:6219b4a1a50f3c9c",
+          "from_state": "32f76b8b1d9d",
+          "role": "menu",
+          "name": "Spacing",
+          "bbox": [
+            238,
+            100,
+            268,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Spacing"
+      },
+      "window_name": "synthetic_writer_fd935010d99e5d109b97c482d6a84cd3.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "02668043-7ef0-5d0f-8628-cb625418fa65",
+  "task_id": "02668043-7ef0-5d0f-8628-cb625418fa65",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open a new comment anchored to the active selection.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "873741bc22e18be9",
+    "task_type": "review_commenting",
+    "task_index": 8,
+    "expected_outcome": "A comment editor appears for entering review notes.",
+    "preconditions": {
+      "description": "The selection is active in the document.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "active selection"
+        },
+        {
+          "key": "document_state",
+          "value": "editable document"
+        }
+      ]
+    }
+  }
+}

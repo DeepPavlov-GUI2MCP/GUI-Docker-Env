@@ -1,0 +1,36 @@
+{
+  "id": "63fb6b1c-bf01-520f-aace-3d535481d12d",
+  "task_id": "63fb6b1c-bf01-520f-aace-3d535481d12d",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Activate the Right alignment toggle so any new paragraph starts at the right margin.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5efd2b6e31938559",
+    "task_type": "paragraph_layout",
+    "task_index": 4,
+    "expected_outcome": "The right-align toggle remains active and future paragraphs are right aligned.",
+    "preconditions": {
+      "description": "The document canvas is open with visible formatting controls.",
+      "extras": [
+        {
+          "key": "toolbar_state",
+          "value": "Alignment buttons visible"
+        },
+        {
+          "key": "document_state",
+          "value": "Empty document"
+        }
+      ]
+    }
+  }
+}

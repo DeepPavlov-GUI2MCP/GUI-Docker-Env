@@ -1,0 +1,190 @@
+{
+  "id": "1be4885f-5a99-577b-9234-2d95a123acf2",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Activate the Save as Template... command.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/image_anchor__viewing_your_class_schedule_and_textbooks.docx",
+            "path": "/home/user/Desktop/synthetic_writer_1be4885f5a99577b92342d95a123acf2.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_1be4885f5a99577b92342d95a123acf2.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_1be4885f5a99577b92342d95a123acf2.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "File"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:bb08184c0b3835ee",
+              "role": "menu",
+              "name": "File",
+              "recorded_bbox": [
+                57,
+                50,
+                39,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Templates"
+            },
+            "meta": {
+              "edge_id": "e65903c8fc2b:b551cb0a4cd566ae",
+              "role": "menu",
+              "name": "Templates",
+              "recorded_bbox": [
+                57,
+                226,
+                302,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Templates",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/1c6d5d3a1094/20260606T225258Z",
+    "macro_state_id": "1c6d5d3a1094",
+    "micro_action_id": "ae080cbe2e67666e",
+    "task_type": "dialog_open",
+    "task_index": 4,
+    "expected_outcome": "A dialog opens that allows the user to define template metadata before saving.",
+    "preconditions": {
+      "description": "The menu state matches the screenshot, with Templates expanded and Save as Template... listed between Edit Template... and Manage Templates.",
+      "extras": [
+        {
+          "key": "item_position",
+          "value": "middle item"
+        },
+        {
+          "key": "neighbor_items",
+          "value": "Edit Template... above, Manage Templates below"
+        },
+        {
+          "key": "window_title",
+          "value": "Untitled 1 - LibreOffice Writer"
+        }
+      ]
+    },
+    "fixture": "image_anchor__viewing_your_class_schedule_and_textbooks.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_1be4885f5a99577b92342d95a123acf2.docx",
+    "window_name": "synthetic_writer_1be4885f5a99577b92342d95a123acf2.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "1c6d5d3a1094",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:bb08184c0b3835ee",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "File",
+          "bbox": [
+            57,
+            50,
+            39,
+            25
+          ]
+        },
+        {
+          "edge_id": "e65903c8fc2b:b551cb0a4cd566ae",
+          "from_state": "e65903c8fc2b",
+          "role": "menu",
+          "name": "Templates",
+          "bbox": [
+            57,
+            226,
+            302,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Templates"
+      },
+      "window_name": "synthetic_writer_1be4885f5a99577b92342d95a123acf2.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    }
+  }
+}

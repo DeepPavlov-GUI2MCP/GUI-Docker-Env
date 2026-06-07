@@ -1,0 +1,36 @@
+{
+  "id": "a349af11-e5df-56c9-a9cf-8c64f6f39824",
+  "task_id": "a349af11-e5df-56c9-a9cf-8c64f6f39824",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a 3-column by 2-row table at the cursor position.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "e42a806420f3e1b7",
+    "task_type": "insert_at_cursor",
+    "task_index": 0,
+    "expected_outcome": "A new table with 3 columns and 2 rows is inserted into the document.",
+    "preconditions": {
+      "description": "Blank document with an active cursor in the body text area.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "empty document"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

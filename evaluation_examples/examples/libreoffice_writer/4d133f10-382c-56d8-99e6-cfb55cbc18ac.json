@@ -1,0 +1,36 @@
+{
+  "id": "4d133f10-382c-56d8-99e6-cfb55cbc18ac",
+  "task_id": "4d133f10-382c-56d8-99e6-cfb55cbc18ac",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Enable the formatting marks toggle so paragraph symbols and spaces are shown.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "bc2a95014408bc56",
+    "task_type": "cursor_format_toggle",
+    "task_index": 2,
+    "expected_outcome": "The toggle is activated and formatting marks become visible.",
+    "preconditions": {
+      "description": "The Writer window is open on a blank or text document.",
+      "extras": [
+        {
+          "key": "toolbar_state",
+          "value": "Formatting marks button available"
+        },
+        {
+          "key": "marks_visible",
+          "value": "off"
+        }
+      ]
+    }
+  }
+}

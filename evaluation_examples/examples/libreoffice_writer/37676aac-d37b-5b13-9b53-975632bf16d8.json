@@ -1,0 +1,36 @@
+{
+  "id": "37676aac-d37b-5b13-9b53-975632bf16d8",
+  "task_id": "37676aac-d37b-5b13-9b53-975632bf16d8",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add an inline comment to the selected passage.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "873741bc22e18be9",
+    "task_type": "review_commenting",
+    "task_index": 7,
+    "expected_outcome": "The selected passage is annotated with a new comment.",
+    "preconditions": {
+      "description": "A passage of text is currently selected.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "passage selected"
+        },
+        {
+          "key": "comments",
+          "value": "available"
+        }
+      ]
+    }
+  }
+}

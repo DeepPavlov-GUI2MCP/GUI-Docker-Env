@@ -1,0 +1,186 @@
+{
+  "id": "6e499ddf-9a95-5442-964b-35c3b3197413",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open the break configuration window by clicking Manual Break....",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_6e499ddf9a955442964b35c3b3197413.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_6e499ddf9a955442964b35c3b3197413.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_6e499ddf9a955442964b35c3b3197413.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Insert"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:1586a91a7495c7bb",
+              "role": "menu",
+              "name": "Insert",
+              "recorded_bbox": [
+                185,
+                50,
+                53,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "More Breaks"
+            },
+            "meta": {
+              "edge_id": "f7a7a6e1ff4f:4798916a49a49356",
+              "role": "menu",
+              "name": "More Breaks",
+              "recorded_bbox": [
+                185,
+                100,
+                345,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "More Breaks",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/cd1d4499cd59/20260606T225302Z",
+    "macro_state_id": "cd1d4499cd59",
+    "micro_action_id": "887e5ed21f2c7201",
+    "task_type": "dialog_open",
+    "task_index": 2,
+    "expected_outcome": "The Manual Break dialog is shown instead of inserting a break immediately.",
+    "preconditions": {
+      "description": "The user is at the More Breaks menu level and no modal dialog is currently open.",
+      "extras": [
+        {
+          "key": "current_ui_layer",
+          "value": "menu"
+        },
+        {
+          "key": "modal_state",
+          "value": "none"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_6e499ddf9a955442964b35c3b3197413.docx",
+    "window_name": "synthetic_writer_6e499ddf9a955442964b35c3b3197413.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "cd1d4499cd59",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:1586a91a7495c7bb",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Insert",
+          "bbox": [
+            185,
+            50,
+            53,
+            25
+          ]
+        },
+        {
+          "edge_id": "f7a7a6e1ff4f:4798916a49a49356",
+          "from_state": "f7a7a6e1ff4f",
+          "role": "menu",
+          "name": "More Breaks",
+          "bbox": [
+            185,
+            100,
+            345,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "More Breaks"
+      },
+      "window_name": "synthetic_writer_6e499ddf9a955442964b35c3b3197413.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    }
+  }
+}

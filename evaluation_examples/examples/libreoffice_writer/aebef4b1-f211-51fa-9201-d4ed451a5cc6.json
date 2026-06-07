@@ -1,0 +1,36 @@
+{
+  "id": "aebef4b1-f211-51fa-9201-d4ed451a5cc6",
+  "task_id": "aebef4b1-f211-51fa-9201-d4ed451a5cc6",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add a chart to the document body without adding any text.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "ba32ff6c264a4cd3",
+    "task_type": "insert_at_cursor",
+    "task_index": 8,
+    "expected_outcome": "A chart object is inserted while the document remains otherwise blank.",
+    "preconditions": {
+      "description": "The document is open and ready for object insertion.",
+      "extras": [
+        {
+          "key": "typing_mode",
+          "value": "normal"
+        },
+        {
+          "key": "existing_objects",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

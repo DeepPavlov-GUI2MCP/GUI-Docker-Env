@@ -1,0 +1,36 @@
+{
+  "id": "7b94ff3e-1344-59f9-865b-18764544308b",
+  "task_id": "7b94ff3e-1344-59f9-865b-18764544308b",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Switch the current paragraph input into unordered list mode.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "51ced5784ca04890",
+    "task_type": "cursor_format_toggle",
+    "task_index": 9,
+    "expected_outcome": "The bullet list toggle becomes active for the current and following paragraphs.",
+    "preconditions": {
+      "description": "A blank Writer page is open with the cursor ready for input.",
+      "extras": [
+        {
+          "key": "typing_mode",
+          "value": "standard text"
+        },
+        {
+          "key": "selection",
+          "value": "collapsed cursor"
+        }
+      ]
+    }
+  }
+}

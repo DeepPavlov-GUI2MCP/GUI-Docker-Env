@@ -1,0 +1,103 @@
+{
+  "id": "515b8be2-638d-52d5-95c2-a40b6292d1f9",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Click Unordered List to start bullets in a fresh empty document paragraph.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_515b8be2638d52d595c2a40b6292d1f9.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_515b8be2638d52d595c2a40b6292d1f9.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_515b8be2638d52d595c2a40b6292d1f9.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "51ced5784ca04890",
+    "task_type": "cursor_format_toggle",
+    "task_index": 6,
+    "expected_outcome": "A bullet is applied to the current empty paragraph and future typing will continue as an unordered list item.",
+    "preconditions": {
+      "description": "The document is editable, the cursor is in the first empty paragraph, and nothing is selected.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Blank document or empty paragraph"
+        },
+        {
+          "key": "selection_state",
+          "value": "No selection"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_515b8be2638d52d595c2a40b6292d1f9.docx",
+    "window_name": "synthetic_writer_515b8be2638d52d595c2a40b6292d1f9.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_515b8be2638d52d595c2a40b6292d1f9.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

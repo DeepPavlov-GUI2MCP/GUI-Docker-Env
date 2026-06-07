@@ -1,0 +1,186 @@
+{
+  "id": "f5f79eda-ef70-584f-820e-28582014b325",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open the Zoom dialog from the View > Zoom submenu by selecting Zoom....",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_f5f79edaef70584f820e28582014b325.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_f5f79edaef70584f820e28582014b325.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_f5f79edaef70584f820e28582014b325.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "View"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:62630bf121555e87",
+              "role": "menu",
+              "name": "View",
+              "recorded_bbox": [
+                137,
+                50,
+                48,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Zoom"
+            },
+            "meta": {
+              "edge_id": "bd6f423fe87f:6a7b3b0949b544ae",
+              "role": "menu",
+              "name": "Zoom",
+              "recorded_bbox": [
+                137,
+                682,
+                296,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Zoom",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/bec5c2ab42e1/20260606T225301Z",
+    "macro_state_id": "bec5c2ab42e1",
+    "micro_action_id": "59bcaa6f8cb7116e",
+    "task_type": "dialog_open",
+    "task_index": 0,
+    "expected_outcome": "The Zoom dialog opens on top of the Writer window.",
+    "preconditions": {
+      "description": "A Writer document is open and the View > Zoom submenu is visible.",
+      "extras": [
+        {
+          "key": "current_menu_path",
+          "value": "View > Zoom"
+        },
+        {
+          "key": "dialog_open",
+          "value": "none"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_f5f79edaef70584f820e28582014b325.docx",
+    "window_name": "synthetic_writer_f5f79edaef70584f820e28582014b325.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "bec5c2ab42e1",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:62630bf121555e87",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "View",
+          "bbox": [
+            137,
+            50,
+            48,
+            25
+          ]
+        },
+        {
+          "edge_id": "bd6f423fe87f:6a7b3b0949b544ae",
+          "from_state": "bd6f423fe87f",
+          "role": "menu",
+          "name": "Zoom",
+          "bbox": [
+            137,
+            682,
+            296,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Zoom"
+      },
+      "window_name": "synthetic_writer_f5f79edaef70584f820e28582014b325.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    }
+  }
+}

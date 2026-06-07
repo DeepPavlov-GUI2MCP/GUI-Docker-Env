@@ -1,0 +1,194 @@
+{
+  "id": "cac736d7-e41a-5c04-9f7f-5b41583b0a96",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Reset the document properties shown on the General tab by clicking the \"Reset Properties\" button.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_cac736d7e41a5c049f7f5b41583b0a96.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_cac736d7e41a5c049f7f5b41583b0a96.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_cac736d7e41a5c049f7f5b41583b0a96.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "File"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:bb08184c0b3835ee",
+              "role": "menu",
+              "name": "File",
+              "recorded_bbox": [
+                57,
+                50,
+                39,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu item",
+              "name": "Properties..."
+            },
+            "meta": {
+              "edge_id": "e65903c8fc2b:e987f20d674ebecb",
+              "role": "menu item",
+              "name": "Properties...",
+              "recorded_bbox": [
+                57,
+                606,
+                302,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "dialog",
+              "name": "Properties of “Untitled 1”",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/8ae0e75d5d09/20260606T225300Z",
+    "macro_state_id": "8ae0e75d5d09",
+    "micro_action_id": "07c3799ecfd87a65",
+    "task_type": "document_analysis",
+    "task_index": 0,
+    "expected_outcome": "The tracked document metadata on the General tab is reset to defaults, such as revision number and total editing time returning to initial values and generated history fields being cleared where applicable.",
+    "preconditions": {
+      "description": "The Properties dialog for the current untitled Writer document is open on the General tab, and the document has accumulated non-default tracked properties.",
+      "extras": [
+        {
+          "key": "active_tab",
+          "value": "General"
+        },
+        {
+          "key": "revision_number",
+          "value": "12"
+        },
+        {
+          "key": "total_editing_time",
+          "value": "00:47:13"
+        },
+        {
+          "key": "last_printed",
+          "value": "06/03/2026, 22:10:00"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_cac736d7e41a5c049f7f5b41583b0a96.docx",
+    "window_name": "synthetic_writer_cac736d7e41a5c049f7f5b41583b0a96.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "8ae0e75d5d09",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:bb08184c0b3835ee",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "File",
+          "bbox": [
+            57,
+            50,
+            39,
+            25
+          ]
+        },
+        {
+          "edge_id": "e65903c8fc2b:e987f20d674ebecb",
+          "from_state": "e65903c8fc2b",
+          "role": "menu item",
+          "name": "Properties...",
+          "bbox": [
+            57,
+            606,
+            302,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "dialog",
+        "role": "dialog",
+        "name": "Properties of “Untitled 1”"
+      },
+      "window_name": "synthetic_writer_cac736d7e41a5c049f7f5b41583b0a96.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    }
+  }
+}

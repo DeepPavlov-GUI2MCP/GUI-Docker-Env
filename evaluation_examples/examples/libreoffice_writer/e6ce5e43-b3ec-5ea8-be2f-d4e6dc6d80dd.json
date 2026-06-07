@@ -1,0 +1,36 @@
+{
+  "id": "e6ce5e43-b3ec-5ea8-be2f-d4e6dc6d80dd",
+  "task_id": "e6ce5e43-b3ec-5ea8-be2f-d4e6dc6d80dd",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Press the Bold toggle so new input is bolded.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "7c845f4f60c21cc0",
+    "task_type": "cursor_format_toggle",
+    "task_index": 4,
+    "expected_outcome": "The toolbar Bold button becomes enabled/pressed for typing.",
+    "preconditions": {
+      "description": "Cursor is placed in an empty Writer document.",
+      "extras": [
+        {
+          "key": "current_formatting",
+          "value": "default style"
+        },
+        {
+          "key": "selection",
+          "value": "no selection"
+        }
+      ]
+    }
+  }
+}

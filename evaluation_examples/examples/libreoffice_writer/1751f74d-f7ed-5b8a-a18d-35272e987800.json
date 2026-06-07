@@ -1,0 +1,36 @@
+{
+  "id": "1751f74d-f7ed-5b8a-a18d-35272e987800",
+  "task_id": "1751f74d-f7ed-5b8a-a18d-35272e987800",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Change the selected quote text to magenta using the Font Color button.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "604a561290a440d7",
+    "task_type": "selection_transform",
+    "task_index": 8,
+    "expected_outcome": "The quote text becomes magenta only in the selected range.",
+    "preconditions": {
+      "description": "The document contains a quoted passage that is selected.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "Quoted passage selected"
+        },
+        {
+          "key": "existing_formatting",
+          "value": "Default color text"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "4a00160e-e669-5327-9267-68d6d68f06e2",
+  "task_id": "4a00160e-e669-5327-9267-68d6d68f06e2",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Click Update to refresh the active generated content in the document.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "bf244eeb6387b214",
+    "task_type": "document_analysis",
+    "task_index": 1,
+    "expected_outcome": "The selected generated item is updated to the latest values or layout.",
+    "preconditions": {
+      "description": "The document includes an out-of-date generated element such as a table of contents or field.",
+      "extras": [
+        {
+          "key": "generated_content",
+          "value": "stale or pending refresh"
+        },
+        {
+          "key": "toolbar_button",
+          "value": "Update available"
+        }
+      ]
+    }
+  }
+}

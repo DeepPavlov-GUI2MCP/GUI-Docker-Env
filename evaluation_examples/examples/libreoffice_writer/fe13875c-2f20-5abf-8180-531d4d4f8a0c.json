@@ -1,0 +1,107 @@
+{
+  "id": "fe13875c-2f20-5abf-8180-531d4d4f8a0c",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add a page break after the title line so the following body text begins on a new page.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+            "path": "/home/user/Desktop/synthetic_writer_fe13875c2f205abf8180531d4d4f8a0c.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_fe13875c2f205abf8180531d4d4f8a0c.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_fe13875c2f205abf8180531d4d4f8a0c.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "73e5697b26bfdbec",
+    "task_type": "insert_at_cursor",
+    "task_index": 1,
+    "expected_outcome": "The body text is moved to the next page because a manual page break is inserted immediately after the title.",
+    "preconditions": {
+      "description": "The document has a single-line title followed by body text, and the insertion point is placed at the end of the title line.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Line 1: Annual Report 2025. Following lines: several sentences of body text."
+        },
+        {
+          "key": "selection_state",
+          "value": "No selection"
+        },
+        {
+          "key": "initial_page_count",
+          "value": "1"
+        }
+      ]
+    },
+    "fixture": "single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_fe13875c2f205abf8180531d4d4f8a0c.docx",
+    "window_name": "synthetic_writer_fe13875c2f205abf8180531d4d4f8a0c.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_fe13875c2f205abf8180531d4d4f8a0c.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

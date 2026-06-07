@@ -1,0 +1,36 @@
+{
+  "id": "43736cd9-7c1e-54f1-a394-b138ba2b8795",
+  "task_id": "43736cd9-7c1e-54f1-a394-b138ba2b8795",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a hard page break to start the next line of content on a fresh page.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "73e5697b26bfdbec",
+    "task_type": "insert_at_cursor",
+    "task_index": 9,
+    "expected_outcome": "The following content begins on the next page rather than continuing on the current page.",
+    "preconditions": {
+      "description": "A document with at least one paragraph is open in Writer.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "text already entered"
+        },
+        {
+          "key": "selection",
+          "value": "no selection"
+        }
+      ]
+    }
+  }
+}

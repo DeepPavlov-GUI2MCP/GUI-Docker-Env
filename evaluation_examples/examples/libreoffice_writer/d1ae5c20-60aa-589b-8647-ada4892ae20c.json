@@ -1,0 +1,107 @@
+{
+  "id": "d1ae5c20-60aa-589b-8647-ada4892ae20c",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Hide non-printing characters by clicking the Formatting Marks toggle.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/two_paragraphs__novels_intro_packet.docx",
+            "path": "/home/user/Desktop/synthetic_writer_d1ae5c2060aa589b8647ada4892ae20c.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_d1ae5c2060aa589b8647ada4892ae20c.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_d1ae5c2060aa589b8647ada4892ae20c.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "bc2a95014408bc56",
+    "task_type": "cursor_format_toggle",
+    "task_index": 1,
+    "expected_outcome": "Visible paragraph marks and other non-printing symbols are hidden from view.",
+    "preconditions": {
+      "description": "The document shows formatting marks on screen already.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "At least two paragraphs"
+        },
+        {
+          "key": "formatting_marks",
+          "value": "On"
+        },
+        {
+          "key": "visible_symbols",
+          "value": "Paragraph marks currently visible"
+        }
+      ]
+    },
+    "fixture": "two_paragraphs__novels_intro_packet.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_d1ae5c2060aa589b8647ada4892ae20c.docx",
+    "window_name": "synthetic_writer_d1ae5c2060aa589b8647ada4892ae20c.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_d1ae5c2060aa589b8647ada4892ae20c.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

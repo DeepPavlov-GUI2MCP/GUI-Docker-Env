@@ -1,0 +1,107 @@
+{
+  "id": "9b4bc06a-bc01-5424-bbdc-8c57b0156759",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Apply right alignment to the selected sign-off line using the Right button.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_9b4bc06abc015424bbdc8c57b0156759.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_9b4bc06abc015424bbdc8c57b0156759.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_9b4bc06abc015424bbdc8c57b0156759.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5efd2b6e31938559",
+    "task_type": "paragraph_layout",
+    "task_index": 4,
+    "expected_outcome": "The highlighted sign-off paragraph shifts to right alignment.",
+    "preconditions": {
+      "description": "A closing line such as a letter sign-off is selected and not already right-aligned.",
+      "extras": [
+        {
+          "key": "selection_scope",
+          "value": "sign-off paragraph"
+        },
+        {
+          "key": "initial_alignment",
+          "value": "left"
+        },
+        {
+          "key": "paragraph_content",
+          "value": "closing phrase"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_9b4bc06abc015424bbdc8c57b0156759.docx",
+    "window_name": "synthetic_writer_9b4bc06abc015424bbdc8c57b0156759.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_9b4bc06abc015424bbdc8c57b0156759.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

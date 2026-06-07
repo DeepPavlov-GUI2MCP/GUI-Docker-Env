@@ -1,0 +1,147 @@
+{
+  "id": "5a63b4f6-ef48-5bcc-830c-549479d2f532",
+  "snapshot": "libreoffice_writer",
+  "instruction": "From the open Table menu, verify the disabled status of \"Number Format...\".",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_5a63b4f6ef485bcc830c549479d2f532.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_5a63b4f6ef485bcc830c549479d2f532.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_5a63b4f6ef485bcc830c549479d2f532.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Table"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:b0c485afa1095a6e",
+              "role": "menu",
+              "name": "Table",
+              "recorded_bbox": [
+                356,
+                50,
+                50,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Table",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/53bf0935406d/20260606T225300Z",
+    "macro_state_id": "53bf0935406d",
+    "micro_action_id": "3ee6c804531e54c7",
+    "task_type": "availability_check",
+    "task_index": 4,
+    "expected_outcome": "The command remains disabled and no formatting dialog appears.",
+    "preconditions": {
+      "description": "A Writer document is open with no active table selection; the Table menu is visible.",
+      "extras": [
+        {
+          "key": "target_item",
+          "value": "Number Format..."
+        },
+        {
+          "key": "post_state",
+          "value": "menu unchanged"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_5a63b4f6ef485bcc830c549479d2f532.docx",
+    "window_name": "synthetic_writer_5a63b4f6ef485bcc830c549479d2f532.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "53bf0935406d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:b0c485afa1095a6e",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Table",
+          "bbox": [
+            356,
+            50,
+            50,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Table"
+      },
+      "window_name": "synthetic_writer_5a63b4f6ef485bcc830c549479d2f532.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    }
+  }
+}

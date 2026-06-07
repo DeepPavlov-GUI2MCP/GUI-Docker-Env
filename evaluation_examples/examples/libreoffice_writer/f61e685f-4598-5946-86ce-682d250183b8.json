@@ -1,0 +1,190 @@
+{
+  "id": "f61e685f-4598-5946-86ce-682d250183b8",
+  "snapshot": "libreoffice_writer",
+  "instruction": "From the File → New submenu, launch a master document.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list__ccch9003_tutorial_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_f61e685f4598594686ce682d250183b8.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_f61e685f4598594686ce682d250183b8.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_f61e685f4598594686ce682d250183b8.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "File"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:bb08184c0b3835ee",
+              "role": "menu",
+              "name": "File",
+              "recorded_bbox": [
+                57,
+                50,
+                39,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "New"
+            },
+            "meta": {
+              "edge_id": "e65903c8fc2b:c939ccb4cb728bbc",
+              "role": "menu",
+              "name": "New",
+              "recorded_bbox": [
+                57,
+                75,
+                302,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "New",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/19a31745f3fe/20260606T225258Z",
+    "macro_state_id": "19a31745f3fe",
+    "micro_action_id": "5905ca57faf67eb6",
+    "task_type": "dialog_open",
+    "task_index": 4,
+    "expected_outcome": "LibreOffice Writer opens a fresh master document.",
+    "preconditions": {
+      "description": "The command list under New is visible and includes Master Document.",
+      "extras": [
+        {
+          "key": "source_module",
+          "value": "Writer"
+        },
+        {
+          "key": "item_name",
+          "value": "Master Document"
+        },
+        {
+          "key": "item_state",
+          "value": "available"
+        }
+      ]
+    },
+    "fixture": "bulleted_list__ccch9003_tutorial_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_f61e685f4598594686ce682d250183b8.docx",
+    "window_name": "synthetic_writer_f61e685f4598594686ce682d250183b8.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "19a31745f3fe",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:bb08184c0b3835ee",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "File",
+          "bbox": [
+            57,
+            50,
+            39,
+            25
+          ]
+        },
+        {
+          "edge_id": "e65903c8fc2b:c939ccb4cb728bbc",
+          "from_state": "e65903c8fc2b",
+          "role": "menu",
+          "name": "New",
+          "bbox": [
+            57,
+            75,
+            302,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "New"
+      },
+      "window_name": "synthetic_writer_f61e685f4598594686ce682d250183b8.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    }
+  }
+}

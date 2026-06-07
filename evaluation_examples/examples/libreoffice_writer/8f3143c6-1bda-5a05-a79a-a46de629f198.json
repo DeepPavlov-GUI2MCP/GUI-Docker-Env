@@ -1,0 +1,36 @@
+{
+  "id": "8f3143c6-1bda-5a05-a79a-a46de629f198",
+  "task_id": "8f3143c6-1bda-5a05-a79a-a46de629f198",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use the image insert button to place a photo or illustration into the document at the current cursor position.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5398a209dce824da",
+    "task_type": "insert_at_cursor",
+    "task_index": 2,
+    "expected_outcome": "The document now contains an inserted image at the cursor location.",
+    "preconditions": {
+      "description": "The blank document is ready for content entry, and the standard toolbar is visible.",
+      "extras": [
+        {
+          "key": "available_action",
+          "value": "Insert image from local storage"
+        },
+        {
+          "key": "page_state",
+          "value": "No existing content"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "ee413bd1-828d-51f9-ab31-0c6aece64e8d",
+  "task_id": "ee413bd1-828d-51f9-ab31-0c6aece64e8d",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Toggle Left alignment for the current paragraph so the paragraph becomes left-aligned.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "e34275bb4e92a8a8",
+    "task_type": "paragraph_layout",
+    "task_index": 0,
+    "expected_outcome": "The paragraph alignment changes to left alignment.",
+    "preconditions": {
+      "description": "A paragraph in the document is selected or has the caret inside it, and its alignment is not already left.",
+      "extras": [
+        {
+          "key": "paragraph_alignment",
+          "value": "center or right or justified"
+        }
+      ]
+    }
+  }
+}

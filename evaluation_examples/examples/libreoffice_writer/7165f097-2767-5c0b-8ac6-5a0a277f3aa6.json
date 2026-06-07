@@ -1,0 +1,36 @@
+{
+  "id": "7165f097-2767-5c0b-8ac6-5a0a277f3aa6",
+  "task_id": "7165f097-2767-5c0b-8ac6-5a0a277f3aa6",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Inspect the Redo button state on the toolbar and verify it cannot be used yet.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "301277f609a4e065",
+    "task_type": "availability_check",
+    "task_index": 1,
+    "expected_outcome": "The Redo control is shown as disabled, with no effect on the document.",
+    "preconditions": {
+      "description": "Writer is open after startup with no prior edits or undos.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "startup blank"
+        },
+        {
+          "key": "recent_actions",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

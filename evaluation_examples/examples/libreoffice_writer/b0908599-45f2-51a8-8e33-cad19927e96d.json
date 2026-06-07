@@ -1,0 +1,40 @@
+{
+  "id": "b0908599-45f2-51a8-8e33-cad19927e96d",
+  "task_id": "b0908599-45f2-51a8-8e33-cad19927e96d",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open the symbol insertion control and add a Greek letter character into the document.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "e04b538b97c3ed53",
+    "task_type": "insert_at_cursor",
+    "task_index": 2,
+    "expected_outcome": "One Greek letter is inserted into the current paragraph.",
+    "preconditions": {
+      "description": "Blank document with the cursor placed in the body area and standard toolbar available.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "empty document"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        },
+        {
+          "key": "formatting",
+          "value": "default paragraph style"
+        }
+      ]
+    }
+  }
+}

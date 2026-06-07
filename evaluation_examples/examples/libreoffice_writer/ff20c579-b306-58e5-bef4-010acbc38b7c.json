@@ -1,0 +1,107 @@
+{
+  "id": "ff20c579-b306-58e5-bef4-010acbc38b7c",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Apply a font color to the selected heading with the Font Color control.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_ff20c579b30658e5bef4010acbc38b7c.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_ff20c579b30658e5bef4010acbc38b7c.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_ff20c579b30658e5bef4010acbc38b7c.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "604a561290a440d7",
+    "task_type": "selection_transform",
+    "task_index": 1,
+    "expected_outcome": "The selected heading text changes from black to the newly chosen color.",
+    "preconditions": {
+      "description": "A heading line is selected and has no custom font color applied yet.",
+      "extras": [
+        {
+          "key": "selection_scope",
+          "value": "heading line"
+        },
+        {
+          "key": "initial_font_color",
+          "value": "automatic/black"
+        },
+        {
+          "key": "text_sample",
+          "value": "Quarterly Summary"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_ff20c579b30658e5bef4010acbc38b7c.docx",
+    "window_name": "synthetic_writer_ff20c579b30658e5bef4010acbc38b7c.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_ff20c579b30658e5bef4010acbc38b7c.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

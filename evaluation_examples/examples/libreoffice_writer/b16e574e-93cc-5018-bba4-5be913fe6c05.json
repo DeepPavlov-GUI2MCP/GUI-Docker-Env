@@ -1,0 +1,36 @@
+{
+  "id": "b16e574e-93cc-5018-bba4-5be913fe6c05",
+  "task_id": "b16e574e-93cc-5018-bba4-5be913fe6c05",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Switch the formatting marks display off.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "bc2a95014408bc56",
+    "task_type": "cursor_format_toggle",
+    "task_index": 1,
+    "expected_outcome": "Nonprinting characters are hidden from the document view.",
+    "preconditions": {
+      "description": "Formatting marks are currently visible in the document.",
+      "extras": [
+        {
+          "key": "marks_visible",
+          "value": "on"
+        },
+        {
+          "key": "document_state",
+          "value": "editable text document"
+        }
+      ]
+    }
+  }
+}

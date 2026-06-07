@@ -1,0 +1,190 @@
+{
+  "id": "eae5321f-01b3-5969-995b-4e81e7a5e226",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Apply Format → Text → tOGGLE cASE to the selected text.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_eae5321f01b35969995b4e81e7a5e226.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_eae5321f01b35969995b4e81e7a5e226.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_eae5321f01b35969995b4e81e7a5e226.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Format"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:09346a8f4b7dda04",
+              "role": "menu",
+              "name": "Format",
+              "recorded_bbox": [
+                238,
+                50,
+                62,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Text"
+            },
+            "meta": {
+              "edge_id": "32f76b8b1d9d:e98fd2ece44678c7",
+              "role": "menu",
+              "name": "Text",
+              "recorded_bbox": [
+                238,
+                75,
+                268,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Text",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/a3fd82503da5/20260606T225300Z",
+    "macro_state_id": "a3fd82503da5",
+    "micro_action_id": "e086f84d136f5046",
+    "task_type": "selection_transform",
+    "task_index": 0,
+    "expected_outcome": "The selected text changes from \"Budget REVIEW 2024\" to \"bUDGET review 2024\".",
+    "preconditions": {
+      "description": "The text \"Budget REVIEW 2024\" is selected.",
+      "extras": [
+        {
+          "key": "selected_text",
+          "value": "Budget REVIEW 2024"
+        },
+        {
+          "key": "selection_scope",
+          "value": "single line"
+        },
+        {
+          "key": "menu_path",
+          "value": "Format > Text > tOGGLE cASE"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_eae5321f01b35969995b4e81e7a5e226.docx",
+    "window_name": "synthetic_writer_eae5321f01b35969995b4e81e7a5e226.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "a3fd82503da5",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:09346a8f4b7dda04",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Format",
+          "bbox": [
+            238,
+            50,
+            62,
+            25
+          ]
+        },
+        {
+          "edge_id": "32f76b8b1d9d:e98fd2ece44678c7",
+          "from_state": "32f76b8b1d9d",
+          "role": "menu",
+          "name": "Text",
+          "bbox": [
+            238,
+            75,
+            268,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Text"
+      },
+      "window_name": "synthetic_writer_eae5321f01b35969995b4e81e7a5e226.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    }
+  }
+}

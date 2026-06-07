@@ -1,0 +1,32 @@
+{
+  "id": "f907e5ab-2cdc-5cf7-b79f-e64c278872c9",
+  "task_id": "f907e5ab-2cdc-5cf7-b79f-e64c278872c9",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use Spelling to inspect the whole document for incorrect words.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "840cc918ba7d67e7",
+    "task_type": "document_analysis",
+    "task_index": 6,
+    "expected_outcome": "The document is checked and a spelling dialog or scan begins.",
+    "preconditions": {
+      "description": "Writer is open on an unsaved text draft.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "no selection"
+        }
+      ]
+    }
+  }
+}

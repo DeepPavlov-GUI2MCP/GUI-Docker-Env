@@ -1,0 +1,36 @@
+{
+  "id": "40366714-f829-5acc-a941-8091bfe03235",
+  "task_id": "40366714-f829-5acc-a941-8091bfe03235",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Turn on strikethrough before typing a note, then type the note text.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "8f25a177f8919c8c",
+    "task_type": "cursor_format_toggle",
+    "task_index": 0,
+    "expected_outcome": "Newly typed text appears with strikethrough formatting enabled.",
+    "preconditions": {
+      "description": "Blank Writer document with the insertion point active in the main page area.",
+      "extras": [
+        {
+          "key": "selected_text",
+          "value": "none"
+        },
+        {
+          "key": "current_formatting",
+          "value": "default paragraph style, regular text"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "id": "b3f4904f-5c85-5d7d-89c0-9477985da1b3",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open Word Count from the Tools menu.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_b3f4904f5c855d7d89c09477985da1b3.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_b3f4904f5c855d7d89c09477985da1b3.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_b3f4904f5c855d7d89c09477985da1b3.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Tools"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:a17009973bda9611",
+              "role": "menu",
+              "name": "Tools",
+              "recorded_bbox": [
+                455,
+                50,
+                49,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Tools",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/e85ad249bd7d/20260606T225303Z",
+    "macro_state_id": "e85ad249bd7d",
+    "micro_action_id": "949ad21450b977aa",
+    "task_type": "document_analysis",
+    "task_index": 0,
+    "expected_outcome": "The Word Count dialog opens and reports counts for the current document.",
+    "preconditions": {
+      "description": "A Writer document is open and the Tools menu is expanded.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "blank document"
+        },
+        {
+          "key": "target_item",
+          "value": "Word Count..."
+        },
+        {
+          "key": "expected_counts_context",
+          "value": "whole document"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_b3f4904f5c855d7d89c09477985da1b3.docx",
+    "window_name": "synthetic_writer_b3f4904f5c855d7d89c09477985da1b3.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "e85ad249bd7d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:a17009973bda9611",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Tools",
+          "bbox": [
+            455,
+            50,
+            49,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Tools"
+      },
+      "window_name": "synthetic_writer_b3f4904f5c855d7d89c09477985da1b3.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    }
+  }
+}

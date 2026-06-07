@@ -1,0 +1,36 @@
+{
+  "id": "80745165-b0c0-5245-8571-b4391e21d3c4",
+  "task_id": "80745165-b0c0-5245-8571-b4391e21d3c4",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Apply a custom font color to the selected title text so it stands out from the body.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "604a561290a440d7",
+    "task_type": "selection_transform",
+    "task_index": 6,
+    "expected_outcome": "The selected title text changes to the chosen color.",
+    "preconditions": {
+      "description": "A title line is selected near the top of the document.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "Title text selected"
+        },
+        {
+          "key": "existing_formatting",
+          "value": "Title currently default color"
+        }
+      ]
+    }
+  }
+}

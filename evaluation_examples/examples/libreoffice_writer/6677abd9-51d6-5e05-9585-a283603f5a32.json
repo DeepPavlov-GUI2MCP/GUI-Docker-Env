@@ -1,0 +1,107 @@
+{
+  "id": "6677abd9-51d6-5e05-9585-a283603f5a32",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add an endnote at the end of a heading line.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_6677abd951d65e059585a283603f5a32.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_6677abd951d65e059585a283603f5a32.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_6677abd951d65e059585a283603f5a32.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "18988404a6554ace",
+    "task_type": "insert_at_cursor",
+    "task_index": 5,
+    "expected_outcome": "The heading gains an endnote reference and a matching endnote is inserted in the document's endnote section.",
+    "preconditions": {
+      "description": "A heading exists and the caret is at its end, with no text selected.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "heading text present"
+        },
+        {
+          "key": "selection_state",
+          "value": "no selection"
+        },
+        {
+          "key": "target_position",
+          "value": "end of heading"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_6677abd951d65e059585a283603f5a32.docx",
+    "window_name": "synthetic_writer_6677abd951d65e059585a283603f5a32.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_6677abd951d65e059585a283603f5a32.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "b84a8574-6500-58d9-a7d1-408ac028bfd7",
+  "task_id": "b84a8574-6500-58d9-a7d1-408ac028bfd7",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Enable strikethrough, type one short sentence, and leave the toggle on.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "8f25a177f8919c8c",
+    "task_type": "cursor_format_toggle",
+    "task_index": 1,
+    "expected_outcome": "Typed sentence is struck through and subsequent typing would also remain struck through until toggled off.",
+    "preconditions": {
+      "description": "Empty document ready for typing.",
+      "extras": [
+        {
+          "key": "selected_text",
+          "value": "none"
+        },
+        {
+          "key": "font",
+          "value": "Liberation Serif 12 pt"
+        }
+      ]
+    }
+  }
+}

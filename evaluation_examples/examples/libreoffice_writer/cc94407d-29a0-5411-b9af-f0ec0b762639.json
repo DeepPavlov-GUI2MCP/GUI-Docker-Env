@@ -1,0 +1,190 @@
+{
+  "id": "cc94407d-29a0-5411-b9af-f0ec0b762639",
+  "snapshot": "libreoffice_writer",
+  "instruction": "From the visible Table → Insert submenu, verify that inserting a row above is not currently possible.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_cc94407d29a05411b9aff0ec0b762639.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_cc94407d29a05411b9aff0ec0b762639.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_cc94407d29a05411b9aff0ec0b762639.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Table"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:b0c485afa1095a6e",
+              "role": "menu",
+              "name": "Table",
+              "recorded_bbox": [
+                356,
+                50,
+                50,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Insert"
+            },
+            "meta": {
+              "edge_id": "53bf0935406d:86560dc965cecd7e",
+              "role": "menu",
+              "name": "Insert",
+              "recorded_bbox": [
+                356,
+                100,
+                344,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Insert",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/22dc431f9220/20260606T225258Z",
+    "macro_state_id": "22dc431f9220",
+    "micro_action_id": "b5ad39331850bcaf",
+    "task_type": "availability_check",
+    "task_index": 4,
+    "expected_outcome": "The agent observes Rows Above as greyed out; nothing is inserted.",
+    "preconditions": {
+      "description": "The menu hierarchy is open exactly to Table > Insert, and structural row insertion requires a table context that is not present.",
+      "extras": [
+        {
+          "key": "submenu_visible",
+          "value": "yes"
+        },
+        {
+          "key": "structural_action",
+          "value": "insert row above"
+        },
+        {
+          "key": "availability_expected",
+          "value": "false"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_cc94407d29a05411b9aff0ec0b762639.docx",
+    "window_name": "synthetic_writer_cc94407d29a05411b9aff0ec0b762639.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "22dc431f9220",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:b0c485afa1095a6e",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Table",
+          "bbox": [
+            356,
+            50,
+            50,
+            25
+          ]
+        },
+        {
+          "edge_id": "53bf0935406d:86560dc965cecd7e",
+          "from_state": "53bf0935406d",
+          "role": "menu",
+          "name": "Insert",
+          "bbox": [
+            356,
+            100,
+            344,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Insert"
+      },
+      "window_name": "synthetic_writer_cc94407d29a05411b9aff0ec0b762639.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    }
+  }
+}

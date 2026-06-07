@@ -1,0 +1,36 @@
+{
+  "id": "782f4da8-cb0b-5afb-876c-fcbc210e5162",
+  "task_id": "782f4da8-cb0b-5afb-876c-fcbc210e5162",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a simple table that can be used for a two-item comparison.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "e42a806420f3e1b7",
+    "task_type": "insert_at_cursor",
+    "task_index": 9,
+    "expected_outcome": "A table is created at the cursor location.",
+    "preconditions": {
+      "description": "No text is selected and the page is otherwise blank.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "empty document"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

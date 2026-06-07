@@ -1,0 +1,36 @@
+{
+  "id": "77045d6e-3fc4-5b32-9945-a601cf93c6ad",
+  "task_id": "77045d6e-3fc4-5b32-9945-a601cf93c6ad",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check the Undo button state after opening a blank file, confirming it cannot be used.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "1cc89d4baaa9b5bf",
+    "task_type": "availability_check",
+    "task_index": 1,
+    "expected_outcome": "Undo stays disabled and nothing is reverted.",
+    "preconditions": {
+      "description": "Writer is open with a blank page and no recent actions performed.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "blank"
+        },
+        {
+          "key": "recent_actions",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

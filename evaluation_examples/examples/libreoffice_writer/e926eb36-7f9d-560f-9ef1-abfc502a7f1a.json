@@ -1,0 +1,36 @@
+{
+  "id": "e926eb36-7f9d-560f-9ef1-abfc502a7f1a",
+  "task_id": "e926eb36-7f9d-560f-9ef1-abfc502a7f1a",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Place a chart in the document using the toolbar button.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "ba32ff6c264a4cd3",
+    "task_type": "insert_at_cursor",
+    "task_index": 7,
+    "expected_outcome": "The current document contains an inserted chart object.",
+    "preconditions": {
+      "description": "The cursor is available for insertion in the blank document.",
+      "extras": [
+        {
+          "key": "availability",
+          "value": "chart button enabled"
+        },
+        {
+          "key": "document_content",
+          "value": "no typed text"
+        }
+      ]
+    }
+  }
+}

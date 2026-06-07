@@ -1,0 +1,36 @@
+{
+  "id": "3fc4888c-bc8e-52ce-9da7-f1177a816d62",
+  "task_id": "3fc4888c-bc8e-52ce-9da7-f1177a816d62",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a reference field at the cursor using the Field toolbar action.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "593074c8035800ee",
+    "task_type": "insert_at_cursor",
+    "task_index": 8,
+    "expected_outcome": "A reference field is inserted into the document.",
+    "preconditions": {
+      "description": "The current page is blank and ready for insert operations.",
+      "extras": [
+        {
+          "key": "field_target",
+          "value": "Reference field"
+        },
+        {
+          "key": "selection",
+          "value": "Insertion point active"
+        }
+      ]
+    }
+  }
+}

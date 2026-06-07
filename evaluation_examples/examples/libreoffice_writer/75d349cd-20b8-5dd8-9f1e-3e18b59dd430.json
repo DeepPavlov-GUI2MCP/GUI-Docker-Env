@@ -1,0 +1,36 @@
+{
+  "id": "75d349cd-20b8-5dd8-9f1e-3e18b59dd430",
+  "task_id": "75d349cd-20b8-5dd8-9f1e-3e18b59dd430",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Apply justified alignment to the selected paragraph, then move to the next line.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "abd8fb0ce2943745",
+    "task_type": "paragraph_layout",
+    "task_index": 1,
+    "expected_outcome": "The selected paragraph becomes justified and a new line can be edited afterward.",
+    "preconditions": {
+      "description": "The document contains one paragraph that is not yet justified.",
+      "extras": [
+        {
+          "key": "selection_state",
+          "value": "paragraph selected"
+        },
+        {
+          "key": "page_layout",
+          "value": "single page"
+        }
+      ]
+    }
+  }
+}

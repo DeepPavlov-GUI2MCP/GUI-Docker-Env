@@ -1,0 +1,36 @@
+{
+  "id": "077a80e4-1b50-5acf-9408-ece4f06e3edd",
+  "task_id": "077a80e4-1b50-5acf-9408-ece4f06e3edd",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Create a chart in the open Writer file.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "ba32ff6c264a4cd3",
+    "task_type": "insert_at_cursor",
+    "task_index": 2,
+    "expected_outcome": "A chart placeholder appears in the document, ready for data editing.",
+    "preconditions": {
+      "description": "Writer is focused with a blank page visible.",
+      "extras": [
+        {
+          "key": "toolbar_state",
+          "value": "Insert controls visible"
+        },
+        {
+          "key": "document_content",
+          "value": "no text or objects"
+        }
+      ]
+    }
+  }
+}

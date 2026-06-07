@@ -1,0 +1,36 @@
+{
+  "id": "9f7439fd-7487-55fe-a88e-1bf45ac7ce60",
+  "task_id": "9f7439fd-7487-55fe-a88e-1bf45ac7ce60",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Set the current paragraph to right alignment, then enter a brief label.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5efd2b6e31938559",
+    "task_type": "paragraph_layout",
+    "task_index": 5,
+    "expected_outcome": "The label is placed as a right-aligned paragraph.",
+    "preconditions": {
+      "description": "A cursor is present in the blank document body.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "No text selected"
+        },
+        {
+          "key": "paragraph_state",
+          "value": "Single empty paragraph"
+        }
+      ]
+    }
+  }
+}

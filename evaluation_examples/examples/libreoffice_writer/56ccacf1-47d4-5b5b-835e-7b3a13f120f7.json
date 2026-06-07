@@ -1,0 +1,32 @@
+{
+  "id": "56ccacf1-47d4-5b5b-835e-7b3a13f120f7",
+  "task_id": "56ccacf1-47d4-5b5b-835e-7b3a13f120f7",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Set the selected text paragraph to left alignment from its current justified layout.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "e34275bb4e92a8a8",
+    "task_type": "paragraph_layout",
+    "task_index": 5,
+    "expected_outcome": "The paragraph layout updates to left alignment.",
+    "preconditions": {
+      "description": "Text in one paragraph is selected and the paragraph is justified.",
+      "extras": [
+        {
+          "key": "paragraph_alignment",
+          "value": "justified"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "id": "6fdadde2-0457-53ca-812f-1160ae8b70ea",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open the style management interface from the Styles menu.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_6fdadde2045753ca812f1160ae8b70ea.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_6fdadde2045753ca812f1160ae8b70ea.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_6fdadde2045753ca812f1160ae8b70ea.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Styles"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:4cfd8cff88d8274a",
+              "role": "menu",
+              "name": "Styles",
+              "recorded_bbox": [
+                300,
+                50,
+                56,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Styles",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/979ebb535cc1/20260606T225300Z",
+    "macro_state_id": "979ebb535cc1",
+    "micro_action_id": "40d42e1b05137651",
+    "task_type": "dialog_open",
+    "task_index": 0,
+    "expected_outcome": "The Manage Styles panel/window opens and becomes visible for browsing available styles.",
+    "preconditions": {
+      "description": "A Writer document is open and the Styles menu is expanded as shown.",
+      "extras": [
+        {
+          "key": "menu_path",
+          "value": "Styles"
+        },
+        {
+          "key": "target_item",
+          "value": "Manage Styles"
+        },
+        {
+          "key": "document_state",
+          "value": "editable document"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_6fdadde2045753ca812f1160ae8b70ea.docx",
+    "window_name": "synthetic_writer_6fdadde2045753ca812f1160ae8b70ea.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "979ebb535cc1",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:4cfd8cff88d8274a",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Styles",
+          "bbox": [
+            300,
+            50,
+            56,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Styles"
+      },
+      "window_name": "synthetic_writer_6fdadde2045753ca812f1160ae8b70ea.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    }
+  }
+}

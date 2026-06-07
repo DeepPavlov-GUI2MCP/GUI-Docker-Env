@@ -1,0 +1,151 @@
+{
+  "id": "c0cd2683-d00c-5110-a781-4e7928b93fb4",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a page break to move the remainder of the checklist onto page 2.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list__ccch9003_tutorial_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_c0cd2683d00c5110a7814e7928b93fb4.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_c0cd2683d00c5110a7814e7928b93fb4.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_c0cd2683d00c5110a7814e7928b93fb4.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Insert"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:1586a91a7495c7bb",
+              "role": "menu",
+              "name": "Insert",
+              "recorded_bbox": [
+                185,
+                50,
+                53,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Insert",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/f7a7a6e1ff4f/20260606T225304Z",
+    "macro_state_id": "f7a7a6e1ff4f",
+    "micro_action_id": "73c265da9b8168ca",
+    "task_type": "insert_at_cursor",
+    "task_index": 6,
+    "expected_outcome": "The list items after the cursor shift onto the next page because a page break is inserted.",
+    "preconditions": {
+      "description": "A checklist or list is present and the cursor is placed before the first item intended for the next page.",
+      "extras": [
+        {
+          "key": "content_type",
+          "value": "List"
+        },
+        {
+          "key": "intended_result",
+          "value": "Remaining items on next page"
+        },
+        {
+          "key": "pages_before_action",
+          "value": "Single page or multipage document"
+        }
+      ]
+    },
+    "fixture": "bulleted_list__ccch9003_tutorial_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_c0cd2683d00c5110a7814e7928b93fb4.docx",
+    "window_name": "synthetic_writer_c0cd2683d00c5110a7814e7928b93fb4.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "f7a7a6e1ff4f",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:1586a91a7495c7bb",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Insert",
+          "bbox": [
+            185,
+            50,
+            53,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Insert"
+      },
+      "window_name": "synthetic_writer_c0cd2683d00c5110a7814e7928b93fb4.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    }
+  }
+}

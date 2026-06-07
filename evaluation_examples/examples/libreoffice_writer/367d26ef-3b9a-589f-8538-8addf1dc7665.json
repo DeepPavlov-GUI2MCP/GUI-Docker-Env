@@ -1,0 +1,107 @@
+{
+  "id": "367d26ef-3b9a-589f-8538-8addf1dc7665",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Apply underline to the selected phrase.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/highlighted_text__sample_recruitment_phone_script.odt",
+            "path": "/home/user/Desktop/synthetic_writer_367d26ef3b9a589f85388addf1dc7665.odt"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_367d26ef3b9a589f85388addf1dc7665.odt"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_367d26ef3b9a589f85388addf1dc7665.odt - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "8439922aa0dab81c",
+    "task_type": "selection_transform",
+    "task_index": 1,
+    "expected_outcome": "The selected phrase becomes underlined without changing unselected text.",
+    "preconditions": {
+      "description": "A multi-word phrase is highlighted in the document and currently has no underline formatting.",
+      "extras": [
+        {
+          "key": "selected_content",
+          "value": "final submission date"
+        },
+        {
+          "key": "selection_scope",
+          "value": "Phrase"
+        },
+        {
+          "key": "underline_state",
+          "value": "Off on selection"
+        }
+      ]
+    },
+    "fixture": "highlighted_text__sample_recruitment_phone_script.odt",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_367d26ef3b9a589f85388addf1dc7665.odt",
+    "window_name": "synthetic_writer_367d26ef3b9a589f85388addf1dc7665.odt - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_367d26ef3b9a589f85388addf1dc7665.odt - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

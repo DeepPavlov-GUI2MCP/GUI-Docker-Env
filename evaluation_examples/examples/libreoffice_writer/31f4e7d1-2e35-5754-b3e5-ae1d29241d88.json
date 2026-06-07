@@ -1,0 +1,151 @@
+{
+  "id": "31f4e7d1-2e35-5754-b3e5-ae1d29241d88",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open the Thesaurus dialog for the selected adjective.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_31f4e7d12e355754b3e5ae1d29241d88.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_31f4e7d12e355754b3e5ae1d29241d88.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_31f4e7d12e355754b3e5ae1d29241d88.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Tools"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:a17009973bda9611",
+              "role": "menu",
+              "name": "Tools",
+              "recorded_bbox": [
+                455,
+                50,
+                49,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Tools",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/e85ad249bd7d/20260606T225303Z",
+    "macro_state_id": "e85ad249bd7d",
+    "micro_action_id": "b8d55332d826ade9",
+    "task_type": "dialog_open",
+    "task_index": 10,
+    "expected_outcome": "A Thesaurus dialog opens from the Tools menu command.",
+    "preconditions": {
+      "description": "The document contains text and the Tools menu is expanded.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "A product description contains the selected word simple."
+        },
+        {
+          "key": "selection_state",
+          "value": "The word simple is selected."
+        },
+        {
+          "key": "window_state",
+          "value": "Single Writer window active."
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_31f4e7d12e355754b3e5ae1d29241d88.docx",
+    "window_name": "synthetic_writer_31f4e7d12e355754b3e5ae1d29241d88.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "e85ad249bd7d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:a17009973bda9611",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Tools",
+          "bbox": [
+            455,
+            50,
+            49,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Tools"
+      },
+      "window_name": "synthetic_writer_31f4e7d12e355754b3e5ae1d29241d88.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    }
+  }
+}

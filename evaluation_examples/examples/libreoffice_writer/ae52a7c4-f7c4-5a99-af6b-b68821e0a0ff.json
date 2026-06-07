@@ -1,0 +1,190 @@
+{
+  "id": "ae52a7c4-f7c4-5a99-af6b-b68821e0a0ff",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Look at the Format > Lists submenu and verify that Demote One Level With Subpoints is currently disabled.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list__ccch9003_tutorial_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_ae52a7c4f7c45a99af6bb68821e0a0ff.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_ae52a7c4f7c45a99af6bb68821e0a0ff.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_ae52a7c4f7c45a99af6bb68821e0a0ff.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Format"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:09346a8f4b7dda04",
+              "role": "menu",
+              "name": "Format",
+              "recorded_bbox": [
+                238,
+                50,
+                62,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Lists"
+            },
+            "meta": {
+              "edge_id": "32f76b8b1d9d:57818d6dee972860",
+              "role": "menu",
+              "name": "Lists",
+              "recorded_bbox": [
+                238,
+                252,
+                268,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Lists",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/07e46a8883b5/20260606T225257Z",
+    "macro_state_id": "07e46a8883b5",
+    "micro_action_id": "9da56e21c7b87ec0",
+    "task_type": "availability_check",
+    "task_index": 0,
+    "expected_outcome": "Demote One Level With Subpoints is confirmed unavailable, and no changes are made to the document or menu selection.",
+    "preconditions": {
+      "description": "The Lists submenu is open in LibreOffice Writer, and there is no applicable list context for demoting an item together with its subpoints.",
+      "extras": [
+        {
+          "key": "menu_path",
+          "value": "Format > Lists"
+        },
+        {
+          "key": "target_item",
+          "value": "Demote One Level With Subpoints"
+        },
+        {
+          "key": "item_enabled_state",
+          "value": "disabled"
+        }
+      ]
+    },
+    "fixture": "bulleted_list__ccch9003_tutorial_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_ae52a7c4f7c45a99af6bb68821e0a0ff.docx",
+    "window_name": "synthetic_writer_ae52a7c4f7c45a99af6bb68821e0a0ff.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "07e46a8883b5",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:09346a8f4b7dda04",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Format",
+          "bbox": [
+            238,
+            50,
+            62,
+            25
+          ]
+        },
+        {
+          "edge_id": "32f76b8b1d9d:57818d6dee972860",
+          "from_state": "32f76b8b1d9d",
+          "role": "menu",
+          "name": "Lists",
+          "bbox": [
+            238,
+            252,
+            268,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Lists"
+      },
+      "window_name": "synthetic_writer_ae52a7c4f7c45a99af6bb68821e0a0ff.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    }
+  }
+}

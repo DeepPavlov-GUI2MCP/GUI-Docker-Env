@@ -1,0 +1,36 @@
+{
+  "id": "2a876620-ee3e-5c03-bee1-58b4e2b735b2",
+  "task_id": "2a876620-ee3e-5c03-bee1-58b4e2b735b2",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use New to start another document from the current session.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "4a56eb087240c593",
+    "task_type": "insert_at_cursor",
+    "task_index": 1,
+    "expected_outcome": "A new empty document is created in a separate untitled tab/window or replaces the active blank document depending on configuration.",
+    "preconditions": {
+      "description": "The Writer application is already running and focused.",
+      "extras": [
+        {
+          "key": "window_state",
+          "value": "Writer active"
+        },
+        {
+          "key": "document_state",
+          "value": "unsaved blank document"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "id": "97e27254-294d-5c41-86ed-91b6bc9f75f7",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Inspect the Table menu and report the availability of Unprotect Cells.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/table_with_values__view_person_organizational_summary.docx",
+            "path": "/home/user/Desktop/synthetic_writer_97e27254294d5c4186ed91b6bc9f75f7.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_97e27254294d5c4186ed91b6bc9f75f7.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_97e27254294d5c4186ed91b6bc9f75f7.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Table"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:b0c485afa1095a6e",
+              "role": "menu",
+              "name": "Table",
+              "recorded_bbox": [
+                356,
+                50,
+                50,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Table",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/53bf0935406d/20260606T225300Z",
+    "macro_state_id": "53bf0935406d",
+    "micro_action_id": "6940f4da3478eeac",
+    "task_type": "availability_check",
+    "task_index": 4,
+    "expected_outcome": "Availability is reported as unavailable/disabled, with no activation performed.",
+    "preconditions": {
+      "description": "The Table menu is already open and Unprotect Cells is visible in a disabled style.",
+      "extras": [
+        {
+          "key": "menu_item",
+          "value": "Unprotect Cells"
+        },
+        {
+          "key": "menu_state",
+          "value": "open"
+        },
+        {
+          "key": "allowed_action",
+          "value": "availability check only"
+        }
+      ]
+    },
+    "fixture": "table_with_values__view_person_organizational_summary.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_97e27254294d5c4186ed91b6bc9f75f7.docx",
+    "window_name": "synthetic_writer_97e27254294d5c4186ed91b6bc9f75f7.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "53bf0935406d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:b0c485afa1095a6e",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Table",
+          "bbox": [
+            356,
+            50,
+            50,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Table"
+      },
+      "window_name": "synthetic_writer_97e27254294d5c4186ed91b6bc9f75f7.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    }
+  }
+}

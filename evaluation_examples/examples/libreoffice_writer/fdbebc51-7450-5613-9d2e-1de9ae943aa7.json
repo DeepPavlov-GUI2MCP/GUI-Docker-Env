@@ -1,0 +1,151 @@
+{
+  "id": "fdbebc51-7450-5613-9d2e-1de9ae943aa7",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Invoke the Redact command from the Tools dropdown.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_fdbebc51745056139d2e1de9ae943aa7.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_fdbebc51745056139d2e1de9ae943aa7.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_fdbebc51745056139d2e1de9ae943aa7.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Tools"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:a17009973bda9611",
+              "role": "menu",
+              "name": "Tools",
+              "recorded_bbox": [
+                455,
+                50,
+                49,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Tools",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/e85ad249bd7d/20260606T225303Z",
+    "macro_state_id": "e85ad249bd7d",
+    "micro_action_id": "1d4080970dab162e",
+    "task_type": "dialog_open",
+    "task_index": 8,
+    "expected_outcome": "LibreOffice displays a redaction dialog or starts the redaction process flow.",
+    "preconditions": {
+      "description": "The document contains names, dates, and identifier strings for testing, and the command is visible.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Testing data including name, DOB, and ID-like string"
+        },
+        {
+          "key": "command_visibility",
+          "value": "Redact visible"
+        },
+        {
+          "key": "menu_state",
+          "value": "Tools menu open"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_fdbebc51745056139d2e1de9ae943aa7.docx",
+    "window_name": "synthetic_writer_fdbebc51745056139d2e1de9ae943aa7.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "e85ad249bd7d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:a17009973bda9611",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Tools",
+          "bbox": [
+            455,
+            50,
+            49,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Tools"
+      },
+      "window_name": "synthetic_writer_fdbebc51745056139d2e1de9ae943aa7.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    }
+  }
+}

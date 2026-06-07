@@ -1,0 +1,103 @@
+{
+  "id": "1a0835f7-61de-5ffd-aaa7-bf43cc3866b8",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Click the Footnote button to insert a footnote marker for the current sentence.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+            "path": "/home/user/Desktop/synthetic_writer_1a0835f761de5ffdaaa7bf43cc3866b8.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_1a0835f761de5ffdaaa7bf43cc3866b8.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_1a0835f761de5ffdaaa7bf43cc3866b8.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "32482980bb19181d",
+    "task_type": "insert_at_cursor",
+    "task_index": 0,
+    "expected_outcome": "A footnote reference is inserted at the insertion point and the document gains a corresponding footnote area entry.",
+    "preconditions": {
+      "description": "The document contains a single paragraph of body text and the insertion point is placed immediately after the sentence 'Quarterly revenue exceeded expectations.'",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "One paragraph ending with 'Quarterly revenue exceeded expectations.'"
+        },
+        {
+          "key": "selection_state",
+          "value": "No text selected"
+        }
+      ]
+    },
+    "fixture": "single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_1a0835f761de5ffdaaa7bf43cc3866b8.docx",
+    "window_name": "synthetic_writer_1a0835f761de5ffdaaa7bf43cc3866b8.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_1a0835f761de5ffdaaa7bf43cc3866b8.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

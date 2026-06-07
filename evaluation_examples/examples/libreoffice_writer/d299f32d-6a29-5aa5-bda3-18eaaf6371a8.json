@@ -1,0 +1,151 @@
+{
+  "id": "d299f32d-6a29-5aa5-bda3-18eaaf6371a8",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Select New Window from the visible Window menu to duplicate the current editing view.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_d299f32d6a295aa5bda318eaaf6371a8.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_d299f32d6a295aa5bda318eaaf6371a8.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_d299f32d6a295aa5bda318eaaf6371a8.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Window"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:5c76c0e2b8f47135",
+              "role": "menu",
+              "name": "Window",
+              "recorded_bbox": [
+                504,
+                50,
+                68,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Window",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c8b0042c9b42/20260606T225302Z",
+    "macro_state_id": "c8b0042c9b42",
+    "micro_action_id": "eee337270195409d",
+    "task_type": "dialog_open",
+    "task_index": 5,
+    "expected_outcome": "The current document gains an additional editing window, allowing the same file to be viewed in two separate windows.",
+    "preconditions": {
+      "description": "LibreOffice Writer shows one untitled document and the Window menu commands are visible.",
+      "extras": [
+        {
+          "key": "visible_item",
+          "value": "New Window"
+        },
+        {
+          "key": "initial_document_views",
+          "value": "1"
+        },
+        {
+          "key": "resulting_document_views",
+          "value": "2"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_d299f32d6a295aa5bda318eaaf6371a8.docx",
+    "window_name": "synthetic_writer_d299f32d6a295aa5bda318eaaf6371a8.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "c8b0042c9b42",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:5c76c0e2b8f47135",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Window",
+          "bbox": [
+            504,
+            50,
+            68,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Window"
+      },
+      "window_name": "synthetic_writer_d299f32d6a295aa5bda318eaaf6371a8.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    }
+  }
+}

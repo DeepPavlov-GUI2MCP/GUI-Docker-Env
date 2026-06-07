@@ -1,0 +1,107 @@
+{
+  "id": "a2ad9f40-f76b-526f-bb48-ad85fbdb30dc",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use the Chart control to place a chart in a document that already has a heading.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_a2ad9f40f76b526fbb48ad85fbdb30dc.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_a2ad9f40f76b526fbb48ad85fbdb30dc.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_a2ad9f40f76b526fbb48ad85fbdb30dc.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "ba32ff6c264a4cd3",
+    "task_type": "insert_at_cursor",
+    "task_index": 3,
+    "expected_outcome": "A chart object is inserted without removing the heading text.",
+    "preconditions": {
+      "description": "The document contains a heading line only and no embedded objects.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "One heading styled or plain text"
+        },
+        {
+          "key": "selection_state",
+          "value": "No text selected"
+        },
+        {
+          "key": "embedded_objects",
+          "value": "None present"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_a2ad9f40f76b526fbb48ad85fbdb30dc.docx",
+    "window_name": "synthetic_writer_a2ad9f40f76b526fbb48ad85fbdb30dc.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_a2ad9f40f76b526fbb48ad85fbdb30dc.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

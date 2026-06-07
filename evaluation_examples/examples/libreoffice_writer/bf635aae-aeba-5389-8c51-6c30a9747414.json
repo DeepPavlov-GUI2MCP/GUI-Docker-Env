@@ -1,0 +1,36 @@
+{
+  "id": "bf635aae-aeba-5389-8c51-6c30a9747414",
+  "task_id": "bf635aae-aeba-5389-8c51-6c30a9747414",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Enable subscript mode before typing a chemical formula.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "7f83459655403912",
+    "task_type": "cursor_format_toggle",
+    "task_index": 1,
+    "expected_outcome": "Newly typed text appears below the baseline until subscript is turned off.",
+    "preconditions": {
+      "description": "The caret is active in the document body.",
+      "extras": [
+        {
+          "key": "current_formatting",
+          "value": "normal"
+        },
+        {
+          "key": "selection",
+          "value": "no selection"
+        }
+      ]
+    }
+  }
+}

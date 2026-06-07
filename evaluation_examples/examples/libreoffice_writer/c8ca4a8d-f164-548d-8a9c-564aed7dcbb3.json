@@ -1,0 +1,36 @@
+{
+  "id": "c8ca4a8d-f164-548d-8a9c-564aed7dcbb3",
+  "task_id": "c8ca4a8d-f164-548d-8a9c-564aed7dcbb3",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Create a footnote for the current paragraph.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "32482980bb19181d",
+    "task_type": "insert_at_cursor",
+    "task_index": 2,
+    "expected_outcome": "The document contains a footnote reference and an associated footnote section is opened at the bottom of the page.",
+    "preconditions": {
+      "description": "The blank Writer page is active and the caret is positioned in the body of the document.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "untitled document"
+        },
+        {
+          "key": "selection",
+          "value": "no active selection"
+        }
+      ]
+    }
+  }
+}

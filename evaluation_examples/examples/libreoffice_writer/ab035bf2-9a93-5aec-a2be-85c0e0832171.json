@@ -1,0 +1,36 @@
+{
+  "id": "ab035bf2-9a93-5aec-a2be-85c0e0832171",
+  "task_id": "ab035bf2-9a93-5aec-a2be-85c0e0832171",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Toggle right alignment for future typing so the next paragraph starts aligned to the right margin.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5efd2b6e31938559",
+    "task_type": "paragraph_layout",
+    "task_index": 0,
+    "expected_outcome": "Right alignment becomes active for subsequent text input.",
+    "preconditions": {
+      "description": "The document is open and the paragraph alignment controls are visible.",
+      "extras": [
+        {
+          "key": "current_alignment",
+          "value": "Default/left aligned"
+        },
+        {
+          "key": "selection",
+          "value": "No text selected"
+        }
+      ]
+    }
+  }
+}

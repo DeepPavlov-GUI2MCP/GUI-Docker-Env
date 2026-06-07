@@ -1,0 +1,107 @@
+{
+  "id": "96e3bf5d-2b85-592a-a0de-3d78d473f52f",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert an endnote at the current insertion point.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+            "path": "/home/user/Desktop/synthetic_writer_96e3bf5d2b85592aa0de3d78d473f52f.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_96e3bf5d2b85592aa0de3d78d473f52f.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_96e3bf5d2b85592aa0de3d78d473f52f.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "18988404a6554ace",
+    "task_type": "insert_at_cursor",
+    "task_index": 0,
+    "expected_outcome": "An endnote reference mark is added in the document and a corresponding endnote entry is created.",
+    "preconditions": {
+      "description": "The document contains a sentence with the caret placed immediately after the word to annotate, and no text is selected.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "single sentence in body text"
+        },
+        {
+          "key": "selection_state",
+          "value": "caret only"
+        },
+        {
+          "key": "target_position",
+          "value": "after a word in the sentence"
+        }
+      ]
+    },
+    "fixture": "single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_96e3bf5d2b85592aa0de3d78d473f52f.docx",
+    "window_name": "synthetic_writer_96e3bf5d2b85592aa0de3d78d473f52f.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_96e3bf5d2b85592aa0de3d78d473f52f.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "671f5a99-e70a-52e0-8dc9-0d1f6d60d916",
+  "task_id": "671f5a99-e70a-52e0-8dc9-0d1f6d60d916",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a chapter-related field by using the Field button in the toolbar.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "593074c8035800ee",
+    "task_type": "insert_at_cursor",
+    "task_index": 5,
+    "expected_outcome": "A field object for chapter information is inserted.",
+    "preconditions": {
+      "description": "LibreOffice Writer is focused and the page is empty.",
+      "extras": [
+        {
+          "key": "field_target",
+          "value": "Chapter field"
+        },
+        {
+          "key": "ui_state",
+          "value": "Field control enabled"
+        }
+      ]
+    }
+  }
+}

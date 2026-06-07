@@ -1,0 +1,36 @@
+{
+  "id": "5ef0412c-2de8-5fa1-9a55-235a45451b33",
+  "task_id": "5ef0412c-2de8-5fa1-9a55-235a45451b33",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Toggle strikethrough on and enter a single word, then press Enter.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "8f25a177f8919c8c",
+    "task_type": "cursor_format_toggle",
+    "task_index": 2,
+    "expected_outcome": "The entered word is shown with strikethrough; the next paragraph is created after it.",
+    "preconditions": {
+      "description": "Writer page is blank and ready for input.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "none"
+        },
+        {
+          "key": "cursor_state",
+          "value": "text insertion mode"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "fc2b4bd8-c7f8-59d5-bfc7-d3b2ed6c5aeb",
+  "task_id": "fc2b4bd8-c7f8-59d5-bfc7-d3b2ed6c5aeb",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add a footnote to the current position in the document.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "32482980bb19181d",
+    "task_type": "insert_at_cursor",
+    "task_index": 10,
+    "expected_outcome": "The insertion point is replaced by a footnote reference and the corresponding footnote section is started.",
+    "preconditions": {
+      "description": "LibreOffice Writer is displaying a blank untitled document with the caret in the editing area.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "blank page"
+        },
+        {
+          "key": "selection",
+          "value": "no selection"
+        }
+      ]
+    }
+  }
+}

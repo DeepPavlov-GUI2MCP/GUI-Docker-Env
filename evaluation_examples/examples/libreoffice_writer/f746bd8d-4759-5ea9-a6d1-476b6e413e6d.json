@@ -1,0 +1,36 @@
+{
+  "id": "f746bd8d-4759-5ea9-a6d1-476b6e413e6d",
+  "task_id": "f746bd8d-4759-5ea9-a6d1-476b6e413e6d",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use the Right toggle to make the next paragraph align to the right edge.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5efd2b6e31938559",
+    "task_type": "paragraph_layout",
+    "task_index": 6,
+    "expected_outcome": "Paragraph layout changes so new text is right-aligned.",
+    "preconditions": {
+      "description": "LibreOffice Writer shows a blank page and formatting toolbar.",
+      "extras": [
+        {
+          "key": "ui_state",
+          "value": "Right alignment control enabled"
+        },
+        {
+          "key": "document_state",
+          "value": "No content yet"
+        }
+      ]
+    }
+  }
+}

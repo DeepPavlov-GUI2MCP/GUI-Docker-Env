@@ -1,0 +1,107 @@
+{
+  "id": "3210747e-0e9e-5eb9-962a-e89cbaa9a4e8",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check whether Copy can be used right now without clicking the control.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/highlighted_text__sample_recruitment_phone_script.odt",
+            "path": "/home/user/Desktop/synthetic_writer_3210747e0e9e5eb9962ae89cbaa9a4e8.odt"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_3210747e0e9e5eb9962ae89cbaa9a4e8.odt"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_3210747e0e9e5eb9962ae89cbaa9a4e8.odt - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "2e772bfefe4e8a6f",
+    "task_type": "availability_check",
+    "task_index": 1,
+    "expected_outcome": "It is confirmed that Copy is disabled because there is no active selection.",
+    "preconditions": {
+      "description": "A blank or unselected document is open and no content range is highlighted.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "may be empty or contain unselected text"
+        },
+        {
+          "key": "selection_state",
+          "value": "no selection"
+        },
+        {
+          "key": "control_state",
+          "value": "Copy unavailable"
+        }
+      ]
+    },
+    "fixture": "highlighted_text__sample_recruitment_phone_script.odt",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_3210747e0e9e5eb9962ae89cbaa9a4e8.odt",
+    "window_name": "synthetic_writer_3210747e0e9e5eb9962ae89cbaa9a4e8.odt - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_3210747e0e9e5eb9962ae89cbaa9a4e8.odt - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

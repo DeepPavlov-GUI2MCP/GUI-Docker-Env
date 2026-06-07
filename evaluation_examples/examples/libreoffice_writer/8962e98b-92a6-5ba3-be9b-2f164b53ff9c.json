@@ -1,0 +1,36 @@
+{
+  "id": "8962e98b-92a6-5ba3-be9b-2f164b53ff9c",
+  "task_id": "8962e98b-92a6-5ba3-be9b-2f164b53ff9c",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Turn on bullets for the current typing position.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "51ced5784ca04890",
+    "task_type": "cursor_format_toggle",
+    "task_index": 1,
+    "expected_outcome": "New lines entered after the cursor are formatted as an unordered list.",
+    "preconditions": {
+      "description": "A blank document is open and ready for typing.",
+      "extras": [
+        {
+          "key": "typing_mode",
+          "value": "plain text"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

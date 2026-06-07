@@ -1,0 +1,36 @@
+{
+  "id": "6de84529-47d1-5ee6-845f-218c5f525c75",
+  "task_id": "6de84529-47d1-5ee6-845f-218c5f525c75",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Enable italic formatting and type two words separated by a space, keeping the formatting active for both words.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "070b4298960c7e57",
+    "task_type": "cursor_format_toggle",
+    "task_index": 3,
+    "expected_outcome": "Both typed words use italic styling.",
+    "preconditions": {
+      "description": "Caret is placed in the document body with no existing text selected.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "blank page"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

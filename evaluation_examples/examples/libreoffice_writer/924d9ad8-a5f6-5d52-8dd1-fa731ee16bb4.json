@@ -1,0 +1,107 @@
+{
+  "id": "924d9ad8-a5f6-5d52-8dd1-fa731ee16bb4",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a chart into a document that already contains two short paragraphs.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/short_paragraph__dublin_zoo_intro.docx",
+            "path": "/home/user/Desktop/synthetic_writer_924d9ad8a5f65d528dd1fa731ee16bb4.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_924d9ad8a5f65d528dd1fa731ee16bb4.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_924d9ad8a5f65d528dd1fa731ee16bb4.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "ba32ff6c264a4cd3",
+    "task_type": "insert_at_cursor",
+    "task_index": 2,
+    "expected_outcome": "A chart object appears in the document in addition to the existing text.",
+    "preconditions": {
+      "description": "The page already has two short paragraphs and there is room to add an embedded object.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Two simple paragraphs"
+        },
+        {
+          "key": "selection_state",
+          "value": "No active text selection"
+        },
+        {
+          "key": "layout_state",
+          "value": "Normal single-page document view"
+        }
+      ]
+    },
+    "fixture": "short_paragraph__dublin_zoo_intro.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_924d9ad8a5f65d528dd1fa731ee16bb4.docx",
+    "window_name": "synthetic_writer_924d9ad8a5f65d528dd1fa731ee16bb4.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_924d9ad8a5f65d528dd1fa731ee16bb4.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

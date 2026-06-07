@@ -1,0 +1,36 @@
+{
+  "id": "90334a59-4387-5e36-bd99-fdca5f2838a4",
+  "task_id": "90334a59-4387-5e36-bd99-fdca5f2838a4",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Enable right alignment before entering the next line of text in the document.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5efd2b6e31938559",
+    "task_type": "paragraph_layout",
+    "task_index": 2,
+    "expected_outcome": "New text entered after the toggle is aligned to the right.",
+    "preconditions": {
+      "description": "The page is empty except for the current insertion point.",
+      "extras": [
+        {
+          "key": "layout_control",
+          "value": "Right toggle visible"
+        },
+        {
+          "key": "document_state",
+          "value": "Untitled blank page"
+        }
+      ]
+    }
+  }
+}

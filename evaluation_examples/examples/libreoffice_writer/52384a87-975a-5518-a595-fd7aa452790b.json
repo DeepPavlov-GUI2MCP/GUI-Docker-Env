@@ -1,0 +1,233 @@
+{
+  "id": "52384a87-975a-5518-a595-fd7aa452790b",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Activate “More...” from the visible For All Text language submenu.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list__ccch9003_tutorial_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_52384a87975a5518a595fd7aa452790b.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_52384a87975a5518a595fd7aa452790b.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_52384a87975a5518a595fd7aa452790b.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Tools"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:a17009973bda9611",
+              "role": "menu",
+              "name": "Tools",
+              "recorded_bbox": [
+                455,
+                50,
+                49,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Language"
+            },
+            "meta": {
+              "edge_id": "e85ad249bd7d:31fe5737156da5b8",
+              "role": "menu",
+              "name": "Language",
+              "recorded_bbox": [
+                455,
+                150,
+                300,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "For All Text"
+            },
+            "meta": {
+              "edge_id": "d32e00db2ce8:770aaa16ad692e4f",
+              "role": "menu",
+              "name": "For All Text",
+              "recorded_bbox": [
+                753,
+                200,
+                235,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "For All Text",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/014013af658a/20260606T221358Z",
+    "macro_state_id": "014013af658a",
+    "micro_action_id": "ab274e8486f9049f",
+    "task_type": "dialog_open",
+    "task_index": 2,
+    "expected_outcome": "LibreOffice opens the detailed character/language settings dialog for all text, where additional installed languages can be selected.",
+    "preconditions": {
+      "description": "The document is a bilingual glossary and the next step is to access the full language list for all text. The Tools → Language → For All Text submenu is already open.",
+      "extras": [
+        {
+          "key": "desired_language_not_visible",
+          "value": "Polish (Poland)"
+        },
+        {
+          "key": "current_all_text_language",
+          "value": "None (Do not check spelling)"
+        },
+        {
+          "key": "document_type",
+          "value": "Glossary draft"
+        },
+        {
+          "key": "active_menu_path",
+          "value": "Tools > Language > For All Text"
+        }
+      ]
+    },
+    "fixture": "bulleted_list__ccch9003_tutorial_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_52384a87975a5518a595fd7aa452790b.docx",
+    "window_name": "synthetic_writer_52384a87975a5518a595fd7aa452790b.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "014013af658a",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 3,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:a17009973bda9611",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Tools",
+          "bbox": [
+            455,
+            50,
+            49,
+            25
+          ]
+        },
+        {
+          "edge_id": "e85ad249bd7d:31fe5737156da5b8",
+          "from_state": "e85ad249bd7d",
+          "role": "menu",
+          "name": "Language",
+          "bbox": [
+            455,
+            150,
+            300,
+            25
+          ]
+        },
+        {
+          "edge_id": "d32e00db2ce8:770aaa16ad692e4f",
+          "from_state": "d32e00db2ce8",
+          "role": "menu",
+          "name": "For All Text",
+          "bbox": [
+            753,
+            200,
+            235,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "For All Text"
+      },
+      "window_name": "synthetic_writer_52384a87975a5518a595fd7aa452790b.docx - LibreOffice Writer",
+      "preflight_step_count": 8
+    }
+  }
+}

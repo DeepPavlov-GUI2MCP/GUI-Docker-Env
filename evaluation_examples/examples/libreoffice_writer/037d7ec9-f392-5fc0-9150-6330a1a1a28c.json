@@ -1,0 +1,36 @@
+{
+  "id": "037d7ec9-f392-5fc0-9150-6330a1a1a28c",
+  "task_id": "037d7ec9-f392-5fc0-9150-6330a1a1a28c",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use the Table button to add a 6-column by 2-row grid.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "e42a806420f3e1b7",
+    "task_type": "insert_at_cursor",
+    "task_index": 8,
+    "expected_outcome": "A 6x2 table is inserted and the cursor moves into the table.",
+    "preconditions": {
+      "description": "Empty document with the insertion point ready.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "empty document"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

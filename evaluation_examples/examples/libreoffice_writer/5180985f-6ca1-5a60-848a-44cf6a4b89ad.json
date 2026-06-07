@@ -1,0 +1,36 @@
+{
+  "id": "5180985f-6ca1-5a60-848a-44cf6a4b89ad",
+  "task_id": "5180985f-6ca1-5a60-848a-44cf6a4b89ad",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add a comment to the highlighted sentence.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "873741bc22e18be9",
+    "task_type": "review_commenting",
+    "task_index": 1,
+    "expected_outcome": "A comment note is created and linked to the selected sentence.",
+    "preconditions": {
+      "description": "The document contains selected text ready for annotation.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "one sentence selected"
+        },
+        {
+          "key": "comments",
+          "value": "none currently present"
+        }
+      ]
+    }
+  }
+}

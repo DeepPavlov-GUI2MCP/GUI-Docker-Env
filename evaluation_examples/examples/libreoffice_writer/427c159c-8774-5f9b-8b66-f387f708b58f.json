@@ -1,0 +1,32 @@
+{
+  "id": "427c159c-8774-5f9b-8b66-f387f708b58f",
+  "task_id": "427c159c-8774-5f9b-8b66-f387f708b58f",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Find the button used for direct PDF export and confirm it is available on screen.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "2ca61a728a1af8c1",
+    "task_type": "unsafe_or_external_observation",
+    "task_index": 2,
+    "expected_outcome": "The control for direct PDF export is located visually; no file is created.",
+    "preconditions": {
+      "description": "An empty Writer document is shown with the full toolbar row available.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "empty document"
+        }
+      ]
+    }
+  }
+}

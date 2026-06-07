@@ -1,0 +1,147 @@
+{
+  "id": "3bb7735c-a25e-5d48-b6b7-f3bdb1b47ca3",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use Format > Title Page to add one title page and set the next page to begin at page number 1.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/numbered_list__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_3bb7735ca25e5d48b6b7f3bdb1b47ca3.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_3bb7735ca25e5d48b6b7f3bdb1b47ca3.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_3bb7735ca25e5d48b6b7f3bdb1b47ca3.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Format"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:09346a8f4b7dda04",
+              "role": "menu",
+              "name": "Format",
+              "recorded_bbox": [
+                238,
+                50,
+                62,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Format",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/32f76b8b1d9d/20260606T225258Z",
+    "macro_state_id": "32f76b8b1d9d",
+    "micro_action_id": "8e1dbbcc55d147a2",
+    "task_type": "insert_at_cursor",
+    "task_index": 6,
+    "expected_outcome": "One title page is added, and the body starts with page number 1 after the title page.",
+    "preconditions": {
+      "description": "A document with numbered pages is open and lacks front matter.",
+      "extras": [
+        {
+          "key": "page_number_sequence",
+          "value": "continuous from first page"
+        },
+        {
+          "key": "front_page_style",
+          "value": "not title page"
+        }
+      ]
+    },
+    "fixture": "numbered_list__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_3bb7735ca25e5d48b6b7f3bdb1b47ca3.docx",
+    "window_name": "synthetic_writer_3bb7735ca25e5d48b6b7f3bdb1b47ca3.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "32f76b8b1d9d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:09346a8f4b7dda04",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Format",
+          "bbox": [
+            238,
+            50,
+            62,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Format"
+      },
+      "window_name": "synthetic_writer_3bb7735ca25e5d48b6b7f3bdb1b47ca3.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "id": "c6baa115-45c3-5222-a5c1-58067c1814a8",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Invoke Cross-reference to add a reference after the words 'details in'.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/short_paragraph__dublin_zoo_intro.docx",
+            "path": "/home/user/Desktop/synthetic_writer_c6baa11545c35222a5c158067c1814a8.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_c6baa11545c35222a5c158067c1814a8.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_c6baa11545c35222a5c158067c1814a8.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "4c25ca064ae70b2b",
+    "task_type": "insert_at_cursor",
+    "task_index": 8,
+    "expected_outcome": "The cross-reference insertion UI opens, targeting the current cursor location after 'details in'.",
+    "preconditions": {
+      "description": "The active paragraph contains the words 'details in' and the insertion point is immediately after them; another referable object exists in the document.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Paragraph includes 'details in'"
+        },
+        {
+          "key": "document_structure",
+          "value": "Referable object exists"
+        }
+      ]
+    },
+    "fixture": "short_paragraph__dublin_zoo_intro.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_c6baa11545c35222a5c158067c1814a8.docx",
+    "window_name": "synthetic_writer_c6baa11545c35222a5c158067c1814a8.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_c6baa11545c35222a5c158067c1814a8.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

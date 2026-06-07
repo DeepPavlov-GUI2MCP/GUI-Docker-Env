@@ -1,0 +1,32 @@
+{
+  "id": "8548ee6c-f608-59d6-81c3-6acd9681ccf4",
+  "task_id": "8548ee6c-f608-59d6-81c3-6acd9681ccf4",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Click the Left alignment button to switch the active paragraph to left-aligned formatting.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "e34275bb4e92a8a8",
+    "task_type": "paragraph_layout",
+    "task_index": 1,
+    "expected_outcome": "Future text in the current paragraph aligns to the left margin.",
+    "preconditions": {
+      "description": "Caret is inside a paragraph with any non-left alignment.",
+      "extras": [
+        {
+          "key": "paragraph_alignment",
+          "value": "not left"
+        }
+      ]
+    }
+  }
+}

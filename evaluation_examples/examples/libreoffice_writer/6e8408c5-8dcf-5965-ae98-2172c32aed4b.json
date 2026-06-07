@@ -1,0 +1,186 @@
+{
+  "id": "6e8408c5-8dcf-5965-ae98-2172c32aed4b",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Choose the submenu entry \"Export as EPUB...\".",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_6e8408c58dcf5965ae982172c32aed4b.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_6e8408c58dcf5965ae982172c32aed4b.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_6e8408c58dcf5965ae982172c32aed4b.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "File"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:bb08184c0b3835ee",
+              "role": "menu",
+              "name": "File",
+              "recorded_bbox": [
+                57,
+                50,
+                39,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Export As"
+            },
+            "meta": {
+              "edge_id": "e65903c8fc2b:30309006bcf2999c",
+              "role": "menu",
+              "name": "Export As",
+              "recorded_bbox": [
+                57,
+                454,
+                302,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Export As",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/abd09c05bb29/20260606T225301Z",
+    "macro_state_id": "abd09c05bb29",
+    "micro_action_id": "4963cf876ddf3c7a",
+    "task_type": "dialog_open",
+    "task_index": 2,
+    "expected_outcome": "LibreOffice opens an EPUB export dialog instead of exporting immediately.",
+    "preconditions": {
+      "description": "The current macro state has reached File > Export As and the submenu entries are available.",
+      "extras": [
+        {
+          "key": "navigation_state",
+          "value": "Export As submenu open"
+        },
+        {
+          "key": "content_summary",
+          "value": "multi-line text document"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_6e8408c58dcf5965ae982172c32aed4b.docx",
+    "window_name": "synthetic_writer_6e8408c58dcf5965ae982172c32aed4b.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "abd09c05bb29",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:bb08184c0b3835ee",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "File",
+          "bbox": [
+            57,
+            50,
+            39,
+            25
+          ]
+        },
+        {
+          "edge_id": "e65903c8fc2b:30309006bcf2999c",
+          "from_state": "e65903c8fc2b",
+          "role": "menu",
+          "name": "Export As",
+          "bbox": [
+            57,
+            454,
+            302,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Export As"
+      },
+      "window_name": "synthetic_writer_6e8408c58dcf5965ae982172c32aed4b.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "bfb22683-201d-5326-acc4-8eec996c6b64",
+  "task_id": "bfb22683-201d-5326-acc4-8eec996c6b64",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Click Clone, then apply the cloned formatting to a different paragraph.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "a0e8ddacb0e894a2",
+    "task_type": "style_management",
+    "task_index": 1,
+    "expected_outcome": "The chosen paragraph takes on the cloned formatting from the original source.",
+    "preconditions": {
+      "description": "A document with two paragraphs is open; one paragraph has unique formatting.",
+      "extras": [
+        {
+          "key": "source_paragraph",
+          "value": "formatted differently from body text"
+        },
+        {
+          "key": "target_paragraph",
+          "value": "normal body text"
+        }
+      ]
+    }
+  }
+}

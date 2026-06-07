@@ -1,0 +1,103 @@
+{
+  "id": "7353ec04-946d-56be-9ca0-6b422726ffa4",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add a footnote reference after the first clause by clicking Footnote.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+            "path": "/home/user/Desktop/synthetic_writer_7353ec04946d56be9ca06b422726ffa4.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_7353ec04946d56be9ca06b422726ffa4.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_7353ec04946d56be9ca06b422726ffa4.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "32482980bb19181d",
+    "task_type": "insert_at_cursor",
+    "task_index": 8,
+    "expected_outcome": "A footnote reference is inserted after the comma ending the first clause, and a corresponding footnote is added to the page footer area.",
+    "preconditions": {
+      "description": "The sentence 'After the audit concluded, the team archived all paper records.' is present and the insertion point is immediately after 'concluded,'.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Sentence beginning 'After the audit concluded,'"
+        },
+        {
+          "key": "selection_state",
+          "value": "No text selected"
+        }
+      ]
+    },
+    "fixture": "single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_7353ec04946d56be9ca06b422726ffa4.docx",
+    "window_name": "synthetic_writer_7353ec04946d56be9ca06b422726ffa4.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_7353ec04946d56be9ca06b422726ffa4.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

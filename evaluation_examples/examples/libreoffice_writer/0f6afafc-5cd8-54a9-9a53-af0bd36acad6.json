@@ -1,0 +1,36 @@
+{
+  "id": "0f6afafc-5cd8-54a9-9a53-af0bd36acad6",
+  "task_id": "0f6afafc-5cd8-54a9-9a53-af0bd36acad6",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Select a word in the document and change its font color to red.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "604a561290a440d7",
+    "task_type": "selection_transform",
+    "task_index": 0,
+    "expected_outcome": "The selected word is recolored red, while the rest of the document remains unchanged.",
+    "preconditions": {
+      "description": "A document with at least one word is open and a single word is selected.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "One word highlighted"
+        },
+        {
+          "key": "existing_formatting",
+          "value": "Default black text"
+        }
+      ]
+    }
+  }
+}

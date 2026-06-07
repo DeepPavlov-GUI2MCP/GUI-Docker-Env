@@ -1,0 +1,107 @@
+{
+  "id": "6443574a-82b4-5f33-b6b4-2f8c1e22cd10",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use the Field button to begin adding a date-related field to the page.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_6443574a82b45f33b6b42f8c1e22cd10.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_6443574a82b45f33b6b42f8c1e22cd10.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_6443574a82b45f33b6b42f8c1e22cd10.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "593074c8035800ee",
+    "task_type": "insert_at_cursor",
+    "task_index": 1,
+    "expected_outcome": "LibreOffice opens the field insertion options so a date field can be selected.",
+    "preconditions": {
+      "description": "The document contains a short letter header and there is no active selection.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "letter header entered"
+        },
+        {
+          "key": "selection_state",
+          "value": "collapsed insertion point"
+        },
+        {
+          "key": "field_example",
+          "value": "date"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_6443574a82b45f33b6b42f8c1e22cd10.docx",
+    "window_name": "synthetic_writer_6443574a82b45f33b6b42f8c1e22cd10.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_6443574a82b45f33b6b42f8c1e22cd10.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

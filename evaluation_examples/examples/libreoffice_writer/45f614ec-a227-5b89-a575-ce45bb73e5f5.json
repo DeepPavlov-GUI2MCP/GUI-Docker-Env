@@ -1,0 +1,36 @@
+{
+  "id": "45f614ec-a227-5b89-a575-ce45bb73e5f5",
+  "task_id": "45f614ec-a227-5b89-a575-ce45bb73e5f5",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Choose a symbol from the Symbol button and insert it after the current cursor location.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "e04b538b97c3ed53",
+    "task_type": "insert_at_cursor",
+    "task_index": 4,
+    "expected_outcome": "The document now contains one newly inserted special character after the cursor.",
+    "preconditions": {
+      "description": "Blank page with caret active in the document body.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "empty document"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

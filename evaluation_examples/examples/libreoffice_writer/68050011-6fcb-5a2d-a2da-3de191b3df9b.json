@@ -1,0 +1,36 @@
+{
+  "id": "68050011-6fcb-5a2d-a2da-3de191b3df9b",
+  "task_id": "68050011-6fcb-5a2d-a2da-3de191b3df9b",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use Clone to copy the formatting from a heading and apply it to a short phrase.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "a0e8ddacb0e894a2",
+    "task_type": "style_management",
+    "task_index": 0,
+    "expected_outcome": "The target phrase adopts the same style/formatting as the source heading.",
+    "preconditions": {
+      "description": "The document contains at least one formatted heading and one plain text phrase.",
+      "extras": [
+        {
+          "key": "source_format",
+          "value": "bold, larger font"
+        },
+        {
+          "key": "target_text",
+          "value": "plain"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "278afcb2-a1c1-5fb5-848e-a02ed5b894ac",
+  "task_id": "278afcb2-a1c1-5fb5-848e-a02ed5b894ac",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a page break between two sections of text.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "73e5697b26bfdbec",
+    "task_type": "insert_at_cursor",
+    "task_index": 7,
+    "expected_outcome": "The second section starts on a new page.",
+    "preconditions": {
+      "description": "The document includes two short sections separated by the insertion point.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "sectioned text document"
+        },
+        {
+          "key": "selection",
+          "value": "no selection"
+        }
+      ]
+    }
+  }
+}

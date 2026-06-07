@@ -1,0 +1,107 @@
+{
+  "id": "a4cd7696-f5ae-58b9-9081-62bdd071a08b",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Highlight the selected item in a bulleted list.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/highlighted_text__sample_recruitment_phone_script.odt",
+            "path": "/home/user/Desktop/synthetic_writer_a4cd7696f5ae58b9908162bdd071a08b.odt"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_a4cd7696f5ae58b9908162bdd071a08b.odt"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_a4cd7696f5ae58b9908162bdd071a08b.odt - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "cc71148a841f4d55",
+    "task_type": "selection_transform",
+    "task_index": 4,
+    "expected_outcome": "Only the selected list item text becomes highlighted.",
+    "preconditions": {
+      "description": "A bulleted list exists and the text of one list item is selected.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Bulleted list with at least three items"
+        },
+        {
+          "key": "selection_state",
+          "value": "One list item text selected"
+        },
+        {
+          "key": "current_highlight",
+          "value": "Selected item not highlighted"
+        }
+      ]
+    },
+    "fixture": "highlighted_text__sample_recruitment_phone_script.odt",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_a4cd7696f5ae58b9908162bdd071a08b.odt",
+    "window_name": "synthetic_writer_a4cd7696f5ae58b9908162bdd071a08b.odt - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_a4cd7696f5ae58b9908162bdd071a08b.odt - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

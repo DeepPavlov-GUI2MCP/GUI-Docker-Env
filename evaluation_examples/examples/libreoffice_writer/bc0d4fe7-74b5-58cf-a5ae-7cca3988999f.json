@@ -1,0 +1,190 @@
+{
+  "id": "bc0d4fe7-74b5-58cf-a5ae-7cca3988999f",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a column break in the multi-column body text using the visible menu option.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/short_paragraph__dublin_zoo_intro.docx",
+            "path": "/home/user/Desktop/synthetic_writer_bc0d4fe774b558cfa5ae7cca3988999f.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_bc0d4fe774b558cfa5ae7cca3988999f.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_bc0d4fe774b558cfa5ae7cca3988999f.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Insert"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:1586a91a7495c7bb",
+              "role": "menu",
+              "name": "Insert",
+              "recorded_bbox": [
+                185,
+                50,
+                53,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "More Breaks"
+            },
+            "meta": {
+              "edge_id": "f7a7a6e1ff4f:4798916a49a49356",
+              "role": "menu",
+              "name": "More Breaks",
+              "recorded_bbox": [
+                185,
+                100,
+                345,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "More Breaks",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/cd1d4499cd59/20260606T225302Z",
+    "macro_state_id": "cd1d4499cd59",
+    "micro_action_id": "2f370f05d2760770",
+    "task_type": "insert_at_cursor",
+    "task_index": 5,
+    "expected_outcome": "The document gains a column break at the current location and text reflows into the next column.",
+    "preconditions": {
+      "description": "The document body is in columns, and the break should be inserted between existing paragraphs.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Travel guide text with multiple body paragraphs."
+        },
+        {
+          "key": "section_columns",
+          "value": "2"
+        },
+        {
+          "key": "break_position",
+          "value": "Between two body paragraphs."
+        }
+      ]
+    },
+    "fixture": "short_paragraph__dublin_zoo_intro.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_bc0d4fe774b558cfa5ae7cca3988999f.docx",
+    "window_name": "synthetic_writer_bc0d4fe774b558cfa5ae7cca3988999f.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "cd1d4499cd59",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:1586a91a7495c7bb",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Insert",
+          "bbox": [
+            185,
+            50,
+            53,
+            25
+          ]
+        },
+        {
+          "edge_id": "f7a7a6e1ff4f:4798916a49a49356",
+          "from_state": "f7a7a6e1ff4f",
+          "role": "menu",
+          "name": "More Breaks",
+          "bbox": [
+            185,
+            100,
+            345,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "More Breaks"
+      },
+      "window_name": "synthetic_writer_bc0d4fe774b558cfa5ae7cca3988999f.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    }
+  }
+}

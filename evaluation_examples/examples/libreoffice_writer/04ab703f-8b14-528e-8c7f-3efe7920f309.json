@@ -9,7 +9,7 @@
       "parameters": {
         "files": [
           {
-            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body.docx",
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
             "path": "/home/user/Desktop/synthetic_writer_04ab703f8b14528e8c7f3efe7920f309.docx"
           }
         ]
@@ -63,7 +63,7 @@
   },
   "synthetic": {
     "source": "gui_distillation.microaction_tasks",
-    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
     "macro_state_id": "36427b830db2",
     "micro_action_id": "b348558447d37705",
     "task_type": "paragraph_layout",
@@ -82,7 +82,7 @@
         }
       ]
     },
-    "fixture": "styled_heading_and_body.docx",
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
     "vm_document_path": "/home/user/Desktop/synthetic_writer_04ab703f8b14528e8c7f3efe7920f309.docx",
     "window_name": "synthetic_writer_04ab703f8b14528e8c7f3efe7920f309.docx - LibreOffice Writer",
     "macrostate_setup": {

@@ -1,0 +1,103 @@
+{
+  "id": "b46d5ca5-33f8-58be-85cc-4ebfe3e19c82",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Verify that the Cut toolbar button is disabled and cannot be used in the current state.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_b46d5ca533f858be85cc4ebfe3e19c82.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_b46d5ca533f858be85cc4ebfe3e19c82.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_b46d5ca533f858be85cc4ebfe3e19c82.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "f78826d617835817",
+    "task_type": "availability_check",
+    "task_index": 0,
+    "expected_outcome": "The Cut control remains unavailable, with no document content removed and no clipboard cut action performed.",
+    "preconditions": {
+      "description": "The document is open in Writer with no selected text or object, and the Cut button is visibly disabled.",
+      "extras": [
+        {
+          "key": "control_name",
+          "value": "Cut"
+        },
+        {
+          "key": "is_enabled",
+          "value": "false"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_b46d5ca533f858be85cc4ebfe3e19c82.docx",
+    "window_name": "synthetic_writer_b46d5ca533f858be85cc4ebfe3e19c82.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_b46d5ca533f858be85cc4ebfe3e19c82.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

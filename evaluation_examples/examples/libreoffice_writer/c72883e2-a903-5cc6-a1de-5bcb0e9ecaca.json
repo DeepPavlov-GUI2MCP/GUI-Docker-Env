@@ -1,0 +1,36 @@
+{
+  "id": "c72883e2-a903-5cc6-a1de-5bcb0e9ecaca",
+  "task_id": "c72883e2-a903-5cc6-a1de-5bcb0e9ecaca",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add a footnote after the current insertion point.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "32482980bb19181d",
+    "task_type": "insert_at_cursor",
+    "task_index": 1,
+    "expected_outcome": "A new footnote marker appears at the insertion point and a matching footnote entry is created.",
+    "preconditions": {
+      "description": "A Writer document is open and ready for typing, with the insertion point in the main text area.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "blank document"
+        },
+        {
+          "key": "selection",
+          "value": "collapsed cursor"
+        }
+      ]
+    }
+  }
+}

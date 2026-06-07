@@ -1,0 +1,190 @@
+{
+  "id": "ee1257d9-8ac6-5189-82ee-932e3c089960",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Look for the \"Copy\" button associated with Version Information and confirm it is currently available for use, without using it.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_ee1257d98ac6518982ee932e3c089960.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_ee1257d98ac6518982ee932e3c089960.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_ee1257d98ac6518982ee932e3c089960.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Help"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:547fcbaf37a7f7ba",
+              "role": "menu",
+              "name": "Help",
+              "recorded_bbox": [
+                572,
+                50,
+                46,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu item",
+              "name": "About LibreOffice"
+            },
+            "meta": {
+              "edge_id": "bd25ba81ea6e:236e4b69013287b6",
+              "role": "menu item",
+              "name": "About LibreOffice",
+              "recorded_bbox": [
+                572,
+                354,
+                299,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "dialog",
+              "name": "About LibreOffice",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c43cf836e8b3/20260606T225302Z",
+    "macro_state_id": "c43cf836e8b3",
+    "micro_action_id": "81cec4f3048db87c",
+    "task_type": "availability_check",
+    "task_index": 8,
+    "expected_outcome": "The Copy button is located and its current availability is confirmed; no text is copied.",
+    "preconditions": {
+      "description": "The dialog content includes the version, environment, locale, and misc lines.",
+      "extras": [
+        {
+          "key": "context_text",
+          "value": "Version Information"
+        },
+        {
+          "key": "target_control",
+          "value": "Copy"
+        },
+        {
+          "key": "clipboard_mutation",
+          "value": "forbidden"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_ee1257d98ac6518982ee932e3c089960.docx",
+    "window_name": "synthetic_writer_ee1257d98ac6518982ee932e3c089960.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "c43cf836e8b3",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:547fcbaf37a7f7ba",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Help",
+          "bbox": [
+            572,
+            50,
+            46,
+            25
+          ]
+        },
+        {
+          "edge_id": "bd25ba81ea6e:236e4b69013287b6",
+          "from_state": "bd25ba81ea6e",
+          "role": "menu item",
+          "name": "About LibreOffice",
+          "bbox": [
+            572,
+            354,
+            299,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "dialog",
+        "role": "dialog",
+        "name": "About LibreOffice"
+      },
+      "window_name": "synthetic_writer_ee1257d98ac6518982ee932e3c089960.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    }
+  }
+}

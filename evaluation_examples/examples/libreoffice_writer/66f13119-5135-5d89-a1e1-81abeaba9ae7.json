@@ -1,0 +1,36 @@
+{
+  "id": "66f13119-5135-5d89-a1e1-81abeaba9ae7",
+  "task_id": "66f13119-5135-5d89-a1e1-81abeaba9ae7",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check whether the Print icon is present and accessible on the top toolbar.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "4df97f63ba5ded13",
+    "task_type": "unsafe_or_external_observation",
+    "task_index": 1,
+    "expected_outcome": "The interface confirms the availability of a Print control without opening any print dialog.",
+    "preconditions": {
+      "description": "The Writer main window is active and the page is empty.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "empty document"
+        },
+        {
+          "key": "selection",
+          "value": "collapsed cursor"
+        }
+      ]
+    }
+  }
+}

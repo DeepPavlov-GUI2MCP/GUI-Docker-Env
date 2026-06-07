@@ -1,0 +1,36 @@
+{
+  "id": "ea37288d-f168-5fcc-9774-180a90147be8",
+  "task_id": "ea37288d-f168-5fcc-9774-180a90147be8",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use the image control to add a decorative picture to the document body.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5398a209dce824da",
+    "task_type": "insert_at_cursor",
+    "task_index": 6,
+    "expected_outcome": "The document contains an inserted picture object in the body area.",
+    "preconditions": {
+      "description": "The Writer canvas is open on a new untitled document.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "Blank page with default margins"
+        },
+        {
+          "key": "ui_state",
+          "value": "Image command enabled"
+        }
+      ]
+    }
+  }
+}

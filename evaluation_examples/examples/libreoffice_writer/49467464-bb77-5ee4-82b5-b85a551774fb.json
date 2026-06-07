@@ -1,0 +1,40 @@
+{
+  "id": "49467464-bb77-5ee4-82b5-b85a551774fb",
+  "task_id": "49467464-bb77-5ee4-82b5-b85a551774fb",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use the Symbol button to insert a currency symbol near the current cursor position.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "e04b538b97c3ed53",
+    "task_type": "insert_at_cursor",
+    "task_index": 1,
+    "expected_outcome": "A currency-related symbol appears in the document where the cursor was located.",
+    "preconditions": {
+      "description": "Writer document is open and ready for typing with no text selected.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "empty document"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        },
+        {
+          "key": "target_area",
+          "value": "main page body"
+        }
+      ]
+    }
+  }
+}

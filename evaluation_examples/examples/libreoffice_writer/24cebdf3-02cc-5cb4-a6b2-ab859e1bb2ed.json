@@ -1,0 +1,36 @@
+{
+  "id": "24cebdf3-02cc-5cb4-a6b2-ab859e1bb2ed",
+  "task_id": "24cebdf3-02cc-5cb4-a6b2-ab859e1bb2ed",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add a screenshot-like graphic to the page by activating the image insertion control and choosing any available local image.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5398a209dce824da",
+    "task_type": "insert_at_cursor",
+    "task_index": 1,
+    "expected_outcome": "A graphic appears on the page as an inserted image object.",
+    "preconditions": {
+      "description": "Writer is open on a new empty page, and the Image control is enabled in the toolbar.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "No text or object selection"
+        },
+        {
+          "key": "document_state",
+          "value": "Empty document body"
+        }
+      ]
+    }
+  }
+}

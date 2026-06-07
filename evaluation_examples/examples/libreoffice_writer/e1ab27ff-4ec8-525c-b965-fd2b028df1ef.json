@@ -1,0 +1,40 @@
+{
+  "id": "e1ab27ff-4ec8-525c-b965-fd2b028df1ef",
+  "task_id": "e1ab27ff-4ec8-525c-b965-fd2b028df1ef",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a punctuation or dingbat character using the Symbol control.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "e04b538b97c3ed53",
+    "task_type": "insert_at_cursor",
+    "task_index": 3,
+    "expected_outcome": "A non-ASCII symbol is added to the document text.",
+    "preconditions": {
+      "description": "The insertion point is active in an otherwise empty Writer page.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "empty document"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        },
+        {
+          "key": "toolbar_state",
+          "value": "Symbol button enabled"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "id": "5a461015-29f5-548b-b819-f427386bd8c7",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Confirm visually that LibreOffice Help appears in the Help menu with an F1 accelerator, but do not trigger it.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_5a46101529f5548bb819f427386bd8c7.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_5a46101529f5548bb819f427386bd8c7.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_5a46101529f5548bb819f427386bd8c7.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Help"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:547fcbaf37a7f7ba",
+              "role": "menu",
+              "name": "Help",
+              "recorded_bbox": [
+                572,
+                50,
+                46,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Help",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/bd25ba81ea6e/20260606T225301Z",
+    "macro_state_id": "bd25ba81ea6e",
+    "micro_action_id": "b1e050ee9392671e",
+    "task_type": "unsafe_or_external_observation",
+    "task_index": 9,
+    "expected_outcome": "The presence of LibreOffice Help with F1 is confirmed; the app remains on the same document and menu.",
+    "preconditions": {
+      "description": "The Help menu is expanded and accelerator text is displayed on the right side of entries.",
+      "extras": [
+        {
+          "key": "accelerator_check",
+          "value": "F1"
+        },
+        {
+          "key": "command_under_test",
+          "value": "LibreOffice Help"
+        },
+        {
+          "key": "click_allowed",
+          "value": "no"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_5a46101529f5548bb819f427386bd8c7.docx",
+    "window_name": "synthetic_writer_5a46101529f5548bb819f427386bd8c7.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "bd25ba81ea6e",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:547fcbaf37a7f7ba",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Help",
+          "bbox": [
+            572,
+            50,
+            46,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Help"
+      },
+      "window_name": "synthetic_writer_5a46101529f5548bb819f427386bd8c7.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    }
+  }
+}

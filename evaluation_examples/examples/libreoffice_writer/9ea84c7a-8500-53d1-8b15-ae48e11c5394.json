@@ -1,0 +1,107 @@
+{
+  "id": "9ea84c7a-8500-53d1-8b15-ae48e11c5394",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Turn on Italic so the next text typed will be italicized.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_9ea84c7a850053d18b15ae48e11c5394.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_9ea84c7a850053d18b15ae48e11c5394.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_9ea84c7a850053d18b15ae48e11c5394.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "070b4298960c7e57",
+    "task_type": "cursor_format_toggle",
+    "task_index": 0,
+    "expected_outcome": "The Italic toggle becomes active for upcoming typing, while existing document content remains unchanged.",
+    "preconditions": {
+      "description": "A blank Writer document is open and no text is selected.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "empty document"
+        },
+        {
+          "key": "selection_state",
+          "value": "no selection"
+        },
+        {
+          "key": "italic_state",
+          "value": "off before action"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_9ea84c7a850053d18b15ae48e11c5394.docx",
+    "window_name": "synthetic_writer_9ea84c7a850053d18b15ae48e11c5394.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_9ea84c7a850053d18b15ae48e11c5394.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

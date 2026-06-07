@@ -1,0 +1,40 @@
+{
+  "id": "598342b1-566f-5946-b9d0-691cadf1104e",
+  "task_id": "598342b1-566f-5946-b9d0-691cadf1104e",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a special character from the Symbol button, choosing a math or punctuation symbol and place it at the cursor.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "e04b538b97c3ed53",
+    "task_type": "insert_at_cursor",
+    "task_index": 0,
+    "expected_outcome": "A single special character is inserted into the document at the cursor position.",
+    "preconditions": {
+      "description": "Blank Writer document with the insertion point active in the body text area.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "empty document"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        },
+        {
+          "key": "toolbar_state",
+          "value": "Symbol button visible and enabled"
+        }
+      ]
+    }
+  }
+}

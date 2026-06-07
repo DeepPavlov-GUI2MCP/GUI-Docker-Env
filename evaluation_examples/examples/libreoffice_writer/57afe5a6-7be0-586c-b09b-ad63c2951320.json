@@ -1,0 +1,36 @@
+{
+  "id": "57afe5a6-7be0-586c-b09b-ad63c2951320",
+  "task_id": "57afe5a6-7be0-586c-b09b-ad63c2951320",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Click Cross-reference to bring up the cross-reference insertion dialog.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "4c25ca064ae70b2b",
+    "task_type": "dialog_open",
+    "task_index": 1,
+    "expected_outcome": "A cross-reference dialog/window opens for choosing target and reference format.",
+    "preconditions": {
+      "description": "The document editor is active and nothing is selected.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "empty document"
+        },
+        {
+          "key": "selection",
+          "value": "collapsed cursor"
+        }
+      ]
+    }
+  }
+}

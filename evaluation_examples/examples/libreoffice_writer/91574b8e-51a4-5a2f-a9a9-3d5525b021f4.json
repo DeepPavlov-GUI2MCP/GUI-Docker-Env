@@ -1,0 +1,36 @@
+{
+  "id": "91574b8e-51a4-5a2f-a9a9-3d5525b021f4",
+  "task_id": "91574b8e-51a4-5a2f-a9a9-3d5525b021f4",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Switch superscript formatting on for the current typing position.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "427c014248ac7406",
+    "task_type": "cursor_format_toggle",
+    "task_index": 4,
+    "expected_outcome": "Typing immediately after the cursor uses superscript formatting.",
+    "preconditions": {
+      "description": "An untitled Writer document is open on a blank page with no selection.",
+      "extras": [
+        {
+          "key": "typing_mode",
+          "value": "baseline text"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

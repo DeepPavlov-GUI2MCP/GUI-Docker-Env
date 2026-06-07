@@ -1,0 +1,36 @@
+{
+  "id": "1ba110c4-06ff-5ccf-9e54-3a53800a8def",
+  "task_id": "1ba110c4-06ff-5ccf-9e54-3a53800a8def",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Start a footnote at the current insertion point.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "32482980bb19181d",
+    "task_type": "insert_at_cursor",
+    "task_index": 5,
+    "expected_outcome": "A footnote is inserted and focus is moved to the generated note area.",
+    "preconditions": {
+      "description": "The current document contains no content and the caret is in the main editing area.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "blank Writer document"
+        },
+        {
+          "key": "selection",
+          "value": "caret only"
+        }
+      ]
+    }
+  }
+}

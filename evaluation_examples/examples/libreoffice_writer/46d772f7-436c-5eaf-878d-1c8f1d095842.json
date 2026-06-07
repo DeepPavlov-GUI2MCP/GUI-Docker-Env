@@ -1,0 +1,36 @@
+{
+  "id": "46d772f7-436c-5eaf-878d-1c8f1d095842",
+  "task_id": "46d772f7-436c-5eaf-878d-1c8f1d095842",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use the Center button so the next paragraph you type will be centered.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "b348558447d37705",
+    "task_type": "paragraph_layout",
+    "task_index": 2,
+    "expected_outcome": "Future paragraphs inherit centered alignment until changed again.",
+    "preconditions": {
+      "description": "Writer is open with the cursor in a blank paragraph.",
+      "extras": [
+        {
+          "key": "paragraph_style",
+          "value": "Default Paragraph Style"
+        },
+        {
+          "key": "typing_state",
+          "value": "ready"
+        }
+      ]
+    }
+  }
+}

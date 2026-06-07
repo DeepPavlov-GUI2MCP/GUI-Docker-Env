@@ -1,0 +1,36 @@
+{
+  "id": "ee73cad8-f020-517d-a8f4-8b615565ec3a",
+  "task_id": "ee73cad8-f020-517d-a8f4-8b615565ec3a",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Run spelling check for the document.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "840cc918ba7d67e7",
+    "task_type": "document_analysis",
+    "task_index": 0,
+    "expected_outcome": "The spelling checker starts and scans the document for possible errors.",
+    "preconditions": {
+      "description": "A Writer document with at least one misspelled word is open.",
+      "extras": [
+        {
+          "key": "document_language",
+          "value": "English (USA)"
+        },
+        {
+          "key": "selection",
+          "value": "no selection"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "a0a0a305-593c-5bce-ab6c-811e46fe223e",
+  "task_id": "a0a0a305-593c-5bce-ab6c-811e46fe223e",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Create a comment for the selected content and leave the text unchanged.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "873741bc22e18be9",
+    "task_type": "review_commenting",
+    "task_index": 9,
+    "expected_outcome": "Only a comment is added; the selected text itself is not modified.",
+    "preconditions": {
+      "description": "A phrase is selected and the document is in normal editing mode.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "phrase selected"
+        },
+        {
+          "key": "review_state",
+          "value": "comments enabled"
+        }
+      ]
+    }
+  }
+}

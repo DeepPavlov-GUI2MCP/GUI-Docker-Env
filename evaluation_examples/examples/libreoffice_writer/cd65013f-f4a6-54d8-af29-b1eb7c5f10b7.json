@@ -1,0 +1,36 @@
+{
+  "id": "cd65013f-f4a6-54d8-af29-b1eb7c5f10b7",
+  "task_id": "cd65013f-f4a6-54d8-af29-b1eb7c5f10b7",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add an endnote to mark a citation point in the paragraph.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "18988404a6554ace",
+    "task_type": "insert_at_cursor",
+    "task_index": 5,
+    "expected_outcome": "The paragraph contains a new endnote reference and the note area is available.",
+    "preconditions": {
+      "description": "A paragraph exists with the caret in the middle of the line.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "paragraph text present"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

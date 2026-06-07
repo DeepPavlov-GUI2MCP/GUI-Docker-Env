@@ -1,0 +1,36 @@
+{
+  "id": "c258440f-04a4-5293-b63a-a0a9fe85a193",
+  "task_id": "c258440f-04a4-5293-b63a-a0a9fe85a193",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add a new page at the current insertion point using Page Break.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "73e5697b26bfdbec",
+    "task_type": "insert_at_cursor",
+    "task_index": 8,
+    "expected_outcome": "A page break is placed and a new blank page is available after it.",
+    "preconditions": {
+      "description": "The caret is in the document body and nothing is selected.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "writer document with editable body"
+        },
+        {
+          "key": "selection",
+          "value": "no selection"
+        }
+      ]
+    }
+  }
+}

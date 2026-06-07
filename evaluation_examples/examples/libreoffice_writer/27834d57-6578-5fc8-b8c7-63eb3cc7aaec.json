@@ -1,0 +1,36 @@
+{
+  "id": "27834d57-6578-5fc8-b8c7-63eb3cc7aaec",
+  "task_id": "27834d57-6578-5fc8-b8c7-63eb3cc7aaec",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Create an endnote so the document can separate commentary from the main text.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "18988404a6554ace",
+    "task_type": "insert_at_cursor",
+    "task_index": 7,
+    "expected_outcome": "An endnote reference is inserted and a matching endnote is added at the end of the document or note section.",
+    "preconditions": {
+      "description": "The current page contains a short line of text and the cursor is positioned after it.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "line of text"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

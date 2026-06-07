@@ -1,0 +1,36 @@
+{
+  "id": "12b4917a-bb29-56d8-ae1c-d90a38a09ba3",
+  "task_id": "12b4917a-bb29-56d8-ae1c-d90a38a09ba3",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Create a field insertion for the current date and place it into the document.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "593074c8035800ee",
+    "task_type": "insert_at_cursor",
+    "task_index": 4,
+    "expected_outcome": "A date field is inserted and visible in the page content.",
+    "preconditions": {
+      "description": "The document is open with a blank page and no selections.",
+      "extras": [
+        {
+          "key": "field_target",
+          "value": "Current date"
+        },
+        {
+          "key": "document_state",
+          "value": "Empty body"
+        }
+      ]
+    }
+  }
+}

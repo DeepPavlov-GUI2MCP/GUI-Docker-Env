@@ -1,0 +1,36 @@
+{
+  "id": "5fd93c13-d7e3-5f44-97d8-8c4cbe61d76d",
+  "task_id": "5fd93c13-d7e3-5f44-97d8-8c4cbe61d76d",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Enable bullets before typing a set of items.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "51ced5784ca04890",
+    "task_type": "cursor_format_toggle",
+    "task_index": 8,
+    "expected_outcome": "Subsequent paragraphs are inserted as an unordered list.",
+    "preconditions": {
+      "description": "The document is blank and the insertion point is available.",
+      "extras": [
+        {
+          "key": "typing_mode",
+          "value": "plain text"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}

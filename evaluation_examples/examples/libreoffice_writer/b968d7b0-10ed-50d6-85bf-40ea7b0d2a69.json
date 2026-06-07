@@ -1,0 +1,36 @@
+{
+  "id": "b968d7b0-10ed-50d6-85bf-40ea7b0d2a69",
+  "task_id": "b968d7b0-10ed-50d6-85bf-40ea7b0d2a69",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Trigger the spelling checker on the current document contents.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "840cc918ba7d67e7",
+    "task_type": "document_analysis",
+    "task_index": 5,
+    "expected_outcome": "A spell-check scan is initiated.",
+    "preconditions": {
+      "description": "The document contains ordinary prose and at least one word not in the dictionary.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "draft text with a typo"
+        },
+        {
+          "key": "selection",
+          "value": "no selection"
+        }
+      ]
+    }
+  }
+}

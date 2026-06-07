@@ -1,0 +1,36 @@
+{
+  "id": "87cce025-3f4e-53f3-b8bc-eee05132144d",
+  "task_id": "87cce025-3f4e-53f3-b8bc-eee05132144d",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Click Justified to make the active paragraph span the full text width.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "abd8fb0ce2943745",
+    "task_type": "paragraph_layout",
+    "task_index": 2,
+    "expected_outcome": "The active paragraph uses justified alignment instead of its previous alignment.",
+    "preconditions": {
+      "description": "Writer page contains body text with the paragraph cursor inside it.",
+      "extras": [
+        {
+          "key": "paragraph_alignment",
+          "value": "left or centered"
+        },
+        {
+          "key": "font",
+          "value": "Liberation Serif 12 pt"
+        }
+      ]
+    }
+  }
+}

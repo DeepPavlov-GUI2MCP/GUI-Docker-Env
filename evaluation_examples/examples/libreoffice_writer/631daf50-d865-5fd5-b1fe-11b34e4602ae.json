@@ -1,0 +1,36 @@
+{
+  "id": "631daf50-d865-5fd5-b1fe-11b34e4602ae",
+  "task_id": "631daf50-d865-5fd5-b1fe-11b34e4602ae",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add a text box so the document contains an editable framed area.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "d7fbf65f004a5243",
+    "task_type": "insert_at_cursor",
+    "task_index": 2,
+    "expected_outcome": "A text box is inserted and can accept typed text.",
+    "preconditions": {
+      "description": "The caret is positioned in the blank document body.",
+      "extras": [
+        {
+          "key": "page",
+          "value": "first page"
+        },
+        {
+          "key": "input_mode",
+          "value": "text insertion ready"
+        }
+      ]
+    }
+  }
+}

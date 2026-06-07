@@ -1,0 +1,36 @@
+{
+  "id": "5d7e246a-ed67-54bb-9369-e5103386c57f",
+  "task_id": "5d7e246a-ed67-54bb-9369-e5103386c57f",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open the spelling review workflow from the toolbar.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "840cc918ba7d67e7",
+    "task_type": "document_analysis",
+    "task_index": 8,
+    "expected_outcome": "The spelling checker is launched to inspect the document content.",
+    "preconditions": {
+      "description": "A document with several words is active in Writer.",
+      "extras": [
+        {
+          "key": "language",
+          "value": "English (USA)"
+        },
+        {
+          "key": "selection",
+          "value": "no selection"
+        }
+      ]
+    }
+  }
+}

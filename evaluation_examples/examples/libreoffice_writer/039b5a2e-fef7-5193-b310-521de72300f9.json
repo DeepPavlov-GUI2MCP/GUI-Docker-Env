@@ -1,0 +1,36 @@
+{
+  "id": "039b5a2e-fef7-5193-b310-521de72300f9",
+  "task_id": "039b5a2e-fef7-5193-b310-521de72300f9",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use Clear to strip formatting from the selected sentence while keeping the text content.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "73a2e697d7ee0626",
+    "task_type": "selection_transform",
+    "task_index": 3,
+    "expected_outcome": "The sentence remains, but its custom font effects are removed.",
+    "preconditions": {
+      "description": "One sentence with special formatting is selected in the body text.",
+      "extras": [
+        {
+          "key": "selection",
+          "value": "Sentence selected"
+        },
+        {
+          "key": "existing_formatting",
+          "value": "Bold/italic/color overrides present"
+        }
+      ]
+    }
+  }
+}

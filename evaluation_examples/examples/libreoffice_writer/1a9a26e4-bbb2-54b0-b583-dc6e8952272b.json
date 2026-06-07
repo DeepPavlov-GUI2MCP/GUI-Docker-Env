@@ -1,0 +1,151 @@
+{
+  "id": "1a9a26e4-bbb2-54b0-b583-dc6e8952272b",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open Exchange Database... from the Edit menu in order to review available source replacement options.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_1a9a26e4bbb254b0b583dc6e8952272b.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_1a9a26e4bbb254b0b583dc6e8952272b.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_1a9a26e4bbb254b0b583dc6e8952272b.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Edit"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:400b7cc1f0851d8a",
+              "role": "menu",
+              "name": "Edit",
+              "recorded_bbox": [
+                96,
+                50,
+                41,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Edit",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/2e0335a47afa/20260606T225258Z",
+    "macro_state_id": "2e0335a47afa",
+    "micro_action_id": "104db1b5dbd107f3",
+    "task_type": "dialog_open",
+    "task_index": 11,
+    "expected_outcome": "The Exchange Database dialog appears as a modal interface for source replacement.",
+    "preconditions": {
+      "description": "A Writer document is open and no other modal dialog is blocking interaction; the Edit menu is expanded.",
+      "extras": [
+        {
+          "key": "blocking_dialogs",
+          "value": "none"
+        },
+        {
+          "key": "menu_path",
+          "value": "Edit"
+        },
+        {
+          "key": "target_menu_item",
+          "value": "Exchange Database..."
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_1a9a26e4bbb254b0b583dc6e8952272b.docx",
+    "window_name": "synthetic_writer_1a9a26e4bbb254b0b583dc6e8952272b.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "2e0335a47afa",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:400b7cc1f0851d8a",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Edit",
+          "bbox": [
+            96,
+            50,
+            41,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Edit"
+      },
+      "window_name": "synthetic_writer_1a9a26e4bbb254b0b583dc6e8952272b.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    }
+  }
+}

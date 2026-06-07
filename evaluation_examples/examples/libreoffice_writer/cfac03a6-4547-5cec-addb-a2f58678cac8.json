@@ -1,0 +1,36 @@
+{
+  "id": "cfac03a6-4547-5cec-addb-a2f58678cac8",
+  "task_id": "cfac03a6-4547-5cec-addb-a2f58678cac8",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check the document’s spelling before continuing to edit.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "840cc918ba7d67e7",
+    "task_type": "document_analysis",
+    "task_index": 9,
+    "expected_outcome": "Spelling analysis is started on the current file.",
+    "preconditions": {
+      "description": "A plain text document is open in the editing area.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "editable draft containing a typo"
+        },
+        {
+          "key": "selection",
+          "value": "no selection"
+        }
+      ]
+    }
+  }
+}

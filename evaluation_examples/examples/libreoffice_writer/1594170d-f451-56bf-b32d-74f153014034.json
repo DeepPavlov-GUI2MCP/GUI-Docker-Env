@@ -1,0 +1,107 @@
+{
+  "id": "1594170d-f451-56bf-b32d-74f153014034",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Verify that Redo is currently unavailable and do not try to press it.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_1594170df45156bfb32d74f153014034.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_1594170df45156bfb32d74f153014034.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_1594170df45156bfb32d74f153014034.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 30,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "301277f609a4e065",
+    "task_type": "availability_check",
+    "task_index": 0,
+    "expected_outcome": "The Redo control is confirmed disabled, with no change to the document.",
+    "preconditions": {
+      "description": "The document is in its initial state with no undone actions available to restore.",
+      "extras": [
+        {
+          "key": "redo_history",
+          "value": "none"
+        },
+        {
+          "key": "editing_state",
+          "value": "no prior undo performed"
+        },
+        {
+          "key": "control_state",
+          "value": "Redo disabled"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_1594170df45156bfb32d74f153014034.docx",
+    "window_name": "synthetic_writer_1594170df45156bfb32d74f153014034.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_1594170df45156bfb32d74f153014034.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    }
+  }
+}

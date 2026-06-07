@@ -1,0 +1,36 @@
+{
+  "id": "5538cf14-d25f-519f-9360-9e6e5e0e9e0a",
+  "task_id": "5538cf14-d25f-519f-9360-9e6e5e0e9e0a",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Inspect the interface for the Save icon and confirm it can be seen without executing any file action.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5562545d8f3e3722",
+    "task_type": "unsafe_or_external_observation",
+    "task_index": 2,
+    "expected_outcome": "The Save button is identified as available, with no dialog opened and no file written.",
+    "preconditions": {
+      "description": "A new untitled Writer document is displayed.",
+      "extras": [
+        {
+          "key": "safety",
+          "value": "Observation only; no click on Save"
+        },
+        {
+          "key": "document_state",
+          "value": "Blank, unsaved document"
+        }
+      ]
+    }
+  }
+}

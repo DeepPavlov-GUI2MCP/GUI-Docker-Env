@@ -1,0 +1,36 @@
+{
+  "id": "a15e83b4-072d-56f9-95b4-e639394884fb",
+  "task_id": "a15e83b4-072d-56f9-95b4-e639394884fb",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check the Cut toolbar button while no text is selected and confirm it cannot be used.",
+  "config": [],
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "os": "ubuntu",
+  "evaluator": {
+    "func": "always_zero"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4-mini/36427b830db2/20260606T195618Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "f78826d617835817",
+    "task_type": "availability_check",
+    "task_index": 1,
+    "expected_outcome": "Cut stays disabled; no action is performed.",
+    "preconditions": {
+      "description": "Writer is open on a new document with an insertion caret but no selection.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "empty document"
+        },
+        {
+          "key": "selection",
+          "value": "none"
+        }
+      ]
+    }
+  }
+}
