@@ -121,7 +121,7 @@
   },
   "synthetic": {
     "source": "gui_distillation.microaction_tasks",
-    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/bec5c2ab42e1/20260606T225301Z",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/bec5c2ab42e1/20260606T225301Z",
     "macro_state_id": "bec5c2ab42e1",
     "micro_action_id": "9c4be7c9736dfbfa",
     "task_type": "view_or_zoom",

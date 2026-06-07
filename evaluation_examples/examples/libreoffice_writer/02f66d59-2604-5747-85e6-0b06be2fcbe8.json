@@ -94,7 +94,7 @@
   },
   "synthetic": {
     "source": "gui_distillation.microaction_tasks",
-    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/e85ad249bd7d/20260606T225303Z",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/e85ad249bd7d/20260606T225303Z",
     "macro_state_id": "e85ad249bd7d",
     "micro_action_id": "d8f7ab440fa4085e",
     "task_type": "dialog_open",

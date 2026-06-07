@@ -68,7 +68,7 @@
             "seconds": 0.8
           },
           {
-            "op": "move",
+            "op": "click",
             "selector": {
               "require_bbox": true,
               "states": {
@@ -121,7 +121,7 @@
   },
   "synthetic": {
     "source": "gui_distillation.microaction_tasks",
-    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c43cf836e8b3/20260606T225302Z",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c43cf836e8b3/20260606T225302Z",
     "macro_state_id": "c43cf836e8b3",
     "micro_action_id": "81cec4f3048db87c",
     "task_type": "availability_check",

@@ -121,7 +121,7 @@
   },
   "synthetic": {
     "source": "gui_distillation.microaction_tasks",
-    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/cd1d4499cd59/20260606T225302Z",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/cd1d4499cd59/20260606T225302Z",
     "macro_state_id": "cd1d4499cd59",
     "micro_action_id": "942be69c22392f04",
     "task_type": "table_structure",

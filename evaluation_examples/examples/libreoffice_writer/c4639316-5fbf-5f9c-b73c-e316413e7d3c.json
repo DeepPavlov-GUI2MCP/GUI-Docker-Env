@@ -94,7 +94,7 @@
   },
   "synthetic": {
     "source": "gui_distillation.microaction_tasks",
-    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/979ebb535cc1/20260606T225300Z",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/979ebb535cc1/20260606T225300Z",
     "macro_state_id": "979ebb535cc1",
     "micro_action_id": "e7ae4fc417e06a50",
     "task_type": "style_management",

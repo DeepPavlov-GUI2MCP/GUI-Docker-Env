@@ -121,7 +121,7 @@
   },
   "synthetic": {
     "source": "gui_distillation.microaction_tasks",
-    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/a3fd82503da5/20260606T225300Z",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/a3fd82503da5/20260606T225300Z",
     "macro_state_id": "a3fd82503da5",
     "micro_action_id": "140ba0d188921fd6",
     "task_type": "selection_transform",

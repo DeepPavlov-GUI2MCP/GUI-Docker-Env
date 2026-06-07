@@ -63,7 +63,7 @@
   },
   "synthetic": {
     "source": "gui_distillation.microaction_tasks",
-    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
     "macro_state_id": "36427b830db2",
     "micro_action_id": "593074c8035800ee",
     "task_type": "insert_at_cursor",

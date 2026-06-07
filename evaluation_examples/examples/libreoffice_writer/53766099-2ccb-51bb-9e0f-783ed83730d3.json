@@ -68,7 +68,7 @@
             "seconds": 0.8
           },
           {
-            "op": "move",
+            "op": "click",
             "selector": {
               "require_bbox": true,
               "states": {
@@ -121,7 +121,7 @@
   },
   "synthetic": {
     "source": "gui_distillation.microaction_tasks",
-    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/8ae0e75d5d09/20260606T225300Z",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/8ae0e75d5d09/20260606T225300Z",
     "macro_state_id": "8ae0e75d5d09",
     "micro_action_id": "07c3799ecfd87a65",
     "task_type": "document_analysis",

@@ -94,7 +94,7 @@
   },
   "synthetic": {
     "source": "gui_distillation.microaction_tasks",
-    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c8b0042c9b42/20260606T225302Z",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c8b0042c9b42/20260606T225302Z",
     "macro_state_id": "c8b0042c9b42",
     "micro_action_id": "a83b88926c920efe",
     "task_type": "availability_check",

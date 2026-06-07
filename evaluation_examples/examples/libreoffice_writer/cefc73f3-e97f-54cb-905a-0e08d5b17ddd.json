@@ -148,7 +148,7 @@
   },
   "synthetic": {
     "source": "gui_distillation.microaction_tasks",
-    "generation_run": "data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/aeca9cf0c90b/20260606T225301Z",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/aeca9cf0c90b/20260606T225301Z",
     "macro_state_id": "aeca9cf0c90b",
     "micro_action_id": "9b38ffa2e7a44ad7",
     "task_type": "language_spelling_setting",
