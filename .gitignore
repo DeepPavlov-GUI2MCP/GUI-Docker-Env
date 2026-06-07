@@ -200,8 +200,8 @@ vmware_vm_data
 !results/
 !results/README.md
 !results/.gitattributes
-!results/scripts/
-!results/scripts/**
+!results/.scripts/
+!results/.scripts/**
 
 .vscode
 

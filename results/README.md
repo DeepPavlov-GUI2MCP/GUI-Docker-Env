@@ -11,7 +11,7 @@ results/
     coact/...
     preflight_augmented/.../tasks.jsonl
     images.zip
-  scripts/
+  .scripts/
     zip_images.py
     unzip_images.py
 ```
@@ -24,9 +24,9 @@ Zip screenshots so the Hub dataset stores one archive per run instead of thousan
 source .venv/bin/activate
 cd GUI-Docker-Env
 
-python results/scripts/zip_images.py --all
+python results/.scripts/zip_images.py --all
 # or one run:
-python results/scripts/zip_images.py results/results_holo_gpt54_writer_traces_20260607_031517
+python results/.scripts/zip_images.py results/results_holo_gpt54_writer_traces_20260607_031517
 ```
 
 This creates `images.zip` inside each run folder and removes the loose `.png`/`.jpg`/`.jpeg` files.
@@ -48,9 +48,9 @@ Restore screenshots locally before inspecting traces or re-running augmentation:
 source .venv/bin/activate
 cd GUI-Docker-Env
 
-python results/scripts/unzip_images.py --all
+python results/.scripts/unzip_images.py --all
 # or one run:
-python results/scripts/unzip_images.py results/results_<name>
+python results/.scripts/unzip_images.py results/results_<name>
 ```
 
 ## Notes
