@@ -26,6 +26,10 @@ from desktop_env.desktop_env import DesktopEnv
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
+_emulator_start_semaphore = threading.Semaphore(
+    max(1, int(os.environ.get("OSWORLD_START_CONCURRENCY", "4")))
+)
+
 datetime_str: str = datetime.datetime.now().strftime("%Y%m%d@%H%M%S")
 
 file_handler = logging.FileHandler(
@@ -287,12 +291,13 @@ def run_one_example(
     env = None
     try:
         timeout_label = f"{domain}/{example_id}"
-        env = DesktopEnv(
-            action_space="pyautogui",
-            provider_name="docker_server",
-            os_type=args.os_type,
-            enable_proxy=args.enable_proxy,
-        )
+        with _emulator_start_semaphore:
+            env = DesktopEnv(
+                action_space="pyautogui",
+                provider_name="docker_server",
+                os_type=args.os_type,
+                enable_proxy=args.enable_proxy,
+            )
         scores_local: List[float] = []
         try:
             with task_timeout(args.task_timeout_seconds, timeout_label):
