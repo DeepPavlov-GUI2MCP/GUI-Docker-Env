@@ -1,3 +1,4 @@
+from lib_results_paths import normalize_result_dir
 import argparse
 import base64
 import datetime
@@ -165,7 +166,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--test_all_meta_path", type=str, default="evaluation_examples/test_all.json")
     parser.add_argument("--test_config_base_dir", type=str, default="evaluation_examples/examples")
 
-    parser.add_argument("--result_dir", type=str, default="./results_coact")
+    parser.add_argument("--result_dir", type=str, default="./results/results_coact")
     parser.add_argument(
         "--rollout-id",
         type=str,
@@ -1642,6 +1643,7 @@ if __name__ == "__main__":
     parser = _build_parser()
     raw_argv = sys.argv[1:]
     args = parser.parse_args(raw_argv)
+    args.result_dir = normalize_result_dir(args.result_dir)
     _reject_mixed_config_usage(parser, raw_argv, args)
     run_config = load_config_file(args.config) if args.config else _resolve_run_config_from_args(args)
     if not run_config.rollout_id:

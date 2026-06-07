@@ -31,7 +31,7 @@ coact:
     client_password: osworld-public-evaluation
     cua_max_steps: 25
     cut_off_steps: 200
-    result_dir: ./results_coact_no_orchestrator
+    result_dir: ./results/results_coact_no_orchestrator
     num_envs: 1
     log_level: INFO
 

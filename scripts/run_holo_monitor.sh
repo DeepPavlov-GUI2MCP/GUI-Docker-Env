@@ -5,7 +5,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SESSION="${HOLO_MONITOR_SESSION:-holo-eval-monitor}"
 
 EVAL_JSON="${1:-evaluation_examples/test_synthetic_writer_gpt54_all.json}"
-RESULTS_TARGET="${2:-results_holo_gpt54_writer_traces_*}"
+RESULTS_TARGET="${2:-results/results_holo_gpt54_writer_traces_*}"
 TITLE="${3:-Holo Eval Monitor}"
 
 MONITOR_ARGS=(

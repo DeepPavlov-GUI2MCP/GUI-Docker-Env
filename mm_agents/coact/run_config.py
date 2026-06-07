@@ -6,6 +6,7 @@ from typing import Any, Dict, Optional, Tuple
 
 import yaml
 
+from lib_results_paths import normalize_result_dir
 from mm_agents.coact.spending import resolve_default_credentials
 
 
@@ -153,7 +154,7 @@ def load_config_file(path: str) -> ResolvedRunConfig:
         task_id=_get_optional_str(tasks, "task_id"),
         test_all_meta_path=_get_optional_str(tasks, "test_all_meta_path", "evaluation_examples/test_all.json"),
         test_config_base_dir=_get_optional_str(tasks, "test_config_base_dir", "evaluation_examples/examples"),
-        result_dir=_get_optional_str(runtime, "result_dir", "./results_coact"),
+        result_dir=normalize_result_dir(_get_optional_str(runtime, "result_dir", "./results/results_coact") or "./results/results_coact"),
         num_envs=_get_optional_int(runtime, "num_envs", 1),
         log_level=_get_optional_str(runtime, "log_level", "INFO").upper(),
         multi_rollout=_parse_multi_rollout_settings(multi_rollout),

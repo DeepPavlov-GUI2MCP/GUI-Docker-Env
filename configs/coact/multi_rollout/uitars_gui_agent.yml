@@ -38,7 +38,7 @@ coact:
     coding_max_steps: 20
     cua_max_steps: 25
     cut_off_steps: 200
-    result_dir: ./results_coact
+    result_dir: ./results/results_coact
     num_envs: 1
     log_level: INFO
 

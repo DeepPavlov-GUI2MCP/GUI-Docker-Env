@@ -8,8 +8,10 @@ from pathlib import Path
 from huggingface_hub import HfApi
 
 
-DEFAULT_REPO_ID = "tony-pitchblack/dart-gui.GUI-Docker-Env"
-DEFAULT_RESULTS_GLOB = "GUI-Docker-Env/results*"
+DEFAULT_REPO_ID = "tony-pitchblack/dart-gui.GUI-Docker-Env.results"
+DEFAULT_RESULTS_GLOB = "GUI-Docker-Env/results/results*"
+GITATTRIBUTES_SOURCE = Path(__file__).resolve().parents[1] / "results" / ".gitattributes"
+DEFAULT_IGNORE_PATTERNS = ["**/*.png", "**/*.jpg", "**/*.jpeg"]
 WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -59,7 +61,7 @@ def parse_args() -> argparse.Namespace:
         "--exclude",
         action="append",
         default=[],
-        help="Ignore pattern passed to Hugging Face",
+        help="Additional ignore patterns passed to Hugging Face",
     )
     parser.add_argument(
         "--skip-missing",
@@ -133,11 +135,33 @@ def print_folder_list(folders: list[Path]) -> None:
         print(relative_repo_path(folder))
 
 
+def upload_gitattributes(api: HfApi, args: argparse.Namespace) -> None:
+    if not GITATTRIBUTES_SOURCE.is_file() or args.dry_run:
+        return
+    api.upload_file(
+        path_or_fileobj=str(GITATTRIBUTES_SOURCE),
+        path_in_repo=".gitattributes",
+        repo_id=args.repo_id,
+        repo_type=args.repo_type,
+        revision=args.revision,
+        commit_message="Update dataset gitattributes for archived screenshots",
+    )
+
+
 def upload_folders(args: argparse.Namespace, folders: list[Path]) -> int:
     api = HfApi()
     failures = 0
     allow_patterns = args.include or None
-    ignore_patterns = args.exclude or None
+    ignore_patterns = list(DEFAULT_IGNORE_PATTERNS)
+    if args.exclude:
+        ignore_patterns.extend(args.exclude)
+
+    if not args.dry_run:
+        try:
+            upload_gitattributes(api, args)
+        except Exception as exc:
+            failures += 1
+            print(f"FAILED .gitattributes: {exc}", file=sys.stderr)
 
     for folder in folders:
         repo_path = relative_repo_path(folder)

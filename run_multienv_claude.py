@@ -1,3 +1,4 @@
+from lib_results_paths import normalize_result_dir
 """Script to run end-to-end evaluation on the benchmark.
 Utils and basic architecture credit to https://github.com/web-arena-x/webarena/blob/main/run.py.
 """
@@ -80,7 +81,7 @@ def config() -> argparse.Namespace:
     )
 
     # logging related
-    parser.add_argument("--result_dir", type=str, default="./results")
+    parser.add_argument("--result_dir", type=str, default="./results/results")
     parser.add_argument("--num_envs", type=int, default=1, help="Number of environments to run in parallel")
     parser.add_argument("--log_level", type=str, choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], 
                        default='INFO', help="Set the logging level")
@@ -91,6 +92,7 @@ def config() -> argparse.Namespace:
     )
     
     args = parser.parse_args()
+    args.result_dir = normalize_result_dir(args.result_dir)
     return args
 
 args = config()  # Get command line arguments first

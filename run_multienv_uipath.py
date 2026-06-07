@@ -1,3 +1,4 @@
+from lib_results_paths import normalize_result_dir
 from __future__ import annotations
 import argparse
 import datetime
@@ -74,7 +75,7 @@ def config() -> argparse.Namespace:
     )
 
     # logging related
-    parser.add_argument("--result_dir", type=str, default="./results")
+    parser.add_argument("--result_dir", type=str, default="./results/results")
     parser.add_argument(
         "--num_envs",
         type=int,
@@ -106,6 +107,7 @@ def config() -> argparse.Namespace:
     parser.add_argument("--screen_width", type=int, default=1920, help="Screen width")
     parser.add_argument("--screen_height", type=int, default=1080, help="Screen height")
     args = parser.parse_args()
+    args.result_dir = normalize_result_dir(args.result_dir)
     return args
 
 

@@ -1,3 +1,4 @@
+from lib_results_paths import normalize_result_dir
 import argparse
 import json
 import datetime
@@ -149,9 +150,10 @@ def config() -> argparse.Namespace:
     )
 
     # logging related
-    parser.add_argument("--result_dir", type=str, default="./results")
+    parser.add_argument("--result_dir", type=str, default="./results/results")
 
     args = parser.parse_args()
+    args.result_dir = normalize_result_dir(args.result_dir)
 
     return args
 

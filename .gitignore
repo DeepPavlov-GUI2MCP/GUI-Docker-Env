@@ -195,8 +195,13 @@ vmware_vm_data
 .vmware*
 .aws*
 
-# result
+# result run outputs (keep results/ metadata tracked)
 **/result*/**/*
+!results/
+!results/README.md
+!results/.gitattributes
+!results/scripts/
+!results/scripts/**
 
 .vscode
 

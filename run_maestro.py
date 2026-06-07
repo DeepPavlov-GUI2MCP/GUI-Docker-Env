@@ -1,3 +1,4 @@
+from lib_results_paths import normalize_result_dir
 import argparse
 import json
 import datetime
@@ -142,10 +143,11 @@ def config() -> argparse.Namespace:
     parser.add_argument("--test_all_meta_path", type=str, default=test_all_meta_path)
 
     # logging related
-    parser.add_argument("--result_dir", type=str, default="./results")
+    parser.add_argument("--result_dir", type=str, default="./results/results")
     parser.add_argument("--num_envs", type=int, default=1, help="Number of environments to run in parallel")
 
     args = parser.parse_args()
+    args.result_dir = normalize_result_dir(args.result_dir)
 
     # Convert to absolute paths to avoid cwd dependency
     try:

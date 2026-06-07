@@ -1,5 +1,7 @@
 """Run OSWorld evaluations with HoloAgent (Holo3 agent-loop structured JSON)."""
 
+from lib_results_paths import normalize_result_dir
+
 import argparse
 import datetime
 import faulthandler
@@ -170,7 +172,7 @@ def config() -> argparse.Namespace:
         default="evaluation_examples/test_nogdrive.json",
     )
 
-    parser.add_argument("--result_dir", "--result-dir", type=str, default="./results_holo")
+    parser.add_argument("--result_dir", "--result-dir", type=str, default="./results/results_holo")
     parser.add_argument(
         "--overwrite",
         action="store_true",

@@ -1,0 +1,5 @@
+# Screenshots are archived in per-run images.zip files.
+# Do not commit loose PNG/JPG files to the Hub dataset.
+*.png export-ignore
+*.jpg export-ignore
+*.jpeg export-ignore
