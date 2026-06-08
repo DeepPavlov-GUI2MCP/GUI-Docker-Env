@@ -99,7 +99,7 @@
             "selector": {
               "require_bbox": true,
               "role": "dialog",
-              "name": "Properties of “Untitled 1”",
+              "name": "Properties of “synthetic_writer_537660992ccb51bb9e0f783ed83730d3”",
               "states": {
                 "showing": true,
                 "visible": true
@@ -185,7 +185,7 @@
       "active_root": {
         "kind": "dialog",
         "role": "dialog",
-        "name": "Properties of “Untitled 1”"
+        "name": "Properties of “synthetic_writer_537660992ccb51bb9e0f783ed83730d3”"
       },
       "window_name": "synthetic_writer_537660992ccb51bb9e0f783ed83730d3.docx - LibreOffice Writer",
       "preflight_step_count": 6
