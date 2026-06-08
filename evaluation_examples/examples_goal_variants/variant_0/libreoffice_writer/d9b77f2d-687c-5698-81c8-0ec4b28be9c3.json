@@ -1,0 +1,107 @@
+{
+  "id": "d9b77f2d-687c-5698-81c8-0ec4b28be9c3",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Justify the selected paragraph",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_d9b77f2d687c569881c80ec4b28be9c3.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_d9b77f2d687c569881c80ec4b28be9c3.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_d9b77f2d687c569881c80ec4b28be9c3.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "abd8fb0ce2943745",
+    "task_type": "paragraph_layout",
+    "task_index": 0,
+    "expected_outcome": "The selected paragraph is aligned evenly to both left and right margins.",
+    "preconditions": {
+      "description": "A full paragraph of body text is selected, and it is currently left-aligned.",
+      "extras": [
+        {
+          "key": "paragraph_text",
+          "value": "This policy applies to all staff members working on site during the renovation period."
+        },
+        {
+          "key": "current_alignment",
+          "value": "left"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_d9b77f2d687c569881c80ec4b28be9c3.docx",
+    "window_name": "synthetic_writer_d9b77f2d687c569881c80ec4b28be9c3.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_d9b77f2d687c569881c80ec4b28be9c3.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Set the selected paragraph to justified alignment.",
+    "goal_variant_expected_outcome": "The selected paragraph is aligned evenly to both margins.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/d9b77f2d-687c-5698-81c8-0ec4b28be9c3/goal_variant_0.json"
+  }
+}

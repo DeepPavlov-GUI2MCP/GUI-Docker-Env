@@ -1,0 +1,111 @@
+{
+  "id": "364d5aef-49bf-5675-8b5f-2c58db594747",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add a comment to the selected number",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_364d5aef49bf56758b5f2c58db594747.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_364d5aef49bf56758b5f2c58db594747.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_364d5aef49bf56758b5f2c58db594747.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "873741bc22e18be9",
+    "task_type": "review_commenting",
+    "task_index": 10,
+    "expected_outcome": "A comment anchor is attached to the selected number and the comment entry area opens.",
+    "preconditions": {
+      "description": "A standalone numeric value is selected in the document.",
+      "extras": [
+        {
+          "key": "selected_content",
+          "value": "18.5%"
+        },
+        {
+          "key": "selection_scope",
+          "value": "Numeric token"
+        },
+        {
+          "key": "existing_comments",
+          "value": "None on selection"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_364d5aef49bf56758b5f2c58db594747.docx",
+    "window_name": "synthetic_writer_364d5aef49bf56758b5f2c58db594747.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_364d5aef49bf56758b5f2c58db594747.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Add a comment to the selected numeric value.",
+    "goal_variant_expected_outcome": "A comment anchor is attached to the selected number and the comment entry area opens.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/364d5aef-49bf-5675-8b5f-2c58db594747/goal_variant_0.json"
+  }
+}

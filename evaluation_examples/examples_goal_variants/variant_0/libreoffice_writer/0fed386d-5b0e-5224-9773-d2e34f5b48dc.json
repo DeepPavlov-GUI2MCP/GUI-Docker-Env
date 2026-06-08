@@ -1,0 +1,107 @@
+{
+  "id": "0fed386d-5b0e-5224-9773-d2e34f5b48dc",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a footnote at the end of the heading",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_0fed386d5b0e52249773d2e34f5b48dc.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_0fed386d5b0e52249773d2e34f5b48dc.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_0fed386d5b0e52249773d2e34f5b48dc.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "32482980bb19181d",
+    "task_type": "insert_at_cursor",
+    "task_index": 2,
+    "expected_outcome": "A footnote reference is added at the cursor position after the heading text, with a new footnote entry created on the page.",
+    "preconditions": {
+      "description": "The document has a title line reading 'Project Falcon Overview' and the insertion point is at the end of that line.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Title line only: 'Project Falcon Overview'"
+        },
+        {
+          "key": "paragraph_style",
+          "value": "Default Paragraph Style or similar visible body editing context"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_0fed386d5b0e52249773d2e34f5b48dc.docx",
+    "window_name": "synthetic_writer_0fed386d5b0e52249773d2e34f5b48dc.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_0fed386d5b0e52249773d2e34f5b48dc.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Use Footnote to add a note marker at the end of the heading line.",
+    "goal_variant_expected_outcome": "A footnote reference is added after the heading text, with a new footnote entry created on the page.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/0fed386d-5b0e-5224-9773-d2e34f5b48dc/goal_variant_0.json"
+  }
+}

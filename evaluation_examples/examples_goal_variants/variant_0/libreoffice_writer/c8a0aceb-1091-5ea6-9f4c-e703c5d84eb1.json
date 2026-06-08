@@ -1,0 +1,233 @@
+{
+  "id": "c8a0aceb-1091-5ea6-9f4c-e703c5d84eb1",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open more paragraph language settings",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_c8a0aceb10915ea69f4ce703c5d84eb1.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_c8a0aceb10915ea69f4ce703c5d84eb1.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_c8a0aceb10915ea69f4ce703c5d84eb1.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Tools"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:a17009973bda9611",
+              "role": "menu",
+              "name": "Tools",
+              "recorded_bbox": [
+                455,
+                50,
+                49,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Language"
+            },
+            "meta": {
+              "edge_id": "e85ad249bd7d:31fe5737156da5b8",
+              "role": "menu",
+              "name": "Language",
+              "recorded_bbox": [
+                455,
+                150,
+                300,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "For Paragraph"
+            },
+            "meta": {
+              "edge_id": "d32e00db2ce8:442eb81ddd5b9a9b",
+              "role": "menu",
+              "name": "For Paragraph",
+              "recorded_bbox": [
+                753,
+                175,
+                235,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "For Paragraph",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/4f020fe86495/20260606T225259Z",
+    "macro_state_id": "4f020fe86495",
+    "micro_action_id": "2b6c2178fc74be77",
+    "task_type": "dialog_open",
+    "task_index": 0,
+    "expected_outcome": "A language-related dialog opens from the paragraph language menu, replacing the submenu-only state.",
+    "preconditions": {
+      "description": "LibreOffice Writer is open with the Tools → Language → For Paragraph submenu visible.",
+      "extras": [
+        {
+          "key": "menu_path",
+          "value": "Tools > Language > For Paragraph"
+        },
+        {
+          "key": "target_menu_item",
+          "value": "More..."
+        },
+        {
+          "key": "document_content",
+          "value": "A writable document is open"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_c8a0aceb10915ea69f4ce703c5d84eb1.docx",
+    "window_name": "synthetic_writer_c8a0aceb10915ea69f4ce703c5d84eb1.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "4f020fe86495",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 3,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:a17009973bda9611",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Tools",
+          "bbox": [
+            455,
+            50,
+            49,
+            25
+          ]
+        },
+        {
+          "edge_id": "e85ad249bd7d:31fe5737156da5b8",
+          "from_state": "e85ad249bd7d",
+          "role": "menu",
+          "name": "Language",
+          "bbox": [
+            455,
+            150,
+            300,
+            25
+          ]
+        },
+        {
+          "edge_id": "d32e00db2ce8:442eb81ddd5b9a9b",
+          "from_state": "d32e00db2ce8",
+          "role": "menu",
+          "name": "For Paragraph",
+          "bbox": [
+            753,
+            175,
+            235,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "For Paragraph"
+      },
+      "window_name": "synthetic_writer_c8a0aceb10915ea69f4ce703c5d84eb1.docx - LibreOffice Writer",
+      "preflight_step_count": 8
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Click \"More...\" in Tools → Language → For Paragraph to open the detailed language settings dialog for paragraph language handling.",
+    "goal_variant_expected_outcome": "A detailed language settings dialog opens for paragraph language handling.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/4f020fe86495/20260606T225259Z/goals/c8a0aceb-1091-5ea6-9f4c-e703c5d84eb1/goal_variant_0.json"
+  }
+}

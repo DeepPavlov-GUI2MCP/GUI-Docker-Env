@@ -1,0 +1,111 @@
+{
+  "id": "6a4756bb-8933-504e-863c-ffebe409e9fc",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a text box near the bulleted list",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list__ccch9003_tutorial_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_6a4756bb8933504e863cffebe409e9fc.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_6a4756bb8933504e863cffebe409e9fc.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_6a4756bb8933504e863cffebe409e9fc.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "d7fbf65f004a5243",
+    "task_type": "insert_at_cursor",
+    "task_index": 4,
+    "expected_outcome": "The bulleted list remains intact and a text box object is added to the page.",
+    "preconditions": {
+      "description": "A short bulleted list is present and there is free space on the page.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Bulleted list with three items"
+        },
+        {
+          "key": "selection_state",
+          "value": "No list items selected"
+        },
+        {
+          "key": "existing_objects",
+          "value": "No text box present"
+        }
+      ]
+    },
+    "fixture": "bulleted_list__ccch9003_tutorial_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_6a4756bb8933504e863cffebe409e9fc.docx",
+    "window_name": "synthetic_writer_6a4756bb8933504e863cffebe409e9fc.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_6a4756bb8933504e863cffebe409e9fc.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Insert a text box into a document containing a bulleted list.",
+    "goal_variant_expected_outcome": "The bulleted list remains intact and a text box object is added to the page.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/6a4756bb-8933-504e-863c-ffebe409e9fc/goal_variant_0.json"
+  }
+}

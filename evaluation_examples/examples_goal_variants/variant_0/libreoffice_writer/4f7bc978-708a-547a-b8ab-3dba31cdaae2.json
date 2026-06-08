@@ -1,0 +1,107 @@
+{
+  "id": "4f7bc978-708a-547a-b8ab-3dba31cdaae2",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Find the Print button",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_4f7bc978708a547ab8ab3dba31cdaae2.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_4f7bc978708a547ab8ab3dba31cdaae2.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_4f7bc978708a547ab8ab3dba31cdaae2.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "4df97f63ba5ded13",
+    "task_type": "unsafe_or_external_observation",
+    "task_index": 0,
+    "expected_outcome": "The Print button is visually identified on the toolbar, and no print dialog or printing action is triggered.",
+    "preconditions": {
+      "description": "The Writer window is open with the standard toolbar visible and no modal dialog present.",
+      "extras": [
+        {
+          "key": "safety_requirement",
+          "value": "Do not activate Print"
+        },
+        {
+          "key": "toolbar_visibility",
+          "value": "Standard toolbar visible"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_4f7bc978708a547ab8ab3dba31cdaae2.docx",
+    "window_name": "synthetic_writer_4f7bc978708a547ab8ab3dba31cdaae2.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_4f7bc978708a547ab8ab3dba31cdaae2.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Locate the Print control on the toolbar without clicking it.",
+    "goal_variant_expected_outcome": "The Print button is visually identified and nothing is printed.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/4f7bc978-708a-547a-b8ab-3dba31cdaae2/goal_variant_0.json"
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "id": "d1db0f35-817f-56b0-947b-e3bea4902139",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add a chart after the bullet list",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list__ccch9003_tutorial_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_d1db0f35817f56b0947be3bea4902139.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_d1db0f35817f56b0947be3bea4902139.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_d1db0f35817f56b0947be3bea4902139.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "ba32ff6c264a4cd3",
+    "task_type": "insert_at_cursor",
+    "task_index": 5,
+    "expected_outcome": "A chart object is inserted into the document while the bulleted list remains intact.",
+    "preconditions": {
+      "description": "The document contains a short bulleted list and currently no embedded chart.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Three bullet items"
+        },
+        {
+          "key": "selection_state",
+          "value": "No list items selected"
+        },
+        {
+          "key": "existing_objects",
+          "value": "No chart present"
+        }
+      ]
+    },
+    "fixture": "bulleted_list__ccch9003_tutorial_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_d1db0f35817f56b0947be3bea4902139.docx",
+    "window_name": "synthetic_writer_d1db0f35817f56b0947be3bea4902139.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_d1db0f35817f56b0947be3bea4902139.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Add a chart after a short bulleted list using the Chart button.",
+    "goal_variant_expected_outcome": "A chart object is inserted while the bulleted list remains intact.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/d1db0f35-817f-56b0-947b-e3bea4902139/goal_variant_0.json"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "id": "40b7cb7b-ca3d-5e74-8a2e-ec3a50db1010",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a 3x4 table",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_40b7cb7bca3d5e748a2eec3a50db1010.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_40b7cb7bca3d5e748a2eec3a50db1010.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_40b7cb7bca3d5e748a2eec3a50db1010.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "e42a806420f3e1b7",
+    "task_type": "insert_at_cursor",
+    "task_index": 1,
+    "expected_outcome": "A 3x4 table appears at the current insertion point.",
+    "preconditions": {
+      "description": "An editable paragraph is active and ready to receive an inserted object.",
+      "extras": [
+        {
+          "key": "table_size",
+          "value": "3x4"
+        },
+        {
+          "key": "insertion_context",
+          "value": "text document"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_40b7cb7bca3d5e748a2eec3a50db1010.docx",
+    "window_name": "synthetic_writer_40b7cb7bca3d5e748a2eec3a50db1010.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_40b7cb7bca3d5e748a2eec3a50db1010.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Use the Table button to add a 3-column, 4-row table.",
+    "goal_variant_expected_outcome": "A 3-column by 4-row table is inserted into the document.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/40b7cb7b-ca3d-5e74-8a2e-ec3a50db1010/goal_variant_0.json"
+  }
+}

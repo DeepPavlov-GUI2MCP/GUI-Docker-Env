@@ -1,0 +1,107 @@
+{
+  "id": "8148b7f3-156b-548b-9a6b-96b791186b00",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Start a bulleted checklist",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list__ccch9003_tutorial_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_8148b7f3156b548b9a6b96b791186b00.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_8148b7f3156b548b9a6b96b791186b00.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_8148b7f3156b548b9a6b96b791186b00.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "51ced5784ca04890",
+    "task_type": "cursor_format_toggle",
+    "task_index": 5,
+    "expected_outcome": "The paragraph at the cursor becomes a bulleted item, preparing for list entry.",
+    "preconditions": {
+      "description": "The insertion point is in a blank paragraph after the sentence 'Please bring the following:' and there is no selection.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Text ends with 'Please bring the following:'"
+        },
+        {
+          "key": "list_state",
+          "value": "Bullets off"
+        }
+      ]
+    },
+    "fixture": "bulleted_list__ccch9003_tutorial_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_8148b7f3156b548b9a6b96b791186b00.docx",
+    "window_name": "synthetic_writer_8148b7f3156b548b9a6b96b791186b00.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_8148b7f3156b548b9a6b96b791186b00.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Activate Unordered List so a checklist-style set of points can be typed.",
+    "goal_variant_expected_outcome": "The paragraph at the cursor becomes a bulleted item.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/8148b7f3-156b-548b-9a6b-96b791186b00/goal_variant_0.json"
+  }
+}

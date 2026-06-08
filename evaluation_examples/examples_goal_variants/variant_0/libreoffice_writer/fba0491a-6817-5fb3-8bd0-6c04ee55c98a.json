@@ -1,0 +1,155 @@
+{
+  "id": "fba0491a-6817-5fb3-8bd0-6c04ee55c98a",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Edit the Subtitle style",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_fba0491a68175fb38bd06c04ee55c98a.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_fba0491a68175fb38bd06c04ee55c98a.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_fba0491a68175fb38bd06c04ee55c98a.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Styles"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:4cfd8cff88d8274a",
+              "role": "menu",
+              "name": "Styles",
+              "recorded_bbox": [
+                300,
+                50,
+                56,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Styles",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/979ebb535cc1/20260606T225300Z",
+    "macro_state_id": "979ebb535cc1",
+    "micro_action_id": "e2fe17c6fd096554",
+    "task_type": "dialog_open",
+    "task_index": 4,
+    "expected_outcome": "The Edit Style dialog becomes visible for the Subtitle style.",
+    "preconditions": {
+      "description": "A paragraph with the Subtitle style is active and the Styles menu is displayed.",
+      "extras": [
+        {
+          "key": "current_style_name",
+          "value": "Subtitle"
+        },
+        {
+          "key": "menu_path",
+          "value": "Styles"
+        },
+        {
+          "key": "target_item",
+          "value": "Edit Style..."
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_fba0491a68175fb38bd06c04ee55c98a.docx",
+    "window_name": "synthetic_writer_fba0491a68175fb38bd06c04ee55c98a.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "979ebb535cc1",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:4cfd8cff88d8274a",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Styles",
+          "bbox": [
+            300,
+            50,
+            56,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Styles"
+      },
+      "window_name": "synthetic_writer_fba0491a68175fb38bd06c04ee55c98a.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Open style properties for the current subtitle paragraph.",
+    "goal_variant_expected_outcome": "The Edit Style dialog becomes visible for the Subtitle style.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/979ebb535cc1/20260606T225300Z/goals/fba0491a-6817-5fb3-8bd0-6c04ee55c98a/goal_variant_0.json"
+  }
+}

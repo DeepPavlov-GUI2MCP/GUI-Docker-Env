@@ -1,0 +1,111 @@
+{
+  "id": "f9b0c67e-ac1e-56f9-a6ef-3411128e4754",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add an endnote after the title",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_f9b0c67eac1e56f9a6ef3411128e4754.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_f9b0c67eac1e56f9a6ef3411128e4754.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_f9b0c67eac1e56f9a6ef3411128e4754.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "18988404a6554ace",
+    "task_type": "insert_at_cursor",
+    "task_index": 1,
+    "expected_outcome": "A new endnote reference appears after the title text, with a matching endnote area entry.",
+    "preconditions": {
+      "description": "The document has a title line and the caret is positioned at the end of that title with no selected text.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "title line present"
+        },
+        {
+          "key": "selection_state",
+          "value": "no selection"
+        },
+        {
+          "key": "target_position",
+          "value": "end of title"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_f9b0c67eac1e56f9a6ef3411128e4754.docx",
+    "window_name": "synthetic_writer_f9b0c67eac1e56f9a6ef3411128e4754.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_f9b0c67eac1e56f9a6ef3411128e4754.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Add an endnote after the document title.",
+    "goal_variant_expected_outcome": "A new endnote reference appears after the title with a matching endnote entry.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/f9b0c67e-ac1e-56f9-a6ef-3411128e4754/goal_variant_0.json"
+  }
+}

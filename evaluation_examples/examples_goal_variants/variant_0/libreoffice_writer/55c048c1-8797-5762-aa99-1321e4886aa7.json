@@ -1,0 +1,190 @@
+{
+  "id": "55c048c1-8797-5762-aa99-1321e4886aa7",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Cycle the selected text to the next case",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_55c048c187975762aa991321e4886aa7.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_55c048c187975762aa991321e4886aa7.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_55c048c187975762aa991321e4886aa7.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Format"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:09346a8f4b7dda04",
+              "role": "menu",
+              "name": "Format",
+              "recorded_bbox": [
+                238,
+                50,
+                62,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Text"
+            },
+            "meta": {
+              "edge_id": "32f76b8b1d9d:e98fd2ece44678c7",
+              "role": "menu",
+              "name": "Text",
+              "recorded_bbox": [
+                238,
+                75,
+                268,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Text",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/a3fd82503da5/20260606T225300Z",
+    "macro_state_id": "a3fd82503da5",
+    "micro_action_id": "68c07b765f02d752",
+    "task_type": "selection_transform",
+    "task_index": 0,
+    "expected_outcome": "The selected text changes to the next available case state in LibreOffice's cycle sequence.",
+    "preconditions": {
+      "description": "A phrase is selected and currently appears fully in lowercase.",
+      "extras": [
+        {
+          "key": "selected_text",
+          "value": "draft pending manager review"
+        },
+        {
+          "key": "case_before",
+          "value": "lowercase"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_55c048c187975762aa991321e4886aa7.docx",
+    "window_name": "synthetic_writer_55c048c187975762aa991321e4886aa7.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "a3fd82503da5",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:09346a8f4b7dda04",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Format",
+          "bbox": [
+            238,
+            50,
+            62,
+            25
+          ]
+        },
+        {
+          "edge_id": "32f76b8b1d9d:e98fd2ece44678c7",
+          "from_state": "32f76b8b1d9d",
+          "role": "menu",
+          "name": "Text",
+          "bbox": [
+            238,
+            75,
+            268,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Text"
+      },
+      "window_name": "synthetic_writer_55c048c187975762aa991321e4886aa7.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Cycle the case of the selected lowercase phrase once using Format → Text → Cycle Case.",
+    "goal_variant_expected_outcome": "The selected lowercase phrase changes to the next capitalization style in the cycle.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/a3fd82503da5/20260606T225300Z/goals/55c048c1-8797-5762-aa99-1321e4886aa7/goal_variant_0.json"
+  }
+}

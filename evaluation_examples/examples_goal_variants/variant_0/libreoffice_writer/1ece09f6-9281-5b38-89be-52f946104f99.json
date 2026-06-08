@@ -1,0 +1,151 @@
+{
+  "id": "1ece09f6-9281-5b38-89be-52f946104f99",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Verify the repeat header rows option is disabled",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_1ece09f692815b3889be52f946104f99.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_1ece09f692815b3889be52f946104f99.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_1ece09f692815b3889be52f946104f99.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Table"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:b0c485afa1095a6e",
+              "role": "menu",
+              "name": "Table",
+              "recorded_bbox": [
+                356,
+                50,
+                50,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Table",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/53bf0935406d/20260606T225300Z",
+    "macro_state_id": "53bf0935406d",
+    "micro_action_id": "09536eaae5dd0051",
+    "task_type": "availability_check",
+    "task_index": 4,
+    "expected_outcome": "The item remains disabled and the interface stays otherwise unchanged.",
+    "preconditions": {
+      "description": "A Writer document is open and the Table menu is already expanded over a blank page.",
+      "extras": [
+        {
+          "key": "target_item",
+          "value": "Header Rows Repeat Across Pages"
+        },
+        {
+          "key": "post_state",
+          "value": "menu still open"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_1ece09f692815b3889be52f946104f99.docx",
+    "window_name": "synthetic_writer_1ece09f692815b3889be52f946104f99.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "53bf0935406d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:b0c485afa1095a6e",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Table",
+          "bbox": [
+            356,
+            50,
+            50,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Table"
+      },
+      "window_name": "synthetic_writer_1ece09f692815b3889be52f946104f99.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "From the open Table menu, verify the disabled status of \"Header Rows Repeat Across Pages\" and leave the menu open.",
+    "goal_variant_expected_outcome": "The item remains disabled and the interface is unchanged.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/53bf0935406d/20260606T225300Z/goals/1ece09f6-9281-5b38-89be-52f946104f99/goal_variant_0.json"
+  }
+}

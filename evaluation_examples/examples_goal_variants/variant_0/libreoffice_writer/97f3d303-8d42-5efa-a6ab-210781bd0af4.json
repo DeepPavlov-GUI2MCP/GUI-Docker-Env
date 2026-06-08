@@ -1,0 +1,151 @@
+{
+  "id": "97f3d303-8d42-5efa-a6ab-210781bd0af4",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check if Name can be activated",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list__ccch9003_tutorial_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_97f3d3038d425efaa6ab210781bd0af4.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_97f3d3038d425efaa6ab210781bd0af4.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_97f3d3038d425efaa6ab210781bd0af4.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Format"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:09346a8f4b7dda04",
+              "role": "menu",
+              "name": "Format",
+              "recorded_bbox": [
+                238,
+                50,
+                62,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Format",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/32f76b8b1d9d/20260606T225258Z",
+    "macro_state_id": "32f76b8b1d9d",
+    "micro_action_id": "c6046f4057181936",
+    "task_type": "availability_check",
+    "task_index": 1,
+    "expected_outcome": "The agent confirms that Name cannot be activated in the current state and nothing changes in the document.",
+    "preconditions": {
+      "description": "Writer is showing an untitled document and the open Format menu lists Name as disabled.",
+      "extras": [
+        {
+          "key": "current_selection",
+          "value": "none relevant"
+        },
+        {
+          "key": "name_item_visibility",
+          "value": "visible"
+        }
+      ]
+    },
+    "fixture": "bulleted_list__ccch9003_tutorial_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_97f3d3038d425efaa6ab210781bd0af4.docx",
+    "window_name": "synthetic_writer_97f3d3038d425efaa6ab210781bd0af4.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "32f76b8b1d9d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:09346a8f4b7dda04",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Format",
+          "bbox": [
+            238,
+            50,
+            62,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Format"
+      },
+      "window_name": "synthetic_writer_97f3d3038d425efaa6ab210781bd0af4.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Check whether Format > Name can be activated right now, but do not click it if unavailable.",
+    "goal_variant_expected_outcome": "The agent confirms that Name cannot be activated in the current state and nothing changes in the document.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/32f76b8b1d9d/20260606T225258Z/goals/97f3d303-8d42-5efa-a6ab-210781bd0af4/goal_variant_0.json"
+  }
+}

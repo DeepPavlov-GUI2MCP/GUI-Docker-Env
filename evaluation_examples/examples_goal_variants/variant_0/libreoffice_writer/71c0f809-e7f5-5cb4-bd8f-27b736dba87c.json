@@ -1,0 +1,151 @@
+{
+  "id": "71c0f809-e7f5-5cb4-bd8f-27b736dba87c",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Activate User Interface settings",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_71c0f809e7f55cb4bd8f27b736dba87c.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_71c0f809e7f55cb4bd8f27b736dba87c.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_71c0f809e7f55cb4bd8f27b736dba87c.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "View"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:62630bf121555e87",
+              "role": "menu",
+              "name": "View",
+              "recorded_bbox": [
+                137,
+                50,
+                48,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "View",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/bd6f423fe87f/20260606T225301Z",
+    "macro_state_id": "bd6f423fe87f",
+    "micro_action_id": "0803df15d730b792",
+    "task_type": "dialog_open",
+    "task_index": 10,
+    "expected_outcome": "The User Interface dialog opens as a modal window.",
+    "preconditions": {
+      "description": "The screen shows a blank Writer page with the View menu expanded and the target item available.",
+      "extras": [
+        {
+          "key": "target_name",
+          "value": "User Interface..."
+        },
+        {
+          "key": "availability",
+          "value": "enabled"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_71c0f809e7f55cb4bd8f27b736dba87c.docx",
+    "window_name": "synthetic_writer_71c0f809e7f55cb4bd8f27b736dba87c.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "bd6f423fe87f",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:62630bf121555e87",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "View",
+          "bbox": [
+            137,
+            50,
+            48,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "View"
+      },
+      "window_name": "synthetic_writer_71c0f809e7f55cb4bd8f27b736dba87c.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Activate the User Interface... menu item now shown under View.",
+    "goal_variant_expected_outcome": "The User Interface dialog opens as a modal window.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/bd6f423fe87f/20260606T225301Z/goals/71c0f809-e7f5-5cb4-bd8f-27b736dba87c/goal_variant_0.json"
+  }
+}

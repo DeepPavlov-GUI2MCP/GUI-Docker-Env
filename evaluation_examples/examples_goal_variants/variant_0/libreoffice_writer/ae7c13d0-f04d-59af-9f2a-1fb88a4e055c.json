@@ -1,0 +1,151 @@
+{
+  "id": "ae7c13d0-f04d-59af-9f2a-1fb88a4e055c",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add front matter with a title page",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_ae7c13d0f04d59af9f2a1fb88a4e055c.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_ae7c13d0f04d59af9f2a1fb88a4e055c.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_ae7c13d0f04d59af9f2a1fb88a4e055c.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Format"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:09346a8f4b7dda04",
+              "role": "menu",
+              "name": "Format",
+              "recorded_bbox": [
+                238,
+                50,
+                62,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Format",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/32f76b8b1d9d/20260606T225258Z",
+    "macro_state_id": "32f76b8b1d9d",
+    "micro_action_id": "8e1dbbcc55d147a2",
+    "task_type": "insert_at_cursor",
+    "task_index": 9,
+    "expected_outcome": "A title page appears before the chapter content at the start of the document.",
+    "preconditions": {
+      "description": "A chapter-based document opens directly on Chapter 1 and spans several pages.",
+      "extras": [
+        {
+          "key": "starts_with",
+          "value": "Chapter 1"
+        },
+        {
+          "key": "document_length",
+          "value": "multiple pages"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_ae7c13d0f04d59af9f2a1fb88a4e055c.docx",
+    "window_name": "synthetic_writer_ae7c13d0f04d59af9f2a1fb88a4e055c.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "32f76b8b1d9d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:09346a8f4b7dda04",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Format",
+          "bbox": [
+            238,
+            50,
+            62,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Format"
+      },
+      "window_name": "synthetic_writer_ae7c13d0f04d59af9f2a1fb88a4e055c.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Add front matter by inserting a title page before the first chapter.",
+    "goal_variant_expected_outcome": "A title page appears before the chapter content at the start of the document.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/32f76b8b1d9d/20260606T225258Z/goals/ae7c13d0-f04d-59af-9f2a-1fb88a4e055c/goal_variant_0.json"
+  }
+}

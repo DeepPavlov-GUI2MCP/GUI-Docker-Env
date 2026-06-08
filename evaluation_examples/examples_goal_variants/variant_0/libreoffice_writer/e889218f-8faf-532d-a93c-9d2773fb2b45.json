@@ -1,0 +1,159 @@
+{
+  "id": "e889218f-8faf-532d-a93c-9d2773fb2b45",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Update Text Body from this paragraph",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_e889218f8faf532da93c9d2773fb2b45.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_e889218f8faf532da93c9d2773fb2b45.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_e889218f8faf532da93c9d2773fb2b45.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Styles"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:4cfd8cff88d8274a",
+              "role": "menu",
+              "name": "Styles",
+              "recorded_bbox": [
+                300,
+                50,
+                56,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Styles",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/979ebb535cc1/20260606T225300Z",
+    "macro_state_id": "979ebb535cc1",
+    "micro_action_id": "343d9c4a8957b47a",
+    "task_type": "style_management",
+    "task_index": 1,
+    "expected_outcome": "The Text Body style definition is updated from the selected paragraph, causing other Text Body paragraphs to adopt the same revised formatting.",
+    "preconditions": {
+      "description": "A paragraph using Text Body is selected. Its appearance has been manually altered, and multiple other paragraphs also use Text Body.",
+      "extras": [
+        {
+          "key": "selected_style_name",
+          "value": "Text Body"
+        },
+        {
+          "key": "selection_scope",
+          "value": "single paragraph"
+        },
+        {
+          "key": "direct_formatting_example",
+          "value": "first-line indent removed and line spacing increased"
+        },
+        {
+          "key": "comparison_content",
+          "value": "several Text Body paragraphs in document"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_e889218f8faf532da93c9d2773fb2b45.docx",
+    "window_name": "synthetic_writer_e889218f8faf532da93c9d2773fb2b45.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "979ebb535cc1",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:4cfd8cff88d8274a",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Styles",
+          "bbox": [
+            300,
+            50,
+            56,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Styles"
+      },
+      "window_name": "synthetic_writer_e889218f8faf532da93c9d2773fb2b45.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Refresh the Text Body style from the formatting of the selected body paragraph.",
+    "goal_variant_expected_outcome": "The Text Body style is updated from the selected paragraph and other Text Body paragraphs adopt the revised formatting.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/979ebb535cc1/20260606T225300Z/goals/e889218f-8faf-532d-a93c-9d2773fb2b45/goal_variant_0.json"
+  }
+}

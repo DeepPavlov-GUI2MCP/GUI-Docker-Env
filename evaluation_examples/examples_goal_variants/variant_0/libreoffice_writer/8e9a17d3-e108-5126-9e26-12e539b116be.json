@@ -1,0 +1,111 @@
+{
+  "id": "8e9a17d3-e108-5126-9e26-12e539b116be",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Refresh the outdated field",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/table_with_values__view_person_organizational_summary.docx",
+            "path": "/home/user/Desktop/synthetic_writer_8e9a17d3e10851269e2612e539b116be.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_8e9a17d3e10851269e2612e539b116be.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_8e9a17d3e10851269e2612e539b116be.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "bf244eeb6387b214",
+    "task_type": "document_analysis",
+    "task_index": 1,
+    "expected_outcome": "The outdated field value is recalculated or refreshed and now reflects the current document content.",
+    "preconditions": {
+      "description": "The document includes a field or similar updatable item whose shown value no longer matches the underlying content.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Contains an outdated field"
+        },
+        {
+          "key": "selection_state",
+          "value": "No active selection"
+        },
+        {
+          "key": "field_state",
+          "value": "Needs refresh"
+        }
+      ]
+    },
+    "fixture": "table_with_values__view_person_organizational_summary.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_8e9a17d3e10851269e2612e539b116be.docx",
+    "window_name": "synthetic_writer_8e9a17d3e10851269e2612e539b116be.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_8e9a17d3e10851269e2612e539b116be.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Click Update to refresh an outdated field in the document.",
+    "goal_variant_expected_outcome": "The field is recalculated and now reflects the current document content.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/8e9a17d3-e108-5126-9e26-12e539b116be/goal_variant_0.json"
+  }
+}

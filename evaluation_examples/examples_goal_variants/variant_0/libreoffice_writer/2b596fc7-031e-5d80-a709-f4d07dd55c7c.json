@@ -1,0 +1,194 @@
+{
+  "id": "2b596fc7-031e-5d80-a709-f4d07dd55c7c",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Restore the previous dialog values",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/image_anchor__viewing_your_class_schedule_and_textbooks.docx",
+            "path": "/home/user/Desktop/synthetic_writer_2b596fc7031e5d80a709f4d07dd55c7c.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_2b596fc7031e5d80a709f4d07dd55c7c.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_2b596fc7031e5d80a709f4d07dd55c7c.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "File"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:bb08184c0b3835ee",
+              "role": "menu",
+              "name": "File",
+              "recorded_bbox": [
+                57,
+                50,
+                39,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu item",
+              "name": "Properties..."
+            },
+            "meta": {
+              "edge_id": "e65903c8fc2b:e987f20d674ebecb",
+              "role": "menu item",
+              "name": "Properties...",
+              "recorded_bbox": [
+                57,
+                606,
+                302,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "dialog",
+              "name": "Properties of “synthetic_writer_2b596fc7031e5d80a709f4d07dd55c7c”",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/8ae0e75d5d09/20260606T225300Z",
+    "macro_state_id": "8ae0e75d5d09",
+    "micro_action_id": "cce19754c5c4e431",
+    "task_type": "document_analysis",
+    "task_index": 2,
+    "expected_outcome": "All unsaved modifications in the dialog are reverted, so current controls match the state from when the dialog was opened.",
+    "preconditions": {
+      "description": "At least one editable option in the Properties dialog has been changed during this session.",
+      "extras": [
+        {
+          "key": "dialog_opened_state_saved",
+          "value": "true"
+        },
+        {
+          "key": "pending_change_1",
+          "value": "Apply user data toggled"
+        },
+        {
+          "key": "pending_change_2",
+          "value": "Save preview image toggled"
+        }
+      ]
+    },
+    "fixture": "image_anchor__viewing_your_class_schedule_and_textbooks.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_2b596fc7031e5d80a709f4d07dd55c7c.docx",
+    "window_name": "synthetic_writer_2b596fc7031e5d80a709f4d07dd55c7c.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "8ae0e75d5d09",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:bb08184c0b3835ee",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "File",
+          "bbox": [
+            57,
+            50,
+            39,
+            25
+          ]
+        },
+        {
+          "edge_id": "e65903c8fc2b:e987f20d674ebecb",
+          "from_state": "e65903c8fc2b",
+          "role": "menu item",
+          "name": "Properties...",
+          "bbox": [
+            57,
+            606,
+            302,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "dialog",
+        "role": "dialog",
+        "name": "Properties of “synthetic_writer_2b596fc7031e5d80a709f4d07dd55c7c”"
+      },
+      "window_name": "synthetic_writer_2b596fc7031e5d80a709f4d07dd55c7c.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Click the lower \"Reset\" button to restore the current Properties dialog contents to their previous values.",
+    "goal_variant_expected_outcome": "All unsaved modifications are reverted so the controls match the state from when the dialog was opened.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/8ae0e75d5d09/20260606T225300Z/goals/2b596fc7-031e-5d80-a709-f4d07dd55c7c/goal_variant_0.json"
+  }
+}

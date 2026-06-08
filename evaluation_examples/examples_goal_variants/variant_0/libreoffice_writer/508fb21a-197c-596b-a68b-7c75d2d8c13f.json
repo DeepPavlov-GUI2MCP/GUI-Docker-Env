@@ -1,0 +1,111 @@
+{
+  "id": "508fb21a-197c-596b-a68b-7c75d2d8c13f",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Enable bold for the heading",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_508fb21a197c596ba68b7c75d2d8c13f.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_508fb21a197c596ba68b7c75d2d8c13f.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_508fb21a197c596ba68b7c75d2d8c13f.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "7c845f4f60c21cc0",
+    "task_type": "cursor_format_toggle",
+    "task_index": 1,
+    "expected_outcome": "Bold formatting is toggled on for subsequent typing without modifying any existing text.",
+    "preconditions": {
+      "description": "The insertion point is active in the document, no characters are selected, and the bold toggle is not active.",
+      "extras": [
+        {
+          "key": "selection_state",
+          "value": "No selection"
+        },
+        {
+          "key": "bold_state",
+          "value": "Off"
+        },
+        {
+          "key": "upcoming_text_intent",
+          "value": "Section heading"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_508fb21a197c596ba68b7c75d2d8c13f.docx",
+    "window_name": "synthetic_writer_508fb21a197c596ba68b7c75d2d8c13f.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_508fb21a197c596ba68b7c75d2d8c13f.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Enable bold before entering a section heading.",
+    "goal_variant_expected_outcome": "Bold formatting is turned on for subsequent typing.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/508fb21a-197c-596b-a68b-7c75d2d8c13f/goal_variant_0.json"
+  }
+}

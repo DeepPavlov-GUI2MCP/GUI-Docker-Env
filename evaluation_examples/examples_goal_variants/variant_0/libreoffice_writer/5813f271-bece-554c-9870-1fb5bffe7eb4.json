@@ -1,0 +1,111 @@
+{
+  "id": "5813f271-bece-554c-9870-1fb5bffe7eb4",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Change the quote attribution color",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_5813f271bece554c98701fb5bffe7eb4.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_5813f271bece554c98701fb5bffe7eb4.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_5813f271bece554c98701fb5bffe7eb4.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "604a561290a440d7",
+    "task_type": "selection_transform",
+    "task_index": 5,
+    "expected_outcome": "The highlighted attribution line changes to the chosen font color.",
+    "preconditions": {
+      "description": "A short attribution line under a quote is selected and currently gray.",
+      "extras": [
+        {
+          "key": "selection_scope",
+          "value": "single line"
+        },
+        {
+          "key": "initial_font_color",
+          "value": "gray"
+        },
+        {
+          "key": "text_sample",
+          "value": "— Editorial Board"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_5813f271bece554c98701fb5bffe7eb4.docx",
+    "window_name": "synthetic_writer_5813f271bece554c98701fb5bffe7eb4.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_5813f271bece554c98701fb5bffe7eb4.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Apply a new font color to the selected quote attribution.",
+    "goal_variant_expected_outcome": "The selected attribution line changes to the chosen font color.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/5813f271-bece-554c-9870-1fb5bffe7eb4/goal_variant_0.json"
+  }
+}

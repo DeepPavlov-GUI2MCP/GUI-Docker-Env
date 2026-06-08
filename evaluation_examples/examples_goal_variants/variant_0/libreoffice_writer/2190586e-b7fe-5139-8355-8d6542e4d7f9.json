@@ -1,0 +1,155 @@
+{
+  "id": "2190586e-b7fe-5139-8355-8d6542e4d7f9",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open the styles organizer",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_2190586eb7fe513983558d6542e4d7f9.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_2190586eb7fe513983558d6542e4d7f9.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_2190586eb7fe513983558d6542e4d7f9.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Styles"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:4cfd8cff88d8274a",
+              "role": "menu",
+              "name": "Styles",
+              "recorded_bbox": [
+                300,
+                50,
+                56,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Styles",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/979ebb535cc1/20260606T225300Z",
+    "macro_state_id": "979ebb535cc1",
+    "micro_action_id": "40d42e1b05137651",
+    "task_type": "dialog_open",
+    "task_index": 1,
+    "expected_outcome": "The Manage Styles interface opens, allowing paragraph, character, frame, page, and list styles to be viewed.",
+    "preconditions": {
+      "description": "The Styles menu is open in LibreOffice Writer.",
+      "extras": [
+        {
+          "key": "menu_path",
+          "value": "Styles"
+        },
+        {
+          "key": "target_item",
+          "value": "Manage Styles"
+        },
+        {
+          "key": "visible_ui_layer",
+          "value": "menu"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_2190586eb7fe513983558d6542e4d7f9.docx",
+    "window_name": "synthetic_writer_2190586eb7fe513983558d6542e4d7f9.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "979ebb535cc1",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:4cfd8cff88d8274a",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Styles",
+          "bbox": [
+            300,
+            50,
+            56,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Styles"
+      },
+      "window_name": "synthetic_writer_2190586eb7fe513983558d6542e4d7f9.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Bring up the styles organizer using the menu item in the open Styles menu.",
+    "goal_variant_expected_outcome": "The Manage Styles interface opens for viewing paragraph, character, page, frame, and list styles.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/979ebb535cc1/20260606T225300Z/goals/2190586e-b7fe-5139-8355-8d6542e4d7f9/goal_variant_0.json"
+  }
+}

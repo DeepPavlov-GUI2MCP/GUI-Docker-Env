@@ -1,0 +1,111 @@
+{
+  "id": "2558749b-bf0c-513b-9a1c-4562da0829ef",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add an illustration to the newsletter",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/highlighted_text__sample_recruitment_phone_script.odt",
+            "path": "/home/user/Desktop/synthetic_writer_2558749bbf0c513b9a1c4562da0829ef.odt"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_2558749bbf0c513b9a1c4562da0829ef.odt"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_2558749bbf0c513b9a1c4562da0829ef.odt - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5398a209dce824da",
+    "task_type": "insert_at_cursor",
+    "task_index": 10,
+    "expected_outcome": "The application opens the standard image chooser for inserting an illustration.",
+    "preconditions": {
+      "description": "A newsletter draft with headline and subheading is open.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "newsletter headline and subheading"
+        },
+        {
+          "key": "selection_state",
+          "value": "nothing highlighted"
+        },
+        {
+          "key": "intended_image_role",
+          "value": "illustration"
+        }
+      ]
+    },
+    "fixture": "highlighted_text__sample_recruitment_phone_script.odt",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_2558749bbf0c513b9a1c4562da0829ef.odt",
+    "window_name": "synthetic_writer_2558749bbf0c513b9a1c4562da0829ef.odt - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_2558749bbf0c513b9a1c4562da0829ef.odt - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Use the Image button to begin placing an illustration into the newsletter.",
+    "goal_variant_expected_outcome": "The standard image chooser opens for selecting an illustration.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/2558749b-bf0c-513b-9a1c-4562da0829ef/goal_variant_0.json"
+  }
+}

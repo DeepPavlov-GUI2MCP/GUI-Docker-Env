@@ -1,0 +1,155 @@
+{
+  "id": "e4ad42eb-bc02-5cc4-a069-11aa787451f0",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Verify Donate to LibreOffice is above License Information",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_e4ad42ebbc025cc4a06911aa787451f0.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_e4ad42ebbc025cc4a06911aa787451f0.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_e4ad42ebbc025cc4a06911aa787451f0.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Help"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:547fcbaf37a7f7ba",
+              "role": "menu",
+              "name": "Help",
+              "recorded_bbox": [
+                572,
+                50,
+                46,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Help",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/bd25ba81ea6e/20260606T225301Z",
+    "macro_state_id": "bd25ba81ea6e",
+    "micro_action_id": "15c7cea540931c01",
+    "task_type": "unsafe_or_external_observation",
+    "task_index": 6,
+    "expected_outcome": "The near-bottom placement of the item has been confirmed, with no navigation away from Writer.",
+    "preconditions": {
+      "description": "The Help menu is visible.",
+      "extras": [
+        {
+          "key": "target_item",
+          "value": "Donate to LibreOffice"
+        },
+        {
+          "key": "positional_check",
+          "value": "above License Information"
+        },
+        {
+          "key": "menu_name",
+          "value": "Help"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_e4ad42ebbc025cc4a06911aa787451f0.docx",
+    "window_name": "synthetic_writer_e4ad42ebbc025cc4a06911aa787451f0.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "bd25ba81ea6e",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:547fcbaf37a7f7ba",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Help",
+          "bbox": [
+            572,
+            50,
+            46,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Help"
+      },
+      "window_name": "synthetic_writer_e4ad42ebbc025cc4a06911aa787451f0.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Look through the Help menu and verify that 'Donate to LibreOffice' appears near the bottom, above 'License Information', without selecting it.",
+    "goal_variant_expected_outcome": "The near-bottom placement above License Information is confirmed.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/bd25ba81ea6e/20260606T225301Z/goals/e4ad42eb-bc02-5cc4-a069-11aa787451f0/goal_variant_0.json"
+  }
+}

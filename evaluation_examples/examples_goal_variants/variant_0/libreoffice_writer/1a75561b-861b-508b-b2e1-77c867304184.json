@@ -1,0 +1,194 @@
+{
+  "id": "1a75561b-861b-508b-b2e1-77c867304184",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Inspect the document's signature options",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_1a75561b861b508bb2e177c867304184.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_1a75561b861b508bb2e177c867304184.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_1a75561b861b508bb2e177c867304184.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "File"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:bb08184c0b3835ee",
+              "role": "menu",
+              "name": "File",
+              "recorded_bbox": [
+                57,
+                50,
+                39,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu item",
+              "name": "Properties..."
+            },
+            "meta": {
+              "edge_id": "e65903c8fc2b:e987f20d674ebecb",
+              "role": "menu item",
+              "name": "Properties...",
+              "recorded_bbox": [
+                57,
+                606,
+                302,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "dialog",
+              "name": "Properties of “synthetic_writer_1a75561b861b508bb2e177c867304184”",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/8ae0e75d5d09/20260606T225300Z",
+    "macro_state_id": "8ae0e75d5d09",
+    "micro_action_id": "abfe21e61e6759c0",
+    "task_type": "dialog_open",
+    "task_index": 2,
+    "expected_outcome": "LibreOffice opens the Digital Signatures dialog for the current document.",
+    "preconditions": {
+      "description": "The document properties window is already open and no secondary dialog is currently displayed.",
+      "extras": [
+        {
+          "key": "active_tab",
+          "value": "General"
+        },
+        {
+          "key": "secondary_dialog_open",
+          "value": "false"
+        },
+        {
+          "key": "button_state",
+          "value": "enabled"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_1a75561b861b508bb2e177c867304184.docx",
+    "window_name": "synthetic_writer_1a75561b861b508bb2e177c867304184.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "8ae0e75d5d09",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:bb08184c0b3835ee",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "File",
+          "bbox": [
+            57,
+            50,
+            39,
+            25
+          ]
+        },
+        {
+          "edge_id": "e65903c8fc2b:e987f20d674ebecb",
+          "from_state": "e65903c8fc2b",
+          "role": "menu item",
+          "name": "Properties...",
+          "bbox": [
+            57,
+            606,
+            302,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "dialog",
+        "role": "dialog",
+        "name": "Properties of “synthetic_writer_1a75561b861b508bb2e177c867304184”"
+      },
+      "window_name": "synthetic_writer_1a75561b861b508bb2e177c867304184.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Click \"Digital Signatures...\" to inspect signature options for this document.",
+    "goal_variant_expected_outcome": "LibreOffice opens the Digital Signatures dialog for the document.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/8ae0e75d5d09/20260606T225300Z/goals/1a75561b-861b-508b-b2e1-77c867304184/goal_variant_0.json"
+  }
+}

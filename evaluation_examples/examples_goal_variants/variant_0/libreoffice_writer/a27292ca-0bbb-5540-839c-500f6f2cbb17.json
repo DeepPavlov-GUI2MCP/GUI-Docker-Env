@@ -1,0 +1,151 @@
+{
+  "id": "a27292ca-0bbb-5540-839c-500f6f2cbb17",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check if table properties are available",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_a27292ca0bbb5540839c500f6f2cbb17.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_a27292ca0bbb5540839c500f6f2cbb17.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_a27292ca0bbb5540839c500f6f2cbb17.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Table"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:b0c485afa1095a6e",
+              "role": "menu",
+              "name": "Table",
+              "recorded_bbox": [
+                356,
+                50,
+                50,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Table",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/53bf0935406d/20260606T225300Z",
+    "macro_state_id": "53bf0935406d",
+    "micro_action_id": "1117b44e18fc8aad",
+    "task_type": "availability_check",
+    "task_index": 1,
+    "expected_outcome": "The command is observed to be unavailable in the present state.",
+    "preconditions": {
+      "description": "The Table menu is visible and several table-specific commands are disabled.",
+      "extras": [
+        {
+          "key": "target_item",
+          "value": "Properties..."
+        },
+        {
+          "key": "observation_only",
+          "value": "true"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_a27292ca0bbb5540839c500f6f2cbb17.docx",
+    "window_name": "synthetic_writer_a27292ca0bbb5540839c500f6f2cbb17.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "53bf0935406d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:b0c485afa1095a6e",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Table",
+          "bbox": [
+            356,
+            50,
+            50,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Table"
+      },
+      "window_name": "synthetic_writer_a27292ca0bbb5540839c500f6f2cbb17.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Check whether the Table menu command \"Properties...\" is currently available, but do not click it.",
+    "goal_variant_expected_outcome": "The Properties... command is observed to be unavailable.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/53bf0935406d/20260606T225300Z/goals/a27292ca-0bbb-5540-839c-500f6f2cbb17/goal_variant_0.json"
+  }
+}

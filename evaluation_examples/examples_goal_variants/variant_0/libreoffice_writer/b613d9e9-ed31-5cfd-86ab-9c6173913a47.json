@@ -1,0 +1,190 @@
+{
+  "id": "b613d9e9-ed31-5cfd-86ab-9c6173913a47",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check for a direct EPUB export command",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_b613d9e9ed315cfd86ab9c6173913a47.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_b613d9e9ed315cfd86ab9c6173913a47.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_b613d9e9ed315cfd86ab9c6173913a47.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "File"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:bb08184c0b3835ee",
+              "role": "menu",
+              "name": "File",
+              "recorded_bbox": [
+                57,
+                50,
+                39,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Export As"
+            },
+            "meta": {
+              "edge_id": "e65903c8fc2b:30309006bcf2999c",
+              "role": "menu",
+              "name": "Export As",
+              "recorded_bbox": [
+                57,
+                454,
+                302,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Export As",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/abd09c05bb29/20260606T225301Z",
+    "macro_state_id": "abd09c05bb29",
+    "micro_action_id": "ff1871335647938b",
+    "task_type": "unsafe_or_external_observation",
+    "task_index": 4,
+    "expected_outcome": "Availability of the direct EPUB export command is confirmed and the interface remains in the menu state.",
+    "preconditions": {
+      "description": "The export submenu is visible and all four export items can be inspected.",
+      "extras": [
+        {
+          "key": "visible_count",
+          "value": "4 export submenu items"
+        },
+        {
+          "key": "safety_mode",
+          "value": "read-only observation of menu"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_b613d9e9ed315cfd86ab9c6173913a47.docx",
+    "window_name": "synthetic_writer_b613d9e9ed315cfd86ab9c6173913a47.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "abd09c05bb29",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:bb08184c0b3835ee",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "File",
+          "bbox": [
+            57,
+            50,
+            39,
+            25
+          ]
+        },
+        {
+          "edge_id": "e65903c8fc2b:30309006bcf2999c",
+          "from_state": "e65903c8fc2b",
+          "role": "menu",
+          "name": "Export As",
+          "bbox": [
+            57,
+            454,
+            302,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Export As"
+      },
+      "window_name": "synthetic_writer_b613d9e9ed315cfd86ab9c6173913a47.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Check whether a direct EPUB export command is available in the Export As submenu, without clicking any menu item.",
+    "goal_variant_expected_outcome": "Availability of the direct EPUB export command is confirmed and the interface remains in the menu state.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/abd09c05bb29/20260606T225301Z/goals/b613d9e9-ed31-5cfd-86ab-9c6173913a47/goal_variant_0.json"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "id": "cec0d919-1929-5642-8928-cb71d7d5c0a4",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Activate Clone formatting",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_cec0d919192956428928cb71d7d5c0a4.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_cec0d919192956428928cb71d7d5c0a4.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_cec0d919192956428928cb71d7d5c0a4.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "a0e8ddacb0e894a2",
+    "task_type": "style_management",
+    "task_index": 0,
+    "expected_outcome": "Clone formatting mode is activated so the current formatting can be painted elsewhere.",
+    "preconditions": {
+      "description": "A formatted word is selected in the document, making it the source for cloning formatting.",
+      "extras": [
+        {
+          "key": "selected_content",
+          "value": "Announcement"
+        },
+        {
+          "key": "source_format",
+          "value": "bold, blue text"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_cec0d919192956428928cb71d7d5c0a4.docx",
+    "window_name": "synthetic_writer_cec0d919192956428928cb71d7d5c0a4.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_cec0d919192956428928cb71d7d5c0a4.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Click Clone to prepare copying the formatting of the currently selected styled text to another location.",
+    "goal_variant_expected_outcome": "Clone formatting mode is enabled, ready to copy the selected formatting elsewhere.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/cec0d919-1929-5642-8928-cb71d7d5c0a4/goal_variant_0.json"
+  }
+}

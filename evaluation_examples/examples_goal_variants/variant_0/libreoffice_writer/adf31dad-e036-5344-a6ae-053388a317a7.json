@@ -1,0 +1,111 @@
+{
+  "id": "adf31dad-e036-5344-a6ae-053388a317a7",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a page break before References",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/short_paragraph__dublin_zoo_intro.docx",
+            "path": "/home/user/Desktop/synthetic_writer_adf31dade0365344a6ae053388a317a7.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_adf31dade0365344a6ae053388a317a7.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_adf31dade0365344a6ae053388a317a7.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "73e5697b26bfdbec",
+    "task_type": "insert_at_cursor",
+    "task_index": 5,
+    "expected_outcome": "The References line and everything after it starts on a new page due to the inserted page break.",
+    "preconditions": {
+      "description": "The document contains several paragraphs and later a line beginning with “References”, with the insertion point placed just before that line.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Report text followed by section label: References"
+        },
+        {
+          "key": "selection_state",
+          "value": "No selection"
+        },
+        {
+          "key": "initial_page_count",
+          "value": "1"
+        }
+      ]
+    },
+    "fixture": "short_paragraph__dublin_zoo_intro.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_adf31dade0365344a6ae053388a317a7.docx",
+    "window_name": "synthetic_writer_adf31dade0365344a6ae053388a317a7.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_adf31dade0365344a6ae053388a317a7.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Add a page break right before the line that starts with “References”.",
+    "goal_variant_expected_outcome": "The References line and following content start on a new page.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/adf31dad-e036-5344-a6ae-053388a317a7/goal_variant_0.json"
+  }
+}

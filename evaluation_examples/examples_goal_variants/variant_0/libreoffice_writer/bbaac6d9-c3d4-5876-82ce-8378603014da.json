@@ -1,0 +1,194 @@
+{
+  "id": "bbaac6d9-c3d4-5876-82ce-8378603014da",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check if Promote One Level With Subpoints is available",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list__ccch9003_tutorial_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_bbaac6d9c3d4587682ce8378603014da.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_bbaac6d9c3d4587682ce8378603014da.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_bbaac6d9c3d4587682ce8378603014da.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Format"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:09346a8f4b7dda04",
+              "role": "menu",
+              "name": "Format",
+              "recorded_bbox": [
+                238,
+                50,
+                62,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Lists"
+            },
+            "meta": {
+              "edge_id": "32f76b8b1d9d:57818d6dee972860",
+              "role": "menu",
+              "name": "Lists",
+              "recorded_bbox": [
+                238,
+                252,
+                268,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Lists",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/07e46a8883b5/20260606T225257Z",
+    "macro_state_id": "07e46a8883b5",
+    "micro_action_id": "915257bbdbb0859a",
+    "task_type": "availability_check",
+    "task_index": 1,
+    "expected_outcome": "The command is identified as unavailable in the current state, and the document remains unchanged.",
+    "preconditions": {
+      "description": "A blank or non-applicable Writer context is displayed with Format > Lists open, showing the target entry grayed out.",
+      "extras": [
+        {
+          "key": "menu_path",
+          "value": "Format > Lists"
+        },
+        {
+          "key": "target_item",
+          "value": "Promote One Level With Subpoints"
+        },
+        {
+          "key": "visible_state",
+          "value": "grayed out"
+        }
+      ]
+    },
+    "fixture": "bulleted_list__ccch9003_tutorial_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_bbaac6d9c3d4587682ce8378603014da.docx",
+    "window_name": "synthetic_writer_bbaac6d9c3d4587682ce8378603014da.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "07e46a8883b5",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:09346a8f4b7dda04",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Format",
+          "bbox": [
+            238,
+            50,
+            62,
+            25
+          ]
+        },
+        {
+          "edge_id": "32f76b8b1d9d:57818d6dee972860",
+          "from_state": "32f76b8b1d9d",
+          "role": "menu",
+          "name": "Lists",
+          "bbox": [
+            238,
+            252,
+            268,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Lists"
+      },
+      "window_name": "synthetic_writer_bbaac6d9c3d4587682ce8378603014da.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Verify the availability of Promote One Level With Subpoints in the visible Lists menu without triggering any command.",
+    "goal_variant_expected_outcome": "The command is identified as unavailable in the current state.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/07e46a8883b5/20260606T225257Z/goals/bbaac6d9-c3d4-5876-82ce-8378603014da/goal_variant_0.json"
+  }
+}

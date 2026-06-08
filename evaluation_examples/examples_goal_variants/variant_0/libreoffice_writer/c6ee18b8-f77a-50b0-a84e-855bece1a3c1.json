@@ -1,0 +1,107 @@
+{
+  "id": "c6ee18b8-f77a-50b0-a84e-855bece1a3c1",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Turn on superscript",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_c6ee18b8f77a50b0a84e855bece1a3c1.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_c6ee18b8f77a50b0a84e855bece1a3c1.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_c6ee18b8f77a50b0a84e855bece1a3c1.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "427c014248ac7406",
+    "task_type": "cursor_format_toggle",
+    "task_index": 0,
+    "expected_outcome": "Superscript formatting becomes active for future input; no existing document text is changed yet.",
+    "preconditions": {
+      "description": "The document is open in editing mode with no text selected and superscript is currently off.",
+      "extras": [
+        {
+          "key": "selection_state",
+          "value": "No selection"
+        },
+        {
+          "key": "format_state",
+          "value": "Superscript inactive"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_c6ee18b8f77a50b0a84e855bece1a3c1.docx",
+    "window_name": "synthetic_writer_c6ee18b8f77a50b0a84e855bece1a3c1.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_c6ee18b8f77a50b0a84e855bece1a3c1.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Turn on Superscript so the next typed characters will be raised.",
+    "goal_variant_expected_outcome": "Superscript formatting becomes active for future input; no existing document text is changed yet.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/c6ee18b8-f77a-50b0-a84e-855bece1a3c1/goal_variant_0.json"
+  }
+}

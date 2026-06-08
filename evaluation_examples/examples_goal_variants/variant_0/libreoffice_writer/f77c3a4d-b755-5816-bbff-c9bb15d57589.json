@@ -1,0 +1,194 @@
+{
+  "id": "f77c3a4d-b755-5816-bbff-c9bb15d57589",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Can I use Columns After?",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/table_with_values__view_person_organizational_summary.docx",
+            "path": "/home/user/Desktop/synthetic_writer_f77c3a4db7555816bbffc9bb15d57589.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_f77c3a4db7555816bbffc9bb15d57589.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_f77c3a4db7555816bbffc9bb15d57589.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Table"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:b0c485afa1095a6e",
+              "role": "menu",
+              "name": "Table",
+              "recorded_bbox": [
+                356,
+                50,
+                50,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Insert"
+            },
+            "meta": {
+              "edge_id": "53bf0935406d:86560dc965cecd7e",
+              "role": "menu",
+              "name": "Insert",
+              "recorded_bbox": [
+                356,
+                100,
+                344,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Insert",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/22dc431f9220/20260606T225258Z",
+    "macro_state_id": "22dc431f9220",
+    "micro_action_id": "0268872c3590aab8",
+    "task_type": "availability_check",
+    "task_index": 1,
+    "expected_outcome": "The agent confirms Columns After is disabled; no column is inserted and the document content is unchanged.",
+    "preconditions": {
+      "description": "A blank untitled Writer document is open, and the Table > Insert submenu is already open. No table cell is active.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "blank document"
+        },
+        {
+          "key": "table_context",
+          "value": "absent or inactive"
+        },
+        {
+          "key": "target_item",
+          "value": "Columns After"
+        }
+      ]
+    },
+    "fixture": "table_with_values__view_person_organizational_summary.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_f77c3a4db7555816bbffc9bb15d57589.docx",
+    "window_name": "synthetic_writer_f77c3a4db7555816bbffc9bb15d57589.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "22dc431f9220",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:b0c485afa1095a6e",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Table",
+          "bbox": [
+            356,
+            50,
+            50,
+            25
+          ]
+        },
+        {
+          "edge_id": "53bf0935406d:86560dc965cecd7e",
+          "from_state": "53bf0935406d",
+          "role": "menu",
+          "name": "Insert",
+          "bbox": [
+            356,
+            100,
+            344,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Insert"
+      },
+      "window_name": "synthetic_writer_f77c3a4db7555816bbffc9bb15d57589.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Check whether Columns After can be selected from the Table → Insert submenu without changing the document.",
+    "goal_variant_expected_outcome": "Columns After is disabled and the document stays unchanged.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/22dc431f9220/20260606T225258Z/goals/f77c3a4d-b755-5816-bbff-c9bb15d57589/goal_variant_0.json"
+  }
+}

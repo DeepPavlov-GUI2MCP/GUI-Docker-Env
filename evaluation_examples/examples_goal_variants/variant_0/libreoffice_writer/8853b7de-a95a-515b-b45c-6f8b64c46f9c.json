@@ -1,0 +1,155 @@
+{
+  "id": "8853b7de-a95a-515b-b45c-6f8b64c46f9c",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open the source-file selection window",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_8853b7dea95a515bb45c6f8b64c46f9c.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_8853b7dea95a515bb45c6f8b64c46f9c.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_8853b7dea95a515bb45c6f8b64c46f9c.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Insert"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:1586a91a7495c7bb",
+              "role": "menu",
+              "name": "Insert",
+              "recorded_bbox": [
+                185,
+                50,
+                53,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Insert",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/f7a7a6e1ff4f/20260606T225304Z",
+    "macro_state_id": "f7a7a6e1ff4f",
+    "micro_action_id": "a174bf20ecc43b0a",
+    "task_type": "dialog_open",
+    "task_index": 2,
+    "expected_outcome": "Writer opens a file browser dialog for picking a text source file.",
+    "preconditions": {
+      "description": "The document window is focused and the Insert dropdown menu is already open.",
+      "extras": [
+        {
+          "key": "focus",
+          "value": "Document window"
+        },
+        {
+          "key": "active_ui_layer",
+          "value": "Menu"
+        },
+        {
+          "key": "visible_command",
+          "value": "Text from File..."
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_8853b7dea95a515bb45c6f8b64c46f9c.docx",
+    "window_name": "synthetic_writer_8853b7dea95a515bb45c6f8b64c46f9c.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "f7a7a6e1ff4f",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:1586a91a7495c7bb",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Insert",
+          "bbox": [
+            185,
+            50,
+            53,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Insert"
+      },
+      "window_name": "synthetic_writer_8853b7dea95a515bb45c6f8b64c46f9c.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Use Insert > Text from File... to bring up the source-file selection window.",
+    "goal_variant_expected_outcome": "Writer opens a file browser dialog for picking a text source file.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/f7a7a6e1ff4f/20260606T225304Z/goals/8853b7de-a95a-515b-b45c-6f8b64c46f9c/goal_variant_0.json"
+  }
+}

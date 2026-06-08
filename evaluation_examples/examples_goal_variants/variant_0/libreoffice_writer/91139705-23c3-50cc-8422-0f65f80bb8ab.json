@@ -1,0 +1,151 @@
+{
+  "id": "91139705-23c3-50cc-8422-0f65f80bb8ab",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open the image file selection dialog",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_9113970523c350cc84220f65f80bb8ab.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_9113970523c350cc84220f65f80bb8ab.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_9113970523c350cc84220f65f80bb8ab.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Insert"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:1586a91a7495c7bb",
+              "role": "menu",
+              "name": "Insert",
+              "recorded_bbox": [
+                185,
+                50,
+                53,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Insert",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/f7a7a6e1ff4f/20260606T225304Z",
+    "macro_state_id": "f7a7a6e1ff4f",
+    "micro_action_id": "0830a4d086af68ee",
+    "task_type": "dialog_open",
+    "task_index": 9,
+    "expected_outcome": "The file selection dialog for images opens; the document content remains unchanged so far.",
+    "preconditions": {
+      "description": "The Insert menu is open and no file chooser is currently active.",
+      "extras": [
+        {
+          "key": "current_document_content",
+          "value": "empty page"
+        },
+        {
+          "key": "pending_insertions",
+          "value": "none"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_9113970523c350cc84220f65f80bb8ab.docx",
+    "window_name": "synthetic_writer_9113970523c350cc84220f65f80bb8ab.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "f7a7a6e1ff4f",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:1586a91a7495c7bb",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Insert",
+          "bbox": [
+            185,
+            50,
+            53,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Insert"
+      },
+      "window_name": "synthetic_writer_9113970523c350cc84220f65f80bb8ab.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Open the image file selection dialog without inserting anything yet.",
+    "goal_variant_expected_outcome": "The file selection dialog for images opens; the document content remains unchanged so far.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/f7a7a6e1ff4f/20260606T225304Z/goals/91139705-23c3-50cc-8422-0f65f80bb8ab/goal_variant_0.json"
+  }
+}

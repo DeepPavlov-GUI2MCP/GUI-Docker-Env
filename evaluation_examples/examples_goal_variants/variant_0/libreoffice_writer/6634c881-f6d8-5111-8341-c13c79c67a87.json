@@ -1,0 +1,155 @@
+{
+  "id": "6634c881-f6d8-5111-8341-c13c79c67a87",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Bring up Find",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_6634c881f6d851118341c13c79c67a87.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_6634c881f6d851118341c13c79c67a87.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_6634c881f6d851118341c13c79c67a87.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Edit"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:400b7cc1f0851d8a",
+              "role": "menu",
+              "name": "Edit",
+              "recorded_bbox": [
+                96,
+                50,
+                41,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Edit",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/2e0335a47afa/20260606T225258Z",
+    "macro_state_id": "2e0335a47afa",
+    "micro_action_id": "8496eeed37b8d010",
+    "task_type": "dialog_open",
+    "task_index": 4,
+    "expected_outcome": "The Find function opens so text can be searched in the report.",
+    "preconditions": {
+      "description": "A report-style Writer document is open, and Find... is shown as enabled in the Edit menu.",
+      "extras": [
+        {
+          "key": "document_theme",
+          "value": "report"
+        },
+        {
+          "key": "item_name",
+          "value": "Find..."
+        },
+        {
+          "key": "enabled_state",
+          "value": "true"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_6634c881f6d851118341c13c79c67a87.docx",
+    "window_name": "synthetic_writer_6634c881f6d851118341c13c79c67a87.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "2e0335a47afa",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:400b7cc1f0851d8a",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Edit",
+          "bbox": [
+            96,
+            50,
+            41,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Edit"
+      },
+      "window_name": "synthetic_writer_6634c881f6d851118341c13c79c67a87.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Bring up Find... from the visible Edit menu in a report document.",
+    "goal_variant_expected_outcome": "The Find function opens so text can be searched.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/2e0335a47afa/20260606T225258Z/goals/6634c881-f6d8-5111-8341-c13c79c67a87/goal_variant_0.json"
+  }
+}

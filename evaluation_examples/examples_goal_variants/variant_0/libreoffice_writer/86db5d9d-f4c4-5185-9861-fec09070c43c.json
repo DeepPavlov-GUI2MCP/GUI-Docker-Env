@@ -1,0 +1,111 @@
+{
+  "id": "86db5d9d-f4c4-5185-9861-fec09070c43c",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Confirm the Release Notes control is available",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_86db5d9df4c451859861fec09070c43c.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_86db5d9df4c451859861fec09070c43c.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_86db5d9df4c451859861fec09070c43c.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "d48571a29422b02e",
+    "task_type": "unsafe_or_external_observation",
+    "task_index": 1,
+    "expected_outcome": "The control is confirmed to be visible and available for interaction, with no navigation away from the document.",
+    "preconditions": {
+      "description": "LibreOffice Writer shows the informational banner asking about learning what's new.",
+      "extras": [
+        {
+          "key": "notification_text",
+          "value": "Banner about running version 7.3 for the first time"
+        },
+        {
+          "key": "release_notes_button",
+          "value": "Visible on banner"
+        },
+        {
+          "key": "safety_requirement",
+          "value": "Observation only, no click"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_86db5d9df4c451859861fec09070c43c.docx",
+    "window_name": "synthetic_writer_86db5d9df4c451859861fec09070c43c.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_86db5d9df4c451859861fec09070c43c.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Verify that the Release Notes control is available on the welcome-style information banner, but do not open it.",
+    "goal_variant_expected_outcome": "The control is visible and available for interaction, with no navigation away from the document.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/86db5d9d-f4c4-5185-9861-fec09070c43c/goal_variant_0.json"
+  }
+}

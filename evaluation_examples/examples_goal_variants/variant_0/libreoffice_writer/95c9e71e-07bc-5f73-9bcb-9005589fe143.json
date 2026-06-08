@@ -1,0 +1,151 @@
+{
+  "id": "95c9e71e-07bc-5f73-9bcb-9005589fe143",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Verify the disabled status of Protect Cells",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/table_with_values__view_person_organizational_summary.docx",
+            "path": "/home/user/Desktop/synthetic_writer_95c9e71e07bc5f739bcb9005589fe143.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_95c9e71e07bc5f739bcb9005589fe143.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_95c9e71e07bc5f739bcb9005589fe143.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Table"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:b0c485afa1095a6e",
+              "role": "menu",
+              "name": "Table",
+              "recorded_bbox": [
+                356,
+                50,
+                50,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Table",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/53bf0935406d/20260606T225300Z",
+    "macro_state_id": "53bf0935406d",
+    "micro_action_id": "2ad947541b61b535",
+    "task_type": "availability_check",
+    "task_index": 4,
+    "expected_outcome": "The menu item is confirmed disabled.",
+    "preconditions": {
+      "description": "An untitled Writer document is open and the Table menu has been opened programmatically.",
+      "extras": [
+        {
+          "key": "target_item",
+          "value": "Protect Cells"
+        },
+        {
+          "key": "document_type",
+          "value": "Writer document"
+        }
+      ]
+    },
+    "fixture": "table_with_values__view_person_organizational_summary.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_95c9e71e07bc5f739bcb9005589fe143.docx",
+    "window_name": "synthetic_writer_95c9e71e07bc5f739bcb9005589fe143.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "53bf0935406d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:b0c485afa1095a6e",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Table",
+          "bbox": [
+            356,
+            50,
+            50,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Table"
+      },
+      "window_name": "synthetic_writer_95c9e71e07bc5f739bcb9005589fe143.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "From the open Table menu, verify the disabled status of \"Protect Cells\".",
+    "goal_variant_expected_outcome": "The menu item is confirmed disabled.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/53bf0935406d/20260606T225300Z/goals/95c9e71e-07bc-5f73-9bcb-9005589fe143/goal_variant_0.json"
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "id": "a0c5faac-2b59-59e3-b1e6-77e2ce7ba778",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Clear manual formatting from the heading",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_a0c5faac2b5959e3b1e677e2ce7ba778.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_a0c5faac2b5959e3b1e677e2ce7ba778.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_a0c5faac2b5959e3b1e677e2ce7ba778.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "73a2e697d7ee0626",
+    "task_type": "selection_transform",
+    "task_index": 1,
+    "expected_outcome": "The heading text remains selected content-wise but manual formatting is cleared and style-based formatting remains.",
+    "preconditions": {
+      "description": "A heading line is selected and has direct formatting beyond its style.",
+      "extras": [
+        {
+          "key": "selection_scope",
+          "value": "single heading"
+        },
+        {
+          "key": "existing_formatting",
+          "value": "manual underline and custom font color"
+        },
+        {
+          "key": "style_state",
+          "value": "heading style already assigned"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_a0c5faac2b5959e3b1e677e2ce7ba778.docx",
+    "window_name": "synthetic_writer_a0c5faac2b5959e3b1e677e2ce7ba778.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_a0c5faac2b5959e3b1e677e2ce7ba778.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Use the Clear button on the selected heading to strip manual character formatting.",
+    "goal_variant_expected_outcome": "The heading keeps its text while manual character formatting is removed.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/a0c5faac-2b59-59e3-b1e6-77e2ce7ba778/goal_variant_0.json"
+  }
+}

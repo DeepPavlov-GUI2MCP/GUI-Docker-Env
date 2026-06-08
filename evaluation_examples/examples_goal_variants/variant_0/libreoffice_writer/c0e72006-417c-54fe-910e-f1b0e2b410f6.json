@@ -1,0 +1,190 @@
+{
+  "id": "c0e72006-417c-54fe-910e-f1b0e2b410f6",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open the PDF export settings",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_c0e72006417c54fe910ef1b0e2b410f6.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_c0e72006417c54fe910ef1b0e2b410f6.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_c0e72006417c54fe910ef1b0e2b410f6.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "File"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:bb08184c0b3835ee",
+              "role": "menu",
+              "name": "File",
+              "recorded_bbox": [
+                57,
+                50,
+                39,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Export As"
+            },
+            "meta": {
+              "edge_id": "e65903c8fc2b:30309006bcf2999c",
+              "role": "menu",
+              "name": "Export As",
+              "recorded_bbox": [
+                57,
+                454,
+                302,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Export As",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/abd09c05bb29/20260606T225301Z",
+    "macro_state_id": "abd09c05bb29",
+    "micro_action_id": "014a0890ce79585f",
+    "task_type": "dialog_open",
+    "task_index": 4,
+    "expected_outcome": "The PDF export settings dialog is shown on top of the document window.",
+    "preconditions": {
+      "description": "An editable Writer document is present and no modal dialog is currently open; only the Export As submenu is open.",
+      "extras": [
+        {
+          "key": "modal_state",
+          "value": "no dialog open"
+        },
+        {
+          "key": "document_title",
+          "value": "Untitled 1"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_c0e72006417c54fe910ef1b0e2b410f6.docx",
+    "window_name": "synthetic_writer_c0e72006417c54fe910ef1b0e2b410f6.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "abd09c05bb29",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:bb08184c0b3835ee",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "File",
+          "bbox": [
+            57,
+            50,
+            39,
+            25
+          ]
+        },
+        {
+          "edge_id": "e65903c8fc2b:30309006bcf2999c",
+          "from_state": "e65903c8fc2b",
+          "role": "menu",
+          "name": "Export As",
+          "bbox": [
+            57,
+            454,
+            302,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Export As"
+      },
+      "window_name": "synthetic_writer_c0e72006417c54fe910ef1b0e2b410f6.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Activate \"Export as PDF...\" in the submenu.",
+    "goal_variant_expected_outcome": "The PDF export settings dialog is shown.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/abd09c05bb29/20260606T225301Z/goals/c0e72006-417c-54fe-910e-f1b0e2b410f6/goal_variant_0.json"
+  }
+}

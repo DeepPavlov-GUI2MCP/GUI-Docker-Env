@@ -1,0 +1,111 @@
+{
+  "id": "7617c893-29eb-59f8-b4c3-5a34530f07de",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Change the selected word's font color",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_7617c89329eb59f8b4c35a34530f07de.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_7617c89329eb59f8b4c35a34530f07de.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_7617c89329eb59f8b4c35a34530f07de.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "604a561290a440d7",
+    "task_type": "selection_transform",
+    "task_index": 0,
+    "expected_outcome": "The highlighted word displays in a new font color while the text content stays the same.",
+    "preconditions": {
+      "description": "A single word in the document is selected and currently uses the default black font color.",
+      "extras": [
+        {
+          "key": "selection_scope",
+          "value": "single word"
+        },
+        {
+          "key": "initial_font_color",
+          "value": "black"
+        },
+        {
+          "key": "text_sample",
+          "value": "important"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_7617c89329eb59f8b4c35a34530f07de.docx",
+    "window_name": "synthetic_writer_7617c89329eb59f8b4c35a34530f07de.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_7617c89329eb59f8b4c35a34530f07de.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Change the selected word to a different font color using the Font Color button.",
+    "goal_variant_expected_outcome": "The selected word appears in a new font color with the text unchanged.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/7617c893-29eb-59f8-b4c3-5a34530f07de/goal_variant_0.json"
+  }
+}

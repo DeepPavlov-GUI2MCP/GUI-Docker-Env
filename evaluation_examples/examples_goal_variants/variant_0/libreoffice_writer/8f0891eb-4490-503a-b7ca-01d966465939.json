@@ -1,0 +1,111 @@
+{
+  "id": "8f0891eb-4490-503a-b7ca-01d966465939",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check if Undo can be used",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_8f0891eb4490503ab7ca01d966465939.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_8f0891eb4490503ab7ca01d966465939.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_8f0891eb4490503ab7ca01d966465939.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "1cc89d4baaa9b5bf",
+    "task_type": "availability_check",
+    "task_index": 1,
+    "expected_outcome": "It is confirmed that Undo is disabled in the current state.",
+    "preconditions": {
+      "description": "The Writer window is open in its initial untouched state.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "no typed content"
+        },
+        {
+          "key": "editing_actions_done",
+          "value": "none since opening"
+        },
+        {
+          "key": "control_state",
+          "value": "Undo unavailable"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_8f0891eb4490503ab7ca01d966465939.docx",
+    "window_name": "synthetic_writer_8f0891eb4490503ab7ca01d966465939.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_8f0891eb4490503ab7ca01d966465939.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Check whether the Undo button can be used right now, without clicking it.",
+    "goal_variant_expected_outcome": "It is confirmed whether Undo is disabled in the current state.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/8f0891eb-4490-503a-b7ca-01d966465939/goal_variant_0.json"
+  }
+}

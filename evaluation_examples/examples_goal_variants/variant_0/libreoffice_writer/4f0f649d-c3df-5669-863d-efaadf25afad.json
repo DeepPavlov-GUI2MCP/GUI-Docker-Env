@@ -1,0 +1,190 @@
+{
+  "id": "4f0f649d-c3df-5669-863d-efaadf25afad",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Capitalize every word in the phrase",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_4f0f649dc3df5669863defaadf25afad.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_4f0f649dc3df5669863defaadf25afad.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_4f0f649dc3df5669863defaadf25afad.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Format"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:09346a8f4b7dda04",
+              "role": "menu",
+              "name": "Format",
+              "recorded_bbox": [
+                238,
+                50,
+                62,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Text"
+            },
+            "meta": {
+              "edge_id": "32f76b8b1d9d:e98fd2ece44678c7",
+              "role": "menu",
+              "name": "Text",
+              "recorded_bbox": [
+                238,
+                75,
+                268,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Text",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/a3fd82503da5/20260606T225300Z",
+    "macro_state_id": "a3fd82503da5",
+    "micro_action_id": "589030ceb8b680bf",
+    "task_type": "selection_transform",
+    "task_index": 1,
+    "expected_outcome": "All major words in the selected fragment start with capital letters because each word is capitalized.",
+    "preconditions": {
+      "description": "A sentence fragment is selected and is not already in title case.",
+      "extras": [
+        {
+          "key": "selected_text",
+          "value": "submit receipts by noon tomorrow"
+        },
+        {
+          "key": "selection_scope",
+          "value": "phrase"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_4f0f649dc3df5669863defaadf25afad.docx",
+    "window_name": "synthetic_writer_4f0f649dc3df5669863defaadf25afad.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "a3fd82503da5",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:09346a8f4b7dda04",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Format",
+          "bbox": [
+            238,
+            50,
+            62,
+            25
+          ]
+        },
+        {
+          "edge_id": "32f76b8b1d9d:e98fd2ece44678c7",
+          "from_state": "32f76b8b1d9d",
+          "role": "menu",
+          "name": "Text",
+          "bbox": [
+            238,
+            75,
+            268,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Text"
+      },
+      "window_name": "synthetic_writer_4f0f649dc3df5669863defaadf25afad.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Use Capitalize Every Word on the selected sentence fragment.",
+    "goal_variant_expected_outcome": "Each word in the selected fragment starts with a capital letter.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/a3fd82503da5/20260606T225300Z/goals/4f0f649d-c3df-5669-863d-efaadf25afad/goal_variant_0.json"
+  }
+}

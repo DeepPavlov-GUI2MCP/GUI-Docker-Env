@@ -1,0 +1,111 @@
+{
+  "id": "c151db82-33d0-5788-89e1-2f9794c3ae09",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Toggle formatting marks off",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/short_paragraph__dublin_zoo_intro.docx",
+            "path": "/home/user/Desktop/synthetic_writer_c151db8233d0578889e12f9794c3ae09.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_c151db8233d0578889e12f9794c3ae09.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_c151db8233d0578889e12f9794c3ae09.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "bc2a95014408bc56",
+    "task_type": "cursor_format_toggle",
+    "task_index": 5,
+    "expected_outcome": "Paragraph marks and other invisible-character indicators disappear from the page view.",
+    "preconditions": {
+      "description": "The document currently displays formatting marks across mixed content.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Paragraphs separated by blank lines"
+        },
+        {
+          "key": "formatting_marks",
+          "value": "On"
+        },
+        {
+          "key": "visible_symbols",
+          "value": "Spacing and paragraph indicators shown"
+        }
+      ]
+    },
+    "fixture": "short_paragraph__dublin_zoo_intro.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_c151db8233d0578889e12f9794c3ae09.docx",
+    "window_name": "synthetic_writer_c151db8233d0578889e12f9794c3ae09.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_c151db8233d0578889e12f9794c3ae09.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Toggle formatting marks off in a document with mixed paragraphs and blank lines.",
+    "goal_variant_expected_outcome": "Paragraph marks and other invisible-character indicators disappear from view.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/c151db82-33d0-5788-89e1-2f9794c3ae09/goal_variant_0.json"
+  }
+}

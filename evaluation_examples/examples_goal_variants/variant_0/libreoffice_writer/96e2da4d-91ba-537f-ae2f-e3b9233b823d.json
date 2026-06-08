@@ -1,0 +1,111 @@
+{
+  "id": "96e2da4d-91ba-537f-ae2f-e3b9233b823d",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a comment here",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_96e2da4d91ba537fae2fe3b9233b823d.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_96e2da4d91ba537fae2fe3b9233b823d.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_96e2da4d91ba537fae2fe3b9233b823d.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "873741bc22e18be9",
+    "task_type": "review_commenting",
+    "task_index": 9,
+    "expected_outcome": "A new comment is added at the insertion point immediately after the heading, with comment UI opened.",
+    "preconditions": {
+      "description": "The document contains a heading followed by body text; the insertion point is after the heading and no text is selected.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Heading followed by paragraph text"
+        },
+        {
+          "key": "selection_state",
+          "value": "No selection"
+        },
+        {
+          "key": "dialog_state",
+          "value": "No modal dialog open"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_96e2da4d91ba537fae2fe3b9233b823d.docx",
+    "window_name": "synthetic_writer_96e2da4d91ba537fae2fe3b9233b823d.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_96e2da4d91ba537fae2fe3b9233b823d.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Insert a comment at the current location after a heading.",
+    "goal_variant_expected_outcome": "A new comment is added at the insertion point and comment UI opens.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/96e2da4d-91ba-537f-ae2f-e3b9233b823d/goal_variant_0.json"
+  }
+}

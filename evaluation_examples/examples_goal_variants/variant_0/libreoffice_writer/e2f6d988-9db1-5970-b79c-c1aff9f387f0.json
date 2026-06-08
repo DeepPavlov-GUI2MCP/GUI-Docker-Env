@@ -1,0 +1,111 @@
+{
+  "id": "e2f6d988-9db1-5970-b79c-c1aff9f387f0",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Create a chart with the explanatory text",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+            "path": "/home/user/Desktop/synthetic_writer_e2f6d9889db15970b79cc1aff9f387f0.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_e2f6d9889db15970b79cc1aff9f387f0.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_e2f6d9889db15970b79cc1aff9f387f0.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "ba32ff6c264a4cd3",
+    "task_type": "insert_at_cursor",
+    "task_index": 7,
+    "expected_outcome": "An embedded chart is inserted while preserving the existing explanatory text.",
+    "preconditions": {
+      "description": "The page contains one small paragraph of narrative text and no objects.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "A 2-3 sentence paragraph"
+        },
+        {
+          "key": "selection_state",
+          "value": "No active selection"
+        },
+        {
+          "key": "object_state",
+          "value": "No current chart"
+        }
+      ]
+    },
+    "fixture": "single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_e2f6d9889db15970b79cc1aff9f387f0.docx",
+    "window_name": "synthetic_writer_e2f6d9889db15970b79cc1aff9f387f0.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_e2f6d9889db15970b79cc1aff9f387f0.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Create a chart in a document containing a few sentences of explanatory text.",
+    "goal_variant_expected_outcome": "An embedded chart is inserted while preserving the existing text.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/e2f6d988-9db1-5970-b79c-c1aff9f387f0/goal_variant_0.json"
+  }
+}

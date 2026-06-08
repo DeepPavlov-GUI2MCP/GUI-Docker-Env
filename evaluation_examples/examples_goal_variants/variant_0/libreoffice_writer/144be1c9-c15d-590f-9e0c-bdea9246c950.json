@@ -1,0 +1,190 @@
+{
+  "id": "144be1c9-c15d-590f-9e0c-bdea9246c950",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Activate AutoCorrect Apply",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/short_paragraph__dublin_zoo_intro.docx",
+            "path": "/home/user/Desktop/synthetic_writer_144be1c9c15d590f9e0cbdea9246c950.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_144be1c9c15d590f9e0cbdea9246c950.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_144be1c9c15d590f9e0cbdea9246c950.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Tools"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:a17009973bda9611",
+              "role": "menu",
+              "name": "Tools",
+              "recorded_bbox": [
+                455,
+                50,
+                49,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "AutoCorrect"
+            },
+            "meta": {
+              "edge_id": "e85ad249bd7d:2122d1e8d3997612",
+              "role": "menu",
+              "name": "AutoCorrect",
+              "recorded_bbox": [
+                455,
+                226,
+                300,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "AutoCorrect",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/ffa20bd7476a/20260606T225304Z",
+    "macro_state_id": "ffa20bd7476a",
+    "micro_action_id": "8d48fd92ab27e229",
+    "task_type": "document_analysis",
+    "task_index": 3,
+    "expected_outcome": "LibreOffice applies current AutoCorrect rules to existing document text and returns focus to the document afterward.",
+    "preconditions": {
+      "description": "The document has at least one paragraph with AutoCorrect-eligible text patterns.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Sample prose includes malformed capitalization, ordinal patterns, and punctuation spacing issues."
+        },
+        {
+          "key": "ui_focus",
+          "value": "Tools → AutoCorrect submenu is the active UI layer."
+        }
+      ]
+    },
+    "fixture": "short_paragraph__dublin_zoo_intro.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_144be1c9c15d590f9e0cbdea9246c950.docx",
+    "window_name": "synthetic_writer_144be1c9c15d590f9e0cbdea9246c950.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "ffa20bd7476a",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:a17009973bda9611",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Tools",
+          "bbox": [
+            455,
+            50,
+            49,
+            25
+          ]
+        },
+        {
+          "edge_id": "e85ad249bd7d:2122d1e8d3997612",
+          "from_state": "e85ad249bd7d",
+          "role": "menu",
+          "name": "AutoCorrect",
+          "bbox": [
+            455,
+            226,
+            300,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "AutoCorrect"
+      },
+      "window_name": "synthetic_writer_144be1c9c15d590f9e0cbdea9246c950.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "From the open AutoCorrect submenu, activate Apply.",
+    "goal_variant_expected_outcome": "LibreOffice applies current AutoCorrect rules to existing text.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/ffa20bd7476a/20260606T225304Z/goals/144be1c9-c15d-590f-9e0c-bdea9246c950/goal_variant_0.json"
+  }
+}

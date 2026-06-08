@@ -1,0 +1,190 @@
+{
+  "id": "6a62fc2c-126a-5016-bee6-e728a56296fc",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check if Minimize Row Height is usable",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_6a62fc2c126a5016bee6e728a56296fc.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_6a62fc2c126a5016bee6e728a56296fc.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_6a62fc2c126a5016bee6e728a56296fc.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Table"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:b0c485afa1095a6e",
+              "role": "menu",
+              "name": "Table",
+              "recorded_bbox": [
+                356,
+                50,
+                50,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Size"
+            },
+            "meta": {
+              "edge_id": "53bf0935406d:a386b7abea6f7c26",
+              "role": "menu",
+              "name": "Size",
+              "recorded_bbox": [
+                356,
+                175,
+                344,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Size",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c4ae3dc0f4b7/20260606T225302Z",
+    "macro_state_id": "c4ae3dc0f4b7",
+    "micro_action_id": "5e8df4e0bc383a7a",
+    "task_type": "availability_check",
+    "task_index": 1,
+    "expected_outcome": "The command is identified as disabled, with the UI staying on the same open submenu.",
+    "preconditions": {
+      "description": "A blank Writer document is shown and the Table > Size cascade menu is visible.",
+      "extras": [
+        {
+          "key": "document_state",
+          "value": "blank untitled document"
+        },
+        {
+          "key": "target_item",
+          "value": "Minimize Row Height"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_6a62fc2c126a5016bee6e728a56296fc.docx",
+    "window_name": "synthetic_writer_6a62fc2c126a5016bee6e728a56296fc.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "c4ae3dc0f4b7",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:b0c485afa1095a6e",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Table",
+          "bbox": [
+            356,
+            50,
+            50,
+            25
+          ]
+        },
+        {
+          "edge_id": "53bf0935406d:a386b7abea6f7c26",
+          "from_state": "53bf0935406d",
+          "role": "menu",
+          "name": "Size",
+          "bbox": [
+            356,
+            175,
+            344,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Size"
+      },
+      "window_name": "synthetic_writer_6a62fc2c126a5016bee6e728a56296fc.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Check whether the \"Minimize Row Height\" command can be used from the visible submenu without clicking it.",
+    "goal_variant_expected_outcome": "The command is identified as disabled and the submenu remains open.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c4ae3dc0f4b7/20260606T225302Z/goals/6a62fc2c-126a-5016-bee6-e728a56296fc/goal_variant_0.json"
+  }
+}

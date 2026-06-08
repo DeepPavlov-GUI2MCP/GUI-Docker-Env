@@ -1,0 +1,155 @@
+{
+  "id": "807b437c-4958-5f3a-89fc-a358097dec42",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open Accessibility Check",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list__ccch9003_tutorial_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_807b437c49585f3a89fca358097dec42.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_807b437c49585f3a89fca358097dec42.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_807b437c49585f3a89fca358097dec42.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Tools"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:a17009973bda9611",
+              "role": "menu",
+              "name": "Tools",
+              "recorded_bbox": [
+                455,
+                50,
+                49,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Tools",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/e85ad249bd7d/20260606T225303Z",
+    "macro_state_id": "e85ad249bd7d",
+    "micro_action_id": "86bc00626f77123d",
+    "task_type": "document_analysis",
+    "task_index": 2,
+    "expected_outcome": "LibreOffice begins accessibility analysis and displays the related check results UI.",
+    "preconditions": {
+      "description": "An untitled Writer document is active and the Tools menu list is visible.",
+      "extras": [
+        {
+          "key": "status_bar_words",
+          "value": "0 words"
+        },
+        {
+          "key": "document_language",
+          "value": "English (USA)"
+        },
+        {
+          "key": "target_item",
+          "value": "Accessibility Check..."
+        }
+      ]
+    },
+    "fixture": "bulleted_list__ccch9003_tutorial_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_807b437c49585f3a89fca358097dec42.docx",
+    "window_name": "synthetic_writer_807b437c49585f3a89fca358097dec42.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "e85ad249bd7d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:a17009973bda9611",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Tools",
+          "bbox": [
+            455,
+            50,
+            49,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Tools"
+      },
+      "window_name": "synthetic_writer_807b437c49585f3a89fca358097dec42.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Open Accessibility Check for the active Writer file.",
+    "goal_variant_expected_outcome": "Accessibility analysis begins and the related results UI is displayed.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/e85ad249bd7d/20260606T225303Z/goals/807b437c-4958-5f3a-89fc-a358097dec42/goal_variant_0.json"
+  }
+}

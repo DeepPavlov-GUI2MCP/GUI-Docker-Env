@@ -1,0 +1,111 @@
+{
+  "id": "b21f8e02-ec0f-5b86-b567-e18a8113411e",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Create a comment on the selected date",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_b21f8e02ec0f5b86b567e18a8113411e.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_b21f8e02ec0f5b86b567e18a8113411e.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_b21f8e02ec0f5b86b567e18a8113411e.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "873741bc22e18be9",
+    "task_type": "review_commenting",
+    "task_index": 5,
+    "expected_outcome": "A new comment is attached to the selected date text.",
+    "preconditions": {
+      "description": "Only a date string is selected in the document.",
+      "extras": [
+        {
+          "key": "selected_content",
+          "value": "September 30"
+        },
+        {
+          "key": "selection_scope",
+          "value": "Date token"
+        },
+        {
+          "key": "existing_comments",
+          "value": "None on selection"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_b21f8e02ec0f5b86b567e18a8113411e.docx",
+    "window_name": "synthetic_writer_b21f8e02ec0f5b86b567e18a8113411e.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_b21f8e02ec0f5b86b567e18a8113411e.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Create a review comment on the selected date.",
+    "goal_variant_expected_outcome": "A new comment is attached to the selected date text.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/b21f8e02-ec0f-5b86-b567-e18a8113411e/goal_variant_0.json"
+  }
+}

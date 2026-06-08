@@ -1,0 +1,155 @@
+{
+  "id": "d3e8bf8f-fb17-5a96-96d5-69df197c3ce0",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Point out the Get Involved option",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_d3e8bf8ffb175a9696d569df197c3ce0.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_d3e8bf8ffb175a9696d569df197c3ce0.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_d3e8bf8ffb175a9696d569df197c3ce0.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Help"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:547fcbaf37a7f7ba",
+              "role": "menu",
+              "name": "Help",
+              "recorded_bbox": [
+                572,
+                50,
+                46,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Help",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/bd25ba81ea6e/20260606T225301Z",
+    "macro_state_id": "bd25ba81ea6e",
+    "micro_action_id": "ef63b89fd498eb9f",
+    "task_type": "unsafe_or_external_observation",
+    "task_index": 4,
+    "expected_outcome": "The Get Involved option is visually identified; Writer remains unchanged.",
+    "preconditions": {
+      "description": "No other dialogs are open, and the Help menu remains expanded over the document.",
+      "extras": [
+        {
+          "key": "dialog_state",
+          "value": "none open"
+        },
+        {
+          "key": "target_label",
+          "value": "Get Involved"
+        },
+        {
+          "key": "interaction_limit",
+          "value": "no activation"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_d3e8bf8ffb175a9696d569df197c3ce0.docx",
+    "window_name": "synthetic_writer_d3e8bf8ffb175a9696d569df197c3ce0.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "bd25ba81ea6e",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:547fcbaf37a7f7ba",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Help",
+          "bbox": [
+            572,
+            50,
+            46,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Help"
+      },
+      "window_name": "synthetic_writer_d3e8bf8ffb175a9696d569df197c3ce0.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Inspect the Help menu and point out the Get Involved option, but do not activate it.",
+    "goal_variant_expected_outcome": "The Get Involved option is visually identified and Writer remains unchanged.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/bd25ba81ea6e/20260606T225301Z/goals/d3e8bf8f-fb17-5a96-96d5-69df197c3ce0/goal_variant_0.json"
+  }
+}

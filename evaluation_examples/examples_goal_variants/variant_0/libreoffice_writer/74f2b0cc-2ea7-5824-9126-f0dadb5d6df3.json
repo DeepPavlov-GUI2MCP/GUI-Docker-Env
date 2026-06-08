@@ -1,0 +1,111 @@
+{
+  "id": "74f2b0cc-2ea7-5824-9126-f0dadb5d6df3",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Inspect whether the Copy button is disabled",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/image_anchor__viewing_your_class_schedule_and_textbooks.docx",
+            "path": "/home/user/Desktop/synthetic_writer_74f2b0cc2ea758249126f0dadb5d6df3.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_74f2b0cc2ea758249126f0dadb5d6df3.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_74f2b0cc2ea758249126f0dadb5d6df3.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "2e772bfefe4e8a6f",
+    "task_type": "availability_check",
+    "task_index": 2,
+    "expected_outcome": "The Copy toolbar button is observed to be disabled, and nothing is copied.",
+    "preconditions": {
+      "description": "The current Writer window shows no selected text, image, or object.",
+      "extras": [
+        {
+          "key": "selection_types_absent",
+          "value": "text, image, object"
+        },
+        {
+          "key": "clipboard_change",
+          "value": "none"
+        },
+        {
+          "key": "control_state",
+          "value": "Copy disabled"
+        }
+      ]
+    },
+    "fixture": "image_anchor__viewing_your_class_schedule_and_textbooks.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_74f2b0cc2ea758249126f0dadb5d6df3.docx",
+    "window_name": "synthetic_writer_74f2b0cc2ea758249126f0dadb5d6df3.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_74f2b0cc2ea758249126f0dadb5d6df3.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Inspect the toolbar status of the Copy command and verify it is unavailable.",
+    "goal_variant_expected_outcome": "The Copy toolbar button is observed to be disabled, and nothing is copied.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/74f2b0cc-2ea7-5824-9126-f0dadb5d6df3/goal_variant_0.json"
+  }
+}

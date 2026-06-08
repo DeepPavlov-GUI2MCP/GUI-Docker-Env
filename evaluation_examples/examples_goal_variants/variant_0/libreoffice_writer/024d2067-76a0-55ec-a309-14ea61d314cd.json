@@ -1,0 +1,111 @@
+{
+  "id": "024d2067-76a0-55ec-a309-14ea61d314cd",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a scanned signature",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/image_anchor__viewing_your_class_schedule_and_textbooks.docx",
+            "path": "/home/user/Desktop/synthetic_writer_024d206776a055eca30914ea61d314cd.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_024d206776a055eca30914ea61d314cd.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_024d206776a055eca30914ea61d314cd.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5398a209dce824da",
+    "task_type": "insert_at_cursor",
+    "task_index": 6,
+    "expected_outcome": "The system opens an image selection dialog to choose the scanned signature file.",
+    "preconditions": {
+      "description": "A letter template is open and the body is completed, leaving space for a signature.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "completed letter body"
+        },
+        {
+          "key": "selection_state",
+          "value": "no active selection"
+        },
+        {
+          "key": "intended_image_role",
+          "value": "signature image"
+        }
+      ]
+    },
+    "fixture": "image_anchor__viewing_your_class_schedule_and_textbooks.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_024d206776a055eca30914ea61d314cd.docx",
+    "window_name": "synthetic_writer_024d206776a055eca30914ea61d314cd.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_024d206776a055eca30914ea61d314cd.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Click the Image button so you can place a scanned signature in the document.",
+    "goal_variant_expected_outcome": "An image selection dialog opens to choose the signature file.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/024d2067-76a0-55ec-a309-14ea61d314cd/goal_variant_0.json"
+  }
+}

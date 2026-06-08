@@ -1,0 +1,151 @@
+{
+  "id": "3bda5a84-d365-535a-8c0b-9cc8ac000829",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Clear paragraph direct formatting",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_3bda5a84d365535a8c0b9cc8ac000829.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_3bda5a84d365535a8c0b9cc8ac000829.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_3bda5a84d365535a8c0b9cc8ac000829.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Format"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:09346a8f4b7dda04",
+              "role": "menu",
+              "name": "Format",
+              "recorded_bbox": [
+                238,
+                50,
+                62,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Format",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/32f76b8b1d9d/20260606T225258Z",
+    "macro_state_id": "32f76b8b1d9d",
+    "micro_action_id": "2cc8969b3eff60b6",
+    "task_type": "selection_transform",
+    "task_index": 5,
+    "expected_outcome": "The selected paragraph reverts from manually applied paragraph formatting to the underlying style's alignment and spacing.",
+    "preconditions": {
+      "description": "A full paragraph is selected and has direct paragraph formatting such as centered alignment or custom spacing.",
+      "extras": [
+        {
+          "key": "selection_scope",
+          "value": "Entire paragraph"
+        },
+        {
+          "key": "direct_formatting_present",
+          "value": "paragraph-level formatting"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_3bda5a84d365535a8c0b9cc8ac000829.docx",
+    "window_name": "synthetic_writer_3bda5a84d365535a8c0b9cc8ac000829.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "32f76b8b1d9d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:09346a8f4b7dda04",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Format",
+          "bbox": [
+            238,
+            50,
+            62,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Format"
+      },
+      "window_name": "synthetic_writer_3bda5a84d365535a8c0b9cc8ac000829.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Clear direct formatting on the selected paragraph where manual alignment and spacing were applied.",
+    "goal_variant_expected_outcome": "The selected paragraph reverts from manually applied paragraph formatting to the underlying style's alignment and spacing.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/32f76b8b1d9d/20260606T225258Z/goals/3bda5a84-d365-535a-8c0b-9cc8ac000829/goal_variant_0.json"
+  }
+}

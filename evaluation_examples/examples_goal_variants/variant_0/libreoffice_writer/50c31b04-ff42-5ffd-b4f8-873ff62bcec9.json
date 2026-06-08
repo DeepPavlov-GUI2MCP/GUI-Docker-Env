@@ -1,0 +1,190 @@
+{
+  "id": "50c31b04-ff42-5ffd-b4f8-873ff62bcec9",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Show the page at 50%.",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+            "path": "/home/user/Desktop/synthetic_writer_50c31b04ff425ffdb4f8873ff62bcec9.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_50c31b04ff425ffdb4f8873ff62bcec9.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_50c31b04ff425ffdb4f8873ff62bcec9.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "View"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:62630bf121555e87",
+              "role": "menu",
+              "name": "View",
+              "recorded_bbox": [
+                137,
+                50,
+                48,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Zoom"
+            },
+            "meta": {
+              "edge_id": "bd6f423fe87f:6a7b3b0949b544ae",
+              "role": "menu",
+              "name": "Zoom",
+              "recorded_bbox": [
+                137,
+                682,
+                296,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Zoom",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/bec5c2ab42e1/20260606T225301Z",
+    "macro_state_id": "bec5c2ab42e1",
+    "micro_action_id": "7952feb9c931d920",
+    "task_type": "view_or_zoom",
+    "task_index": 1,
+    "expected_outcome": "The zoom level becomes 50% instead of the previous magnification.",
+    "preconditions": {
+      "description": "The document is open in Writer with the Zoom submenu visible, and a higher zoom level is currently active.",
+      "extras": [
+        {
+          "key": "initial_zoom",
+          "value": "150%"
+        },
+        {
+          "key": "page_content",
+          "value": "short text document"
+        }
+      ]
+    },
+    "fixture": "single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_50c31b04ff425ffdb4f8873ff62bcec9.docx",
+    "window_name": "synthetic_writer_50c31b04ff425ffdb4f8873ff62bcec9.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "bec5c2ab42e1",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:62630bf121555e87",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "View",
+          "bbox": [
+            137,
+            50,
+            48,
+            25
+          ]
+        },
+        {
+          "edge_id": "bd6f423fe87f:6a7b3b0949b544ae",
+          "from_state": "bd6f423fe87f",
+          "role": "menu",
+          "name": "Zoom",
+          "bbox": [
+            137,
+            682,
+            296,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Zoom"
+      },
+      "window_name": "synthetic_writer_50c31b04ff425ffdb4f8873ff62bcec9.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Change the zoom so the page is shown at 50%.",
+    "goal_variant_expected_outcome": "The zoom level becomes 50% instead of the previous magnification.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/bec5c2ab42e1/20260606T225301Z/goals/50c31b04-ff42-5ffd-b4f8-873ff62bcec9/goal_variant_0.json"
+  }
+}

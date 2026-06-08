@@ -1,0 +1,190 @@
+{
+  "id": "30347108-9d89-566a-b1ec-c615291f1167",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Perform AutoCorrect on the document",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_303471089d89566ab1ecc615291f1167.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_303471089d89566ab1ecc615291f1167.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_303471089d89566ab1ecc615291f1167.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Tools"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:a17009973bda9611",
+              "role": "menu",
+              "name": "Tools",
+              "recorded_bbox": [
+                455,
+                50,
+                49,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "AutoCorrect"
+            },
+            "meta": {
+              "edge_id": "e85ad249bd7d:2122d1e8d3997612",
+              "role": "menu",
+              "name": "AutoCorrect",
+              "recorded_bbox": [
+                455,
+                226,
+                300,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "AutoCorrect",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/ffa20bd7476a/20260606T225304Z",
+    "macro_state_id": "ffa20bd7476a",
+    "micro_action_id": "8d48fd92ab27e229",
+    "task_type": "document_analysis",
+    "task_index": 2,
+    "expected_outcome": "Text that matches enabled AutoCorrect rules is corrected in place.",
+    "preconditions": {
+      "description": "The Writer document includes content that should change when AutoCorrect is applied.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Several lines include common replacements such as accidental DOuble CApitals and straight apostrophes."
+        },
+        {
+          "key": "window_state",
+          "value": "No modal dialog is open before activation."
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_303471089d89566ab1ecc615291f1167.docx",
+    "window_name": "synthetic_writer_303471089d89566ab1ecc615291f1167.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "ffa20bd7476a",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:a17009973bda9611",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Tools",
+          "bbox": [
+            455,
+            50,
+            49,
+            25
+          ]
+        },
+        {
+          "edge_id": "e85ad249bd7d:2122d1e8d3997612",
+          "from_state": "e85ad249bd7d",
+          "role": "menu",
+          "name": "AutoCorrect",
+          "bbox": [
+            455,
+            226,
+            300,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "AutoCorrect"
+      },
+      "window_name": "synthetic_writer_303471089d89566ab1ecc615291f1167.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Use AutoCorrect → Apply to perform AutoCorrect on the document.",
+    "goal_variant_expected_outcome": "Text matching enabled AutoCorrect rules is corrected in place.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/ffa20bd7476a/20260606T225304Z/goals/30347108-9d89-566a-b1ec-c615291f1167/goal_variant_0.json"
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "id": "f2f0c04f-e847-5b28-9b33-9752e67967b1",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Launch a new HTML document",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_f2f0c04fe8475b289b339752e67967b1.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_f2f0c04fe8475b289b339752e67967b1.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_f2f0c04fe8475b289b339752e67967b1.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "File"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:bb08184c0b3835ee",
+              "role": "menu",
+              "name": "File",
+              "recorded_bbox": [
+                57,
+                50,
+                39,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "New"
+            },
+            "meta": {
+              "edge_id": "e65903c8fc2b:c939ccb4cb728bbc",
+              "role": "menu",
+              "name": "New",
+              "recorded_bbox": [
+                57,
+                75,
+                302,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "New",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/19a31745f3fe/20260606T225258Z",
+    "macro_state_id": "19a31745f3fe",
+    "micro_action_id": "440c2fe4e688fa15",
+    "task_type": "dialog_open",
+    "task_index": 5,
+    "expected_outcome": "An untitled HTML document becomes active in LibreOffice.",
+    "preconditions": {
+      "description": "The application is in Writer and the File → New submenu remains visible on screen.",
+      "extras": [
+        {
+          "key": "source_module",
+          "value": "Writer"
+        },
+        {
+          "key": "submenu_name",
+          "value": "New"
+        },
+        {
+          "key": "item_name",
+          "value": "HTML Document"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_f2f0c04fe8475b289b339752e67967b1.docx",
+    "window_name": "synthetic_writer_f2f0c04fe8475b289b339752e67967b1.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "19a31745f3fe",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:bb08184c0b3835ee",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "File",
+          "bbox": [
+            57,
+            50,
+            39,
+            25
+          ]
+        },
+        {
+          "edge_id": "e65903c8fc2b:c939ccb4cb728bbc",
+          "from_state": "e65903c8fc2b",
+          "role": "menu",
+          "name": "New",
+          "bbox": [
+            57,
+            75,
+            302,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "New"
+      },
+      "window_name": "synthetic_writer_f2f0c04fe8475b289b339752e67967b1.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "From the File → New menu, launch a new HTML document.",
+    "goal_variant_expected_outcome": "An untitled HTML document becomes active in LibreOffice.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/19a31745f3fe/20260606T225258Z/goals/f2f0c04f-e847-5b28-9b33-9752e67967b1/goal_variant_0.json"
+  }
+}

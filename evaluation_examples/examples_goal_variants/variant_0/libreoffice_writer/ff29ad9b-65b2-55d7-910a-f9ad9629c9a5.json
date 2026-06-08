@@ -1,0 +1,111 @@
+{
+  "id": "ff29ad9b-65b2-55d7-910a-f9ad9629c9a5",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Create a comment on the sentence",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+            "path": "/home/user/Desktop/synthetic_writer_ff29ad9b65b255d7910af9ad9629c9a5.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_ff29ad9b65b255d7910af9ad9629c9a5.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_ff29ad9b65b255d7910af9ad9629c9a5.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "873741bc22e18be9",
+    "task_type": "review_commenting",
+    "task_index": 2,
+    "expected_outcome": "A comment anchor is added to the selected sentence and a comment box opens for input.",
+    "preconditions": {
+      "description": "One full sentence is selected in body text and no comment is currently being edited.",
+      "extras": [
+        {
+          "key": "selected_content",
+          "value": "The rollout will begin in the third quarter."
+        },
+        {
+          "key": "selection_scope",
+          "value": "Sentence"
+        },
+        {
+          "key": "existing_comments",
+          "value": "None on selection"
+        }
+      ]
+    },
+    "fixture": "single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_ff29ad9b65b255d7910af9ad9629c9a5.docx",
+    "window_name": "synthetic_writer_ff29ad9b65b255d7910af9ad9629c9a5.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_ff29ad9b65b255d7910af9ad9629c9a5.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Create a comment on the highlighted sentence.",
+    "goal_variant_expected_outcome": "A comment anchor is added to the selected sentence and a comment box opens.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/ff29ad9b-65b2-55d7-910a-f9ad9629c9a5/goal_variant_0.json"
+  }
+}

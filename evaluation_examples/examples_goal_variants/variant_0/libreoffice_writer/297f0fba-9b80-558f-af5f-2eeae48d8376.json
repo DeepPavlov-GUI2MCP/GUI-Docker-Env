@@ -1,0 +1,194 @@
+{
+  "id": "297f0fba-9b80-558f-af5f-2eeae48d8376",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Make the selected code line lowercase",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_297f0fba9b80558faf5f2eeae48d8376.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_297f0fba9b80558faf5f2eeae48d8376.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_297f0fba9b80558faf5f2eeae48d8376.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Format"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:09346a8f4b7dda04",
+              "role": "menu",
+              "name": "Format",
+              "recorded_bbox": [
+                238,
+                50,
+                62,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Text"
+            },
+            "meta": {
+              "edge_id": "32f76b8b1d9d:e98fd2ece44678c7",
+              "role": "menu",
+              "name": "Text",
+              "recorded_bbox": [
+                238,
+                75,
+                268,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Text",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/a3fd82503da5/20260606T225300Z",
+    "macro_state_id": "a3fd82503da5",
+    "micro_action_id": "ad43404fbc58933d",
+    "task_type": "selection_transform",
+    "task_index": 2,
+    "expected_outcome": "The selected content changes to \"model xz-900 rev. b\".",
+    "preconditions": {
+      "description": "A full selected line reads \"MODEL XZ-900 REV. B\".",
+      "extras": [
+        {
+          "key": "selected_text",
+          "value": "MODEL XZ-900 REV. B"
+        },
+        {
+          "key": "selection_scope",
+          "value": "full line"
+        },
+        {
+          "key": "contains_numbers",
+          "value": "yes"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_297f0fba9b80558faf5f2eeae48d8376.docx",
+    "window_name": "synthetic_writer_297f0fba9b80558faf5f2eeae48d8376.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "a3fd82503da5",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:09346a8f4b7dda04",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Format",
+          "bbox": [
+            238,
+            50,
+            62,
+            25
+          ]
+        },
+        {
+          "edge_id": "32f76b8b1d9d:e98fd2ece44678c7",
+          "from_state": "32f76b8b1d9d",
+          "role": "menu",
+          "name": "Text",
+          "bbox": [
+            238,
+            75,
+            268,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Text"
+      },
+      "window_name": "synthetic_writer_297f0fba9b80558faf5f2eeae48d8376.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Use the lowercase command on the selected product code line.",
+    "goal_variant_expected_outcome": "The selected product code line changes to lowercase text while preserving numbers and symbols.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/a3fd82503da5/20260606T225300Z/goals/297f0fba-9b80-558f-af5f-2eeae48d8376/goal_variant_0.json"
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "id": "3d94a48d-c97b-5fa5-93b2-796f7eea0497",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Switch from two columns to three",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_3d94a48dc97b5fa593b2796f7eea0497.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_3d94a48dc97b5fa593b2796f7eea0497.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_3d94a48dc97b5fa593b2796f7eea0497.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Format"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:09346a8f4b7dda04",
+              "role": "menu",
+              "name": "Format",
+              "recorded_bbox": [
+                238,
+                50,
+                62,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Format",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/32f76b8b1d9d/20260606T225258Z",
+    "macro_state_id": "32f76b8b1d9d",
+    "micro_action_id": "8565d4f67c46c830",
+    "task_type": "paragraph_layout",
+    "task_index": 8,
+    "expected_outcome": "The layout updates so text flows through three columns instead of two.",
+    "preconditions": {
+      "description": "The document is already formatted in two columns and contains enough text to show the change.",
+      "extras": [
+        {
+          "key": "current_columns",
+          "value": "2"
+        },
+        {
+          "key": "text_volume",
+          "value": "sufficient"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_3d94a48dc97b5fa593b2796f7eea0497.docx",
+    "window_name": "synthetic_writer_3d94a48dc97b5fa593b2796f7eea0497.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "32f76b8b1d9d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:09346a8f4b7dda04",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Format",
+          "bbox": [
+            238,
+            50,
+            62,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Format"
+      },
+      "window_name": "synthetic_writer_3d94a48dc97b5fa593b2796f7eea0497.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Switch the current page from two columns to three columns using Format > Columns.",
+    "goal_variant_expected_outcome": "The layout updates so text flows through three columns instead of two.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/32f76b8b1d9d/20260606T225258Z/goals/3d94a48d-c97b-5fa5-93b2-796f7eea0497/goal_variant_0.json"
+  }
+}

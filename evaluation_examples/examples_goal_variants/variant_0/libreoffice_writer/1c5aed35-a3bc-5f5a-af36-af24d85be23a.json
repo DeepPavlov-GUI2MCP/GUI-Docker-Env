@@ -1,0 +1,111 @@
+{
+  "id": "1c5aed35-a3bc-5f5a-af36-af24d85be23a",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add a chart below the paragraph",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_1c5aed35a3bc5f5aaf36af24d85be23a.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_1c5aed35a3bc5f5aaf36af24d85be23a.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_1c5aed35a3bc5f5aaf36af24d85be23a.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "ba32ff6c264a4cd3",
+    "task_type": "insert_at_cursor",
+    "task_index": 1,
+    "expected_outcome": "A chart object is inserted into the document after the existing paragraph.",
+    "preconditions": {
+      "description": "The document contains a single paragraph of text and no objects have been inserted yet.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "One short paragraph such as a report title or summary line"
+        },
+        {
+          "key": "selection_state",
+          "value": "Insertion point placed in the document with no text selected"
+        },
+        {
+          "key": "existing_objects",
+          "value": "No chart, text box, or table present"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_1c5aed35a3bc5f5aaf36af24d85be23a.docx",
+    "window_name": "synthetic_writer_1c5aed35a3bc5f5aaf36af24d85be23a.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_1c5aed35a3bc5f5aaf36af24d85be23a.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Add a chart below an existing paragraph by clicking the Chart button.",
+    "goal_variant_expected_outcome": "A chart object is inserted after the existing paragraph.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/1c5aed35-a3bc-5f5a-af36-af24d85be23a/goal_variant_0.json"
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "id": "5ab79313-47a9-5a47-bc8a-83cb782e039f",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Determine whether AutoFormat Styles is unavailable",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_5ab7931347a95a47bc8a83cb782e039f.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_5ab7931347a95a47bc8a83cb782e039f.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_5ab7931347a95a47bc8a83cb782e039f.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Table"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:b0c485afa1095a6e",
+              "role": "menu",
+              "name": "Table",
+              "recorded_bbox": [
+                356,
+                50,
+                50,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Table",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/53bf0935406d/20260606T225300Z",
+    "macro_state_id": "53bf0935406d",
+    "micro_action_id": "c24d1cec49fcc787",
+    "task_type": "availability_check",
+    "task_index": 4,
+    "expected_outcome": "The agent confirms the command is unavailable in the current state; the menu and document remain unchanged.",
+    "preconditions": {
+      "description": "The current UI shows the Table menu open in Writer, and AutoFormat Styles... is present but disabled.",
+      "extras": [
+        {
+          "key": "input_restriction",
+          "value": "do not activate disabled control"
+        },
+        {
+          "key": "target_command",
+          "value": "AutoFormat Styles..."
+        },
+        {
+          "key": "observed_state",
+          "value": "grayed out"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_5ab7931347a95a47bc8a83cb782e039f.docx",
+    "window_name": "synthetic_writer_5ab7931347a95a47bc8a83cb782e039f.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "53bf0935406d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:b0c485afa1095a6e",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Table",
+          "bbox": [
+            356,
+            50,
+            50,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Table"
+      },
+      "window_name": "synthetic_writer_5ab7931347a95a47bc8a83cb782e039f.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Determine whether AutoFormat Styles... is currently unavailable from Table, without using keyboard shortcuts or clicks on the disabled item.",
+    "goal_variant_expected_outcome": "AutoFormat Styles... is confirmed unavailable and the menu and document remain unchanged.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/53bf0935406d/20260606T225300Z/goals/5ab79313-47a9-5a47-bc8a-83cb782e039f/goal_variant_0.json"
+  }
+}

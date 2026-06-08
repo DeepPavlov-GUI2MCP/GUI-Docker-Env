@@ -1,0 +1,194 @@
+{
+  "id": "1b75c5b3-a0b6-5779-8988-abb339470f4b",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check whether Copy looks actionable",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_1b75c5b3a0b657798988abb339470f4b.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_1b75c5b3a0b657798988abb339470f4b.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_1b75c5b3a0b657798988abb339470f4b.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Help"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:547fcbaf37a7f7ba",
+              "role": "menu",
+              "name": "Help",
+              "recorded_bbox": [
+                572,
+                50,
+                46,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu item",
+              "name": "About LibreOffice"
+            },
+            "meta": {
+              "edge_id": "bd25ba81ea6e:236e4b69013287b6",
+              "role": "menu item",
+              "name": "About LibreOffice",
+              "recorded_bbox": [
+                572,
+                354,
+                299,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "dialog",
+              "name": "About LibreOffice",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c43cf836e8b3/20260606T225302Z",
+    "macro_state_id": "c43cf836e8b3",
+    "micro_action_id": "81cec4f3048db87c",
+    "task_type": "availability_check",
+    "task_index": 4,
+    "expected_outcome": "The Copy button is assessed as actionable or not actionable, with no clipboard operation performed.",
+    "preconditions": {
+      "description": "The About LibreOffice dialog displays system and version details under Version Information.",
+      "extras": [
+        {
+          "key": "target_control",
+          "value": "Copy"
+        },
+        {
+          "key": "section_name",
+          "value": "Version Information"
+        },
+        {
+          "key": "safety_constraint",
+          "value": "no clipboard write"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_1b75c5b3a0b657798988abb339470f4b.docx",
+    "window_name": "synthetic_writer_1b75c5b3a0b657798988abb339470f4b.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "c43cf836e8b3",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:547fcbaf37a7f7ba",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Help",
+          "bbox": [
+            572,
+            50,
+            46,
+            25
+          ]
+        },
+        {
+          "edge_id": "bd25ba81ea6e:236e4b69013287b6",
+          "from_state": "bd25ba81ea6e",
+          "role": "menu item",
+          "name": "About LibreOffice",
+          "bbox": [
+            572,
+            354,
+            299,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "dialog",
+        "role": "dialog",
+        "name": "About LibreOffice"
+      },
+      "window_name": "synthetic_writer_1b75c5b3a0b657798988abb339470f4b.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Check whether the \"Copy\" button appears actionable next to the Version Information title, but do not perform the copy action.",
+    "goal_variant_expected_outcome": "The Copy button is assessed as actionable or not actionable, with no clipboard operation performed.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c43cf836e8b3/20260606T225302Z/goals/1b75c5b3-a0b6-5779-8988-abb339470f4b/goal_variant_0.json"
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "id": "f0d6d55b-c148-5f97-a91b-4052188639f4",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Use the mail merge wizard",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_f0d6d55bc1485f97a91b4052188639f4.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_f0d6d55bc1485f97a91b4052188639f4.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_f0d6d55bc1485f97a91b4052188639f4.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Tools"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:a17009973bda9611",
+              "role": "menu",
+              "name": "Tools",
+              "recorded_bbox": [
+                455,
+                50,
+                49,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Tools",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/e85ad249bd7d/20260606T225303Z",
+    "macro_state_id": "e85ad249bd7d",
+    "micro_action_id": "bbdbdacfca10a357",
+    "task_type": "dialog_open",
+    "task_index": 2,
+    "expected_outcome": "The Mail Merge Wizard starts.",
+    "preconditions": {
+      "description": "Writer is focused and no wizard is currently open.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "A one-page notice document."
+        },
+        {
+          "key": "address_block",
+          "value": "Not inserted yet."
+        },
+        {
+          "key": "current_view",
+          "value": "Normal page view."
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_f0d6d55bc1485f97a91b4052188639f4.docx",
+    "window_name": "synthetic_writer_f0d6d55bc1485f97a91b4052188639f4.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "e85ad249bd7d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:a17009973bda9611",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Tools",
+          "bbox": [
+            455,
+            50,
+            49,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Tools"
+      },
+      "window_name": "synthetic_writer_f0d6d55bc1485f97a91b4052188639f4.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Use the visible menu to open the Mail Merge Wizard.",
+    "goal_variant_expected_outcome": "The Mail Merge Wizard starts.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/e85ad249bd7d/20260606T225303Z/goals/f0d6d55b-c148-5f97-a91b-4052188639f4/goal_variant_0.json"
+  }
+}

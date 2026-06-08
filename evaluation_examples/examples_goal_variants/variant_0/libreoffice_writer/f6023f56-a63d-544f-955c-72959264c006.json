@@ -1,0 +1,159 @@
+{
+  "id": "f6023f56-a63d-544f-955c-72959264c006",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Update Emphasis to match this text",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_f6023f56a63d544f955c72959264c006.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_f6023f56a63d544f955c72959264c006.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_f6023f56a63d544f955c72959264c006.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Styles"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:4cfd8cff88d8274a",
+              "role": "menu",
+              "name": "Styles",
+              "recorded_bbox": [
+                300,
+                50,
+                56,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Styles",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/979ebb535cc1/20260606T225300Z",
+    "macro_state_id": "979ebb535cc1",
+    "micro_action_id": "343d9c4a8957b47a",
+    "task_type": "style_management",
+    "task_index": 2,
+    "expected_outcome": "The selected character style is redefined to match the currently highlighted text, and other text with that character style updates accordingly.",
+    "preconditions": {
+      "description": "A run of inline text using the Emphasis character style is selected. The text has been manually reformatted so it differs from the existing Emphasis style, and the style is used in other places too.",
+      "extras": [
+        {
+          "key": "selected_style_name",
+          "value": "Emphasis"
+        },
+        {
+          "key": "selection_scope",
+          "value": "inline text selection"
+        },
+        {
+          "key": "direct_formatting_example",
+          "value": "italic plus green font color"
+        },
+        {
+          "key": "comparison_content",
+          "value": "same character style appears elsewhere"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_f6023f56a63d544f955c72959264c006.docx",
+    "window_name": "synthetic_writer_f6023f56a63d544f955c72959264c006.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "979ebb535cc1",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:4cfd8cff88d8274a",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Styles",
+          "bbox": [
+            300,
+            50,
+            56,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Styles"
+      },
+      "window_name": "synthetic_writer_f6023f56a63d544f955c72959264c006.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Use the menu to update the selected character style from the highlighted inline text formatting.",
+    "goal_variant_expected_outcome": "The Emphasis character style is redefined from the highlighted text and other Emphasis text updates to match.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/979ebb535cc1/20260606T225300Z/goals/f6023f56-a63d-544f-955c-72959264c006/goal_variant_0.json"
+  }
+}

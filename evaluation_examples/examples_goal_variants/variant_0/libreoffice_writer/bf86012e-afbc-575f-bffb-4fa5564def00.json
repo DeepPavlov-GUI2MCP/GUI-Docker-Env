@@ -1,0 +1,111 @@
+{
+  "id": "bf86012e-afbc-575f-bffb-4fa5564def00",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Change the table heading text color",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/table_with_values__view_person_organizational_summary.docx",
+            "path": "/home/user/Desktop/synthetic_writer_bf86012eafbc575fbffb4fa5564def00.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_bf86012eafbc575fbffb4fa5564def00.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_bf86012eafbc575fbffb4fa5564def00.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "604a561290a440d7",
+    "task_type": "selection_transform",
+    "task_index": 6,
+    "expected_outcome": "The selected heading text inside the table displays in the new chosen color.",
+    "preconditions": {
+      "description": "Text inside one table header cell is selected and currently black.",
+      "extras": [
+        {
+          "key": "selection_scope",
+          "value": "text in table cell"
+        },
+        {
+          "key": "initial_font_color",
+          "value": "black"
+        },
+        {
+          "key": "text_sample",
+          "value": "Total Cost"
+        }
+      ]
+    },
+    "fixture": "table_with_values__view_person_organizational_summary.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_bf86012eafbc575fbffb4fa5564def00.docx",
+    "window_name": "synthetic_writer_bf86012eafbc575fbffb4fa5564def00.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_bf86012eafbc575fbffb4fa5564def00.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Use the Font Color button to recolor the selected table heading text.",
+    "goal_variant_expected_outcome": "The selected table header text displays in the chosen new color.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/bf86012e-afbc-575f-bffb-4fa5564def00/goal_variant_0.json"
+  }
+}

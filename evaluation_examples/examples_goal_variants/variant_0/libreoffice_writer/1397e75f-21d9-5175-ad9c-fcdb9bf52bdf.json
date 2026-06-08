@@ -1,0 +1,107 @@
+{
+  "id": "1397e75f-21d9-5175-ad9c-fcdb9bf52bdf",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Find the New button",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_1397e75f21d95175ad9cfcdb9bf52bdf.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_1397e75f21d95175ad9cfcdb9bf52bdf.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_1397e75f21d95175ad9cfcdb9bf52bdf.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "9b9a000f0cc5040d",
+    "task_type": "unsafe_or_external_observation",
+    "task_index": 0,
+    "expected_outcome": "The New control is visually identified, and no new document or window is opened.",
+    "preconditions": {
+      "description": "A blank untitled Writer document is open with the standard toolbar visible.",
+      "extras": [
+        {
+          "key": "target_control",
+          "value": "New"
+        },
+        {
+          "key": "safety_requirement",
+          "value": "observation only; do not activate"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_1397e75f21d95175ad9cfcdb9bf52bdf.docx",
+    "window_name": "synthetic_writer_1397e75f21d95175ad9cfcdb9bf52bdf.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_1397e75f21d95175ad9cfcdb9bf52bdf.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Locate the New button on the toolbar without clicking it.",
+    "goal_variant_expected_outcome": "The New button is visually identified and no new document is opened.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/1397e75f-21d9-5175-ad9c-fcdb9bf52bdf/goal_variant_0.json"
+  }
+}

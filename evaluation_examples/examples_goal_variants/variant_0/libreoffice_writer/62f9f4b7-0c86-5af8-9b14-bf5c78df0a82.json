@@ -1,0 +1,111 @@
+{
+  "id": "62f9f4b7-0c86-5af8-9b14-bf5c78df0a82",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Add a text box under the heading and subheading",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_62f9f4b70c865af89b14bf5c78df0a82.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_62f9f4b70c865af89b14bf5c78df0a82.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_62f9f4b70c865af89b14bf5c78df0a82.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "d7fbf65f004a5243",
+    "task_type": "insert_at_cursor",
+    "task_index": 5,
+    "expected_outcome": "A text box object is inserted in addition to the existing heading and subheading.",
+    "preconditions": {
+      "description": "The document contains two lines of text, one heading and one subheading, with no drawing objects yet.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Heading plus subheading"
+        },
+        {
+          "key": "selection_state",
+          "value": "No selected text"
+        },
+        {
+          "key": "object_state",
+          "value": "No text box"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_62f9f4b70c865af89b14bf5c78df0a82.docx",
+    "window_name": "synthetic_writer_62f9f4b70c865af89b14bf5c78df0a82.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_62f9f4b70c865af89b14bf5c78df0a82.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Add a text box to a document with a heading and subheading.",
+    "goal_variant_expected_outcome": "A text box object is inserted in addition to the existing heading and subheading.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/62f9f4b7-0c86-5af8-9b14-bf5c78df0a82/goal_variant_0.json"
+  }
+}

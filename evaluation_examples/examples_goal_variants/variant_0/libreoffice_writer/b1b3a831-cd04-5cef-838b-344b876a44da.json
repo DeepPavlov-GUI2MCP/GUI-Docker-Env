@@ -1,0 +1,111 @@
+{
+  "id": "b1b3a831-cd04-5cef-838b-344b876a44da",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Right-align the contact information",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/styled_heading_and_body__constitution_template_with_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_b1b3a831cd045cef838b344b876a44da.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_b1b3a831cd045cef838b344b876a44da.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_b1b3a831cd045cef838b344b876a44da.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5efd2b6e31938559",
+    "task_type": "paragraph_layout",
+    "task_index": 6,
+    "expected_outcome": "The entire selected contact-info block is aligned to the right margin.",
+    "preconditions": {
+      "description": "Two lines of contact information are selected and currently center-aligned.",
+      "extras": [
+        {
+          "key": "selection_scope",
+          "value": "two-paragraph contact block"
+        },
+        {
+          "key": "initial_alignment",
+          "value": "center"
+        },
+        {
+          "key": "paragraph_content",
+          "value": "address and phone lines"
+        }
+      ]
+    },
+    "fixture": "styled_heading_and_body__constitution_template_with_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_b1b3a831cd045cef838b344b876a44da.docx",
+    "window_name": "synthetic_writer_b1b3a831cd045cef838b344b876a44da.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_b1b3a831cd045cef838b344b876a44da.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Use the Right alignment control on the selected contact information block.",
+    "goal_variant_expected_outcome": "The selected contact-info block is aligned to the right margin.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/b1b3a831-cd04-5cef-838b-344b876a44da/goal_variant_0.json"
+  }
+}

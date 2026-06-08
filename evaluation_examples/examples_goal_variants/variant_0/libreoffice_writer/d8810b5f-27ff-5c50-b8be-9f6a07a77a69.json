@@ -1,0 +1,111 @@
+{
+  "id": "d8810b5f-27ff-5c50-b8be-9f6a07a77a69",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert an image here",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/image_anchor__viewing_your_class_schedule_and_textbooks.docx",
+            "path": "/home/user/Desktop/synthetic_writer_d8810b5f27ff5c50b8be9f6a07a77a69.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_d8810b5f27ff5c50b8be9f6a07a77a69.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_d8810b5f27ff5c50b8be9f6a07a77a69.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "5398a209dce824da",
+    "task_type": "insert_at_cursor",
+    "task_index": 0,
+    "expected_outcome": "An image insertion file picker or equivalent image insertion workflow opens, ready to choose a picture file.",
+    "preconditions": {
+      "description": "A blank Writer document is open and ready for content insertion.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "empty document"
+        },
+        {
+          "key": "selection_state",
+          "value": "no text selected"
+        },
+        {
+          "key": "target_object",
+          "value": "image"
+        }
+      ]
+    },
+    "fixture": "image_anchor__viewing_your_class_schedule_and_textbooks.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_d8810b5f27ff5c50b8be9f6a07a77a69.docx",
+    "window_name": "synthetic_writer_d8810b5f27ff5c50b8be9f6a07a77a69.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_d8810b5f27ff5c50b8be9f6a07a77a69.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Click the Image toolbar button to insert an image at the current insertion point.",
+    "goal_variant_expected_outcome": "An image file picker opens so a picture can be chosen.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/d8810b5f-27ff-5c50-b8be-9f6a07a77a69/goal_variant_0.json"
+  }
+}

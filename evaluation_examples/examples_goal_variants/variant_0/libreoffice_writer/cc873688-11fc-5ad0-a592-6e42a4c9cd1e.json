@@ -1,0 +1,229 @@
+{
+  "id": "cc873688-11fc-5ad0-a592-6e42a4c9cd1e",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Open extra language settings for the selected phrase",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/highlighted_text__sample_recruitment_phone_script.odt",
+            "path": "/home/user/Desktop/synthetic_writer_cc87368811fc5ad0a5926e42a4c9cd1e.odt"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_cc87368811fc5ad0a5926e42a4c9cd1e.odt"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_cc87368811fc5ad0a5926e42a4c9cd1e.odt - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Tools"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:a17009973bda9611",
+              "role": "menu",
+              "name": "Tools",
+              "recorded_bbox": [
+                455,
+                50,
+                49,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Language"
+            },
+            "meta": {
+              "edge_id": "e85ad249bd7d:31fe5737156da5b8",
+              "role": "menu",
+              "name": "Language",
+              "recorded_bbox": [
+                455,
+                150,
+                300,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "For Selection"
+            },
+            "meta": {
+              "edge_id": "d32e00db2ce8:7b06e70c6ca04a98",
+              "role": "menu",
+              "name": "For Selection",
+              "recorded_bbox": [
+                753,
+                150,
+                235,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "For Selection",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/aeca9cf0c90b/20260606T225301Z",
+    "macro_state_id": "aeca9cf0c90b",
+    "micro_action_id": "32e84b7c6ba2d247",
+    "task_type": "dialog_open",
+    "task_index": 1,
+    "expected_outcome": "A dialog opens that offers additional language/spell-check settings for the selected phrase.",
+    "preconditions": {
+      "description": "The document contains text and a two-word phrase is selected before the menu path is opened.",
+      "extras": [
+        {
+          "key": "selected_content",
+          "value": "Two-word phrase such as 'budget review' is highlighted."
+        },
+        {
+          "key": "selection_scope",
+          "value": "Partial line selection only."
+        }
+      ]
+    },
+    "fixture": "highlighted_text__sample_recruitment_phone_script.odt",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_cc87368811fc5ad0a5926e42a4c9cd1e.odt",
+    "window_name": "synthetic_writer_cc87368811fc5ad0a5926e42a4c9cd1e.odt - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "aeca9cf0c90b",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 3,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:a17009973bda9611",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Tools",
+          "bbox": [
+            455,
+            50,
+            49,
+            25
+          ]
+        },
+        {
+          "edge_id": "e85ad249bd7d:31fe5737156da5b8",
+          "from_state": "e85ad249bd7d",
+          "role": "menu",
+          "name": "Language",
+          "bbox": [
+            455,
+            150,
+            300,
+            25
+          ]
+        },
+        {
+          "edge_id": "d32e00db2ce8:7b06e70c6ca04a98",
+          "from_state": "d32e00db2ce8",
+          "role": "menu",
+          "name": "For Selection",
+          "bbox": [
+            753,
+            150,
+            235,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "For Selection"
+      },
+      "window_name": "synthetic_writer_cc87368811fc5ad0a5926e42a4c9cd1e.odt - LibreOffice Writer",
+      "preflight_step_count": 8
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "With a short phrase selected, activate More... under Tools → Language → For Selection.",
+    "goal_variant_expected_outcome": "A dialog opens with additional language and spelling options for the phrase.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/aeca9cf0c90b/20260606T225301Z/goals/cc873688-11fc-5ad0-a592-6e42a4c9cd1e/goal_variant_0.json"
+  }
+}

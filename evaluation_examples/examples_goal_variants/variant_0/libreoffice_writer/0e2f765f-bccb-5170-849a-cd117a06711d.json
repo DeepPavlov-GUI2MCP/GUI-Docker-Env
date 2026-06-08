@@ -1,0 +1,194 @@
+{
+  "id": "0e2f765f-bccb-5170-849a-cd117a06711d",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check if any recent document can be opened",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/bulleted_list__ccch9003_tutorial_guidelines.docx",
+            "path": "/home/user/Desktop/synthetic_writer_0e2f765fbccb5170849acd117a06711d.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_0e2f765fbccb5170849acd117a06711d.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_0e2f765fbccb5170849acd117a06711d.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "File"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:bb08184c0b3835ee",
+              "role": "menu",
+              "name": "File",
+              "recorded_bbox": [
+                57,
+                50,
+                39,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Recent Documents"
+            },
+            "meta": {
+              "edge_id": "e65903c8fc2b:648b6b97ee6da2c6",
+              "role": "menu",
+              "name": "Recent Documents",
+              "recorded_bbox": [
+                57,
+                150,
+                302,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Recent Documents",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/3e4dc1cffc8d/20260606T225259Z",
+    "macro_state_id": "3e4dc1cffc8d",
+    "micro_action_id": "239c8247d4684bed",
+    "task_type": "availability_check",
+    "task_index": 1,
+    "expected_outcome": "The agent determines that no recent document is available to open because the only visible submenu item is \"No Documents\" and it is unavailable as an actionable file entry.",
+    "preconditions": {
+      "description": "The Recent Documents submenu is expanded from the File menu in Writer, and no recent files have been recorded in the list.",
+      "extras": [
+        {
+          "key": "submenu_state",
+          "value": "expanded"
+        },
+        {
+          "key": "recent_list_population",
+          "value": "none"
+        },
+        {
+          "key": "action_constraint",
+          "value": "do not activate any file-opening action"
+        }
+      ]
+    },
+    "fixture": "bulleted_list__ccch9003_tutorial_guidelines.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_0e2f765fbccb5170849acd117a06711d.docx",
+    "window_name": "synthetic_writer_0e2f765fbccb5170849acd117a06711d.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "3e4dc1cffc8d",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:bb08184c0b3835ee",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "File",
+          "bbox": [
+            57,
+            50,
+            39,
+            25
+          ]
+        },
+        {
+          "edge_id": "e65903c8fc2b:648b6b97ee6da2c6",
+          "from_state": "e65903c8fc2b",
+          "role": "menu",
+          "name": "Recent Documents",
+          "bbox": [
+            57,
+            150,
+            302,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Recent Documents"
+      },
+      "window_name": "synthetic_writer_0e2f765fbccb5170849acd117a06711d.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Check whether any recent document can be opened from the currently visible Recent Documents submenu without clicking any entry.",
+    "goal_variant_expected_outcome": "No recent document is available to open because only \"No Documents\" is shown.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/3e4dc1cffc8d/20260606T225259Z/goals/0e2f765f-bccb-5170-849a-cd117a06711d/goal_variant_0.json"
+  }
+}

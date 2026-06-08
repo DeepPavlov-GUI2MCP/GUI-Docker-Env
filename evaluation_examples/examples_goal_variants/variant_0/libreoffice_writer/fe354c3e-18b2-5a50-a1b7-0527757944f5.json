@@ -1,0 +1,111 @@
+{
+  "id": "fe354c3e-18b2-5a50-a1b7-0527757944f5",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a page break before the checklist",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/highlighted_text__sample_recruitment_phone_script.odt",
+            "path": "/home/user/Desktop/synthetic_writer_fe354c3e18b25a50a1b70527757944f5.odt"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_fe354c3e18b25a50a1b70527757944f5.odt"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_fe354c3e18b25a50a1b70527757944f5.odt - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "73e5697b26bfdbec",
+    "task_type": "insert_at_cursor",
+    "task_index": 11,
+    "expected_outcome": "The checklist begins on a new page because a page break is inserted between the introduction and the checklist.",
+    "preconditions": {
+      "description": "There is one introduction paragraph followed by a checklist, and the insertion point is between them with no highlighted text.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Intro paragraph followed by checklist items"
+        },
+        {
+          "key": "selection_state",
+          "value": "No selection"
+        },
+        {
+          "key": "initial_page_count",
+          "value": "1"
+        }
+      ]
+    },
+    "fixture": "highlighted_text__sample_recruitment_phone_script.odt",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_fe354c3e18b25a50a1b70527757944f5.odt",
+    "window_name": "synthetic_writer_fe354c3e18b25a50a1b70527757944f5.odt - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_fe354c3e18b25a50a1b70527757944f5.odt - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Create a new page between the introduction paragraph and the checklist that follows.",
+    "goal_variant_expected_outcome": "The checklist begins on a new page after the break.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/fe354c3e-18b2-5a50-a1b7-0527757944f5/goal_variant_0.json"
+  }
+}

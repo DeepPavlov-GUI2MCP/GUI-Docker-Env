@@ -1,0 +1,194 @@
+{
+  "id": "7418fdb7-a6f7-55fe-b5b4-d99dcc10c85f",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check whether Reset is unavailable",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_7418fdb7a6f755feb5b4d99dcc10c85f.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_7418fdb7a6f755feb5b4d99dcc10c85f.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_7418fdb7a6f755feb5b4d99dcc10c85f.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "View"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:62630bf121555e87",
+              "role": "menu",
+              "name": "View",
+              "recorded_bbox": [
+                137,
+                50,
+                48,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "move",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Toolbars"
+            },
+            "meta": {
+              "edge_id": "bd6f423fe87f:ef2ff235721120b5",
+              "role": "menu",
+              "name": "Toolbars",
+              "recorded_bbox": [
+                137,
+                151,
+                296,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Toolbars",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/38618c1815fd/20260606T225259Z",
+    "macro_state_id": "38618c1815fd",
+    "micro_action_id": "cfd5c5bfb0fe1c11",
+    "task_type": "availability_check",
+    "task_index": 0,
+    "expected_outcome": "The Reset menu item remains disabled and no toolbar reset or other UI change occurs.",
+    "preconditions": {
+      "description": "LibreOffice Writer is open with the View → Toolbars submenu expanded, showing the Reset item grayed out.",
+      "extras": [
+        {
+          "key": "active_ui_layer",
+          "value": "menu"
+        },
+        {
+          "key": "menu_path",
+          "value": "View > Toolbars"
+        },
+        {
+          "key": "reset_visibility",
+          "value": "visible_disabled"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_7418fdb7a6f755feb5b4d99dcc10c85f.docx",
+    "window_name": "synthetic_writer_7418fdb7a6f755feb5b4d99dcc10c85f.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "38618c1815fd",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:62630bf121555e87",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "View",
+          "bbox": [
+            137,
+            50,
+            48,
+            25
+          ]
+        },
+        {
+          "edge_id": "bd6f423fe87f:ef2ff235721120b5",
+          "from_state": "bd6f423fe87f",
+          "role": "menu",
+          "name": "Toolbars",
+          "bbox": [
+            137,
+            151,
+            296,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Toolbars"
+      },
+      "window_name": "synthetic_writer_7418fdb7a6f755feb5b4d99dcc10c85f.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "In the View → Toolbars submenu, verify that the Reset command is unavailable and do not click it.",
+    "goal_variant_expected_outcome": "Reset is confirmed disabled and nothing changes.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/38618c1815fd/20260606T225259Z/goals/7418fdb7-a6f7-55fe-b5b4-d99dcc10c85f/goal_variant_0.json"
+  }
+}

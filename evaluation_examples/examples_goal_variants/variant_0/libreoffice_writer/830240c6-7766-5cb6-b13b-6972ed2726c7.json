@@ -1,0 +1,107 @@
+{
+  "id": "830240c6-7766-5cb6-b13b-6972ed2726c7",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Insert a cross-reference after as shown in",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+            "path": "/home/user/Desktop/synthetic_writer_830240c677665cb6b13b6972ed2726c7.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_830240c677665cb6b13b6972ed2726c7.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_830240c677665cb6b13b6972ed2726c7.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "4c25ca064ae70b2b",
+    "task_type": "insert_at_cursor",
+    "task_index": 6,
+    "expected_outcome": "A dialog or panel for selecting a cross-reference target becomes visible.",
+    "preconditions": {
+      "description": "A sentence ending with 'as shown in' is present, with the insertion point at its end, and the document has at least one eligible reference target.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "Sentence ends with 'as shown in'"
+        },
+        {
+          "key": "document_structure",
+          "value": "Eligible target exists"
+        }
+      ]
+    },
+    "fixture": "single_sentence__04_chin9505_ebook_purchasing_info_2021_jan.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_830240c677665cb6b13b6972ed2726c7.docx",
+    "window_name": "synthetic_writer_830240c677665cb6b13b6972ed2726c7.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_830240c677665cb6b13b6972ed2726c7.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Open the cross-reference insertion tool for the current sentence.",
+    "goal_variant_expected_outcome": "A dialog or panel for selecting a cross-reference target becomes visible.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/830240c6-7766-5cb6-b13b-6972ed2726c7/goal_variant_0.json"
+  }
+}

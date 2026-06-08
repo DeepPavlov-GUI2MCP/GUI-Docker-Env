@@ -1,0 +1,111 @@
+{
+  "id": "aec38213-91ce-5b89-b678-6784f506f5e0",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Turn on bold for emphasis",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/simple_table__table_of_work_effort_instructions.docx",
+            "path": "/home/user/Desktop/synthetic_writer_aec3821391ce5b89b6786784f506f5e0.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_aec3821391ce5b89b6786784f506f5e0.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_aec3821391ce5b89b6786784f506f5e0.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "7c845f4f60c21cc0",
+    "task_type": "cursor_format_toggle",
+    "task_index": 5,
+    "expected_outcome": "Bold formatting is turned on and will apply to subsequently entered text.",
+    "preconditions": {
+      "description": "The document is editable, no text range is selected, and the bold control is currently off.",
+      "extras": [
+        {
+          "key": "selection_state",
+          "value": "No selection"
+        },
+        {
+          "key": "bold_state",
+          "value": "Off"
+        },
+        {
+          "key": "context",
+          "value": "Preparing to type emphasis text"
+        }
+      ]
+    },
+    "fixture": "simple_table__table_of_work_effort_instructions.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_aec3821391ce5b89b6786784f506f5e0.docx",
+    "window_name": "synthetic_writer_aec3821391ce5b89b6786784f506f5e0.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_aec3821391ce5b89b6786784f506f5e0.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Activate bold for upcoming emphasis text.",
+    "goal_variant_expected_outcome": "Bold formatting is activated and will apply to upcoming text.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/aec38213-91ce-5b89-b678-6784f506f5e0/goal_variant_0.json"
+  }
+}

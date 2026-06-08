@@ -1,0 +1,194 @@
+{
+  "id": "718dca0e-504f-536c-aa5f-acc370342e37",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check whether Release Notes is visible",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_718dca0e504f536caa5facc370342e37.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_718dca0e504f536caa5facc370342e37.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_718dca0e504f536caa5facc370342e37.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Help"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:547fcbaf37a7f7ba",
+              "role": "menu",
+              "name": "Help",
+              "recorded_bbox": [
+                572,
+                50,
+                46,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu item",
+              "name": "About LibreOffice"
+            },
+            "meta": {
+              "edge_id": "bd25ba81ea6e:236e4b69013287b6",
+              "role": "menu item",
+              "name": "About LibreOffice",
+              "recorded_bbox": [
+                572,
+                354,
+                299,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "dialog",
+              "name": "About LibreOffice",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c43cf836e8b3/20260606T225302Z",
+    "macro_state_id": "c43cf836e8b3",
+    "micro_action_id": "0248723922ed6e75",
+    "task_type": "unsafe_or_external_observation",
+    "task_index": 5,
+    "expected_outcome": "The agent confirms the Release Notes button is already visible in the current dialog view and performs no external action.",
+    "preconditions": {
+      "description": "The dialog is open at its initial visible position.",
+      "extras": [
+        {
+          "key": "button_name",
+          "value": "Release Notes"
+        },
+        {
+          "key": "scroll_required",
+          "value": "false"
+        },
+        {
+          "key": "action_constraint",
+          "value": "visibility check only"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_718dca0e504f536caa5facc370342e37.docx",
+    "window_name": "synthetic_writer_718dca0e504f536caa5facc370342e37.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "c43cf836e8b3",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:547fcbaf37a7f7ba",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Help",
+          "bbox": [
+            572,
+            50,
+            46,
+            25
+          ]
+        },
+        {
+          "edge_id": "bd25ba81ea6e:236e4b69013287b6",
+          "from_state": "bd25ba81ea6e",
+          "role": "menu item",
+          "name": "About LibreOffice",
+          "bbox": [
+            572,
+            354,
+            299,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "dialog",
+        "role": "dialog",
+        "name": "About LibreOffice"
+      },
+      "window_name": "synthetic_writer_718dca0e504f536caa5facc370342e37.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Determine whether the top-right \"Release Notes\" button is currently visible without scrolling or clicking.",
+    "goal_variant_expected_outcome": "The agent confirms the Release Notes button is already visible in the current dialog view and performs no external action.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c43cf836e8b3/20260606T225302Z/goals/718dca0e-504f-536c-aa5f-acc370342e37/goal_variant_0.json"
+  }
+}

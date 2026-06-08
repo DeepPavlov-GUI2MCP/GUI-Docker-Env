@@ -1,0 +1,155 @@
+{
+  "id": "6da202e9-d10a-53aa-a8b4-17ea86636576",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Check whether Close Window is selectable",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_6da202e9d10a53aaa8b417ea86636576.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_6da202e9d10a53aaa8b417ea86636576.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_6da202e9d10a53aaa8b417ea86636576.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Window"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:5c76c0e2b8f47135",
+              "role": "menu",
+              "name": "Window",
+              "recorded_bbox": [
+                504,
+                50,
+                68,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "menu",
+              "name": "Window",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c8b0042c9b42/20260606T225302Z",
+    "macro_state_id": "c8b0042c9b42",
+    "micro_action_id": "a83b88926c920efe",
+    "task_type": "availability_check",
+    "task_index": 2,
+    "expected_outcome": "The agent confirms the menu item is selectable/enabled and no windows are closed.",
+    "preconditions": {
+      "description": "A blank untitled Writer document is active, with the Window menu open.",
+      "extras": [
+        {
+          "key": "active_window_title",
+          "value": "Untitled 1 - LibreOffice Writer"
+        },
+        {
+          "key": "menu_open",
+          "value": "Window"
+        },
+        {
+          "key": "item_state_to_check",
+          "value": "enabled"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_6da202e9d10a53aaa8b417ea86636576.docx",
+    "window_name": "synthetic_writer_6da202e9d10a53aaa8b417ea86636576.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "c8b0042c9b42",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 1,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:5c76c0e2b8f47135",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Window",
+          "bbox": [
+            504,
+            50,
+            68,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "menu",
+        "role": "menu",
+        "name": "Window"
+      },
+      "window_name": "synthetic_writer_6da202e9d10a53aaa8b417ea86636576.docx - LibreOffice Writer",
+      "preflight_step_count": 4
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Determine whether Close Window is currently selectable from the Window menu while the untitled document is active, but do not activate it.",
+    "goal_variant_expected_outcome": "Close Window is confirmed selectable and no action is taken.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/c8b0042c9b42/20260606T225302Z/goals/6da202e9-d10a-53aa-a8b4-17ea86636576/goal_variant_0.json"
+  }
+}

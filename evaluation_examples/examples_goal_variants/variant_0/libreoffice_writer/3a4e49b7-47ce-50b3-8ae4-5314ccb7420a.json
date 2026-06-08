@@ -1,0 +1,111 @@
+{
+  "id": "3a4e49b7-47ce-50b3-8ae4-5314ccb7420a",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Perform a spelling review",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_3a4e49b747ce50b38ae45314ccb7420a.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_3a4e49b747ce50b38ae45314ccb7420a.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_3a4e49b747ce50b38ae45314ccb7420a.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z",
+    "macro_state_id": "36427b830db2",
+    "micro_action_id": "840cc918ba7d67e7",
+    "task_type": "document_analysis",
+    "task_index": 7,
+    "expected_outcome": "The document enters spelling analysis mode, showing detected spelling issues if present.",
+    "preconditions": {
+      "description": "The document includes at least one misspelled word in otherwise normal body text.",
+      "extras": [
+        {
+          "key": "document_content",
+          "value": "The team will definately attend."
+        },
+        {
+          "key": "selection_state",
+          "value": "No selection"
+        },
+        {
+          "key": "language_status",
+          "value": "English (USA)"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_3a4e49b747ce50b38ae45314ccb7420a.docx",
+    "window_name": "synthetic_writer_3a4e49b747ce50b38ae45314ccb7420a.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "36427b830db2",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 0,
+      "navigation_edges": [],
+      "active_root": {
+        "kind": "main",
+        "role": "frame",
+        "name": "Untitled 1 - LibreOffice Writer"
+      },
+      "window_name": "synthetic_writer_3a4e49b747ce50b38ae45314ccb7420a.docx - LibreOffice Writer",
+      "preflight_step_count": 2
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Perform a spelling review on the current document text.",
+    "goal_variant_expected_outcome": "The document enters spelling analysis mode.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/36427b830db2/20260606T200446Z/goals/3a4e49b7-47ce-50b3-8ae4-5314ccb7420a/goal_variant_0.json"
+  }
+}

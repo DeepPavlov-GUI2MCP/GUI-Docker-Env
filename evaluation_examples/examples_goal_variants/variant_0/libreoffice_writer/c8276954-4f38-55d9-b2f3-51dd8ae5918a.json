@@ -1,0 +1,198 @@
+{
+  "id": "c8276954-4f38-55d9-b2f3-51dd8ae5918a",
+  "snapshot": "libreoffice_writer",
+  "instruction": "Undo the document properties toggle",
+  "source": "gui_distillation.microaction_tasks",
+  "config": [
+    {
+      "type": "upload_file",
+      "parameters": {
+        "files": [
+          {
+            "local_path": "/home/pitchblack/gui_distillation/data/source/fixtures/libreoffice_writer/blank__generated_empty.docx",
+            "path": "/home/user/Desktop/synthetic_writer_c82769544f3855d9b2f351dd8ae5918a.docx"
+          }
+        ]
+      }
+    },
+    {
+      "type": "open",
+      "parameters": {
+        "path": "/home/user/Desktop/synthetic_writer_c82769544f3855d9b2f351dd8ae5918a.docx"
+      }
+    },
+    {
+      "type": "activate_window",
+      "parameters": {
+        "window_name": "synthetic_writer_c82769544f3855d9b2f351dd8ae5918a.docx - LibreOffice Writer",
+        "strict": false
+      }
+    },
+    {
+      "type": "a11y_preflight",
+      "parameters": {
+        "steps": [
+          {
+            "op": "wait_for",
+            "selector": {
+              "role": "frame",
+              "name_contains": "LibreOffice Writer",
+              "require_bbox": false
+            }
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu",
+              "name": "Tools"
+            },
+            "meta": {
+              "edge_id": "36427b830db2:a17009973bda9611",
+              "role": "menu",
+              "name": "Tools",
+              "recorded_bbox": [
+                455,
+                50,
+                49,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "click",
+            "selector": {
+              "require_bbox": true,
+              "states": {
+                "showing": true,
+                "visible": true
+              },
+              "role": "menu item",
+              "name": "Options..."
+            },
+            "meta": {
+              "edge_id": "e85ad249bd7d:7eb8a5ff1399791d",
+              "role": "menu item",
+              "name": "Options...",
+              "recorded_bbox": [
+                455,
+                682,
+                300,
+                25
+              ]
+            }
+          },
+          {
+            "op": "sleep",
+            "seconds": 0.8
+          },
+          {
+            "op": "assert",
+            "selector": {
+              "require_bbox": true,
+              "role": "dialog",
+              "name": "Options - LibreOffice - User Data",
+              "states": {
+                "showing": true,
+                "visible": true
+              }
+            }
+          }
+        ],
+        "timeout_seconds": 60,
+        "screenshot_on_failure": true
+      }
+    }
+  ],
+  "trajectory": "trajectories/",
+  "related_apps": [
+    "libreoffice_writer"
+  ],
+  "evaluator": {
+    "func": "always_dummy"
+  },
+  "synthetic": {
+    "source": "gui_distillation.microaction_tasks",
+    "generation_run": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/e58c8569541a/20260606T225303Z",
+    "macro_state_id": "e58c8569541a",
+    "micro_action_id": "ed25492e26fa3fd9",
+    "task_type": "dialog_open",
+    "task_index": 3,
+    "expected_outcome": "The checkbox state returns to what it was before the toggle, and the current page remains LibreOffice → User Data.",
+    "preconditions": {
+      "description": "The User Data page is active and the 'Use data for document properties' checkbox has been changed from its original state without applying.",
+      "extras": [
+        {
+          "key": "selected_category",
+          "value": "LibreOffice > User Data"
+        },
+        {
+          "key": "edited_field",
+          "value": "Use data for document properties"
+        },
+        {
+          "key": "control_type",
+          "value": "checkbox"
+        },
+        {
+          "key": "change_state",
+          "value": "unsaved toggle"
+        }
+      ]
+    },
+    "fixture": "blank__generated_empty.docx",
+    "vm_document_path": "/home/user/Desktop/synthetic_writer_c82769544f3855d9b2f351dd8ae5918a.docx",
+    "window_name": "synthetic_writer_c82769544f3855d9b2f351dd8ae5918a.docx - LibreOffice Writer",
+    "macrostate_setup": {
+      "status": "ready",
+      "macro_state_id": "e58c8569541a",
+      "root_state_id": "36427b830db2",
+      "navigation_edge_count": 2,
+      "navigation_edges": [
+        {
+          "edge_id": "36427b830db2:a17009973bda9611",
+          "from_state": "36427b830db2",
+          "role": "menu",
+          "name": "Tools",
+          "bbox": [
+            455,
+            50,
+            49,
+            25
+          ]
+        },
+        {
+          "edge_id": "e85ad249bd7d:7eb8a5ff1399791d",
+          "from_state": "e85ad249bd7d",
+          "role": "menu item",
+          "name": "Options...",
+          "bbox": [
+            455,
+            682,
+            300,
+            25
+          ]
+        }
+      ],
+      "active_root": {
+        "kind": "dialog",
+        "role": "dialog",
+        "name": "Options - LibreOffice - User Data"
+      },
+      "window_name": "synthetic_writer_c82769544f3855d9b2f351dd8ae5918a.docx - LibreOffice Writer",
+      "preflight_step_count": 6
+    },
+    "goal_variant_index": 0,
+    "original_instruction": "Toggle the 'Use data for document properties' checkbox and click Reset.",
+    "goal_variant_expected_outcome": "The 'Use data for document properties' checkbox returns to its previous state.",
+    "goal_variant_source": "/home/pitchblack/gui_distillation/data/synthetic/libreoffice_writer/active_root_231/task_generation/gpt-5.4/e58c8569541a/20260606T225303Z/goals/c8276954-4f38-55d9-b2f3-51dd8ae5918a/goal_variant_0.json"
+  }
+}
